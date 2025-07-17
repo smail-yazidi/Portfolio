@@ -752,7 +752,7 @@ export default function Portfolio() {
   CV
 </Button>
 
-              {/* Hire Me Button */}
+              {/* Hire Me */}
               <Button
                 className={`${isDarkMode
                   ? "bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-black"
