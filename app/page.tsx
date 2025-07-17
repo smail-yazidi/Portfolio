@@ -897,27 +897,67 @@ const AutoRotatingImage = ({ src, alt, totalImages, index }) => {
               >
                 {t.heroDescription}
               </p>
+<div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+  <Button
+    className="bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-gray-900 font-medium px-8 py-3 rounded-full"
+    onClick={() => scrollToSection("experience")}
+  >
+    {t.viewJourney}
+  </Button>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button
-  className="bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-gray-900 font-medium px-8 py-3 rounded-full"
-  onClick={() => scrollToSection("experience")}
->
-  {t.viewJourney}
-</Button>
-
-           <Button
+  <Button
+    variant="ghost"
+    className={`${isDarkMode
+      ? "text-white border-gray-700 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
+      : "text-gray-900 border-gray-300 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
+    } font-medium px-8 py-3 rounded-full border flex items-center`}
+  >
+    <Mail className="w-4 h-4 mr-2" />
+    smail.yazidi.work@gmail.com
+  </Button>
+<Button
   variant="ghost"
+  onClick={() => window.open("https://www.linkedin.com", "_blank")}
   className={`${isDarkMode
     ? "text-white border-gray-700 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
     : "text-gray-900 border-gray-300 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
-  } font-medium px-8 py-3 rounded-full border`}
+  } font-medium px-8 py-3 rounded-full border flex items-center cursor-pointer`}
 >
-  <Mail className="w-4 h-4 mr-2" />
-  smail.yazidi.work@gmail.com
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    className="w-4 h-4 mr-2"
+    aria-hidden="true"
+  >
+    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-9h3v9zm-1.5-10.3c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 10.3h-3v-4.5c0-1.07-.93-1.93-2-1.93s-2 .86-2 1.93v4.5h-3v-9h3v1.35c.59-.89 1.88-1.35 3-1.35 2.21 0 4 1.79 4 4v4.65z" />
+  </svg>
+  LinkedIn
 </Button>
 
-              </div>
+<Button
+  variant="ghost"
+  onClick={() => window.open("https://github.com/SmailYazidi", "_blank")}
+  className={`${isDarkMode
+    ? "text-white border-gray-700 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
+    : "text-gray-900 border-gray-300 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
+  } font-medium px-8 py-3 rounded-full border flex items-center cursor-pointer`}
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+    className="w-4 h-4 mr-2"
+    aria-hidden="true"
+  >
+    <path d="M12 .5a12 12 0 00-3.79 23.39c.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.4-1.35-1.77-1.35-1.77-1.1-.75.08-.74.08-.74 1.21.08 1.85 1.25 1.85 1.25 1.08 1.84 2.84 1.31 3.54 1 .11-.78.42-1.31.76-1.61-2.66-.3-5.47-1.33-5.47-5.92 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.48 11.48 0 016 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.65.25 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.6-2.82 5.61-5.5 5.91.43.37.81 1.1.81 2.22 0 1.6-.01 2.88-.01 3.27 0 .32.22.7.83.58A12 12 0 0012 .5z" />
+  </svg>
+  GitHub
+</Button>
+
+  
+</div>
+
             </div>
 
             {/* Right Content - Profile Image */}
