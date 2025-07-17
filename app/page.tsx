@@ -406,16 +406,16 @@ export default function Portfolio() {
     accentRed: "var(--portfolio-red)", // Using the new CSS variable
     accentRedForeground: "var(--portfolio-red-foreground)",
   }
- const educationEvents = useMemo(
+  const educationEvents = useMemo(
     () => [
-        {
+      {
         year: "2024 - 2025",
         title: t.itWebDev, // Informatique et Développement Web
         institution: t.centreAzrou, // Centre Azrou pour le développement communautaire
         location: "",
         description: t.itWebDevDesc, // Formation en Informatique et Développement Web.
       },
-        {
+      {
         year: "2022 - 2024",
         title: t.diplomaFullStack, // Diplôme en Développement Digital Web Full Stack
         institution: t.istaIfrane, // Institut Spécialisé de Technologie Appliquée Ifrane (OFPPT)
@@ -429,15 +429,15 @@ export default function Portfolio() {
         location: "",
         description: t.baccalaureateDesc, // Diplôme de fin d'études secondaires
       },
-    
-    
+
+
     ],
     [t],
   )
 
   const experienceEvents = useMemo(
     () => [
- 
+
       {
         year: "10 juin 2025 au 10 juillet 2025",
         duration: t.oneMonth, // 1 mois
@@ -446,7 +446,7 @@ export default function Portfolio() {
         location: t.ifrane, // Ifrane
         description: [t.internshipITDesc], // Stage pratique en informatique et développement web.
       },
-           {
+      {
         year: "11 mars 2024 au 11 avril 2024",
         duration: t.oneMonth, // 1 mois
         title: t.internshipWebDev, // Stage en Développement Web
@@ -494,62 +494,61 @@ export default function Portfolio() {
     [t],
   )
 
- const projectsData = useMemo(
-  () => [
-    {
-      title: t.animovTitle,
-      description: t.animovDesc,
-      images: [
-        "/images/animov/1.png",
-        "/images/animov/2.png",
-        "/images/animov/3.png"
-      ],
-      tech: ["Next.js", "Node.js", "Atlas MongoDB", "Tailwind"],
-      github: "#",
-      live: "#",
-    },
-    {
-      title: t.tableManagementTitle,
-      description: t.tableManagementDesc,
-      images: [
-        "/images/table-management/2.png",
-       
-      ],
-      tech: ["Next.js", "Node.js", "Atlas MongoDB", "Tailwind"],
-      github: "#",
-      live: "#",
-    },
-  ],
-  [t]
-);
+  const projectsData = useMemo(
+    () => [
+      {
+        title: t.animovTitle,
+        description: t.animovDesc,
+        images: [
+          "/images/animov/1.png",
+          "/images/animov/2.png",
+          "/images/animov/3.png"
+        ],
+        tech: ["Next.js", "Node.js", "Atlas MongoDB", "Tailwind"],
+        github: "#",
+        live: "#",
+      },
+      {
+        title: t.tableManagementTitle,
+        description: t.tableManagementDesc,
+        images: [
+          "/images/table-management/2.png",
 
-
-// AutoRotatingImage component (define this outside your Projects section)
-const AutoRotatingImage = ({ src, alt, totalImages, index }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
-  useEffect(() => {
-    if (totalImages <= 1) return;
-    
-    const interval = setInterval(() => {
-      setCurrentImageIndex(prev => (prev + 1) % totalImages);
-    }, 3000);
-    
-    return () => clearInterval(interval);
-  }, [totalImages]);
-  
-  return (
-    <Image
-      src={src}
-      alt={alt}
-      width={600}
-      height={350}
-      className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-        index === currentImageIndex ? 'opacity-100' : 'opacity-0'
-      }`}
-    />
+        ],
+        tech: ["Next.js", "Node.js", "Atlas MongoDB", "Tailwind"],
+        github: "#",
+        live: "#",
+      },
+    ],
+    [t]
   );
-};
+
+
+  // AutoRotatingImage component (define this outside your Projects section)
+  const AutoRotatingImage = ({ src, alt, totalImages, index }) => {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    useEffect(() => {
+      if (totalImages <= 1) return;
+
+      const interval = setInterval(() => {
+        setCurrentImageIndex(prev => (prev + 1) % totalImages);
+      }, 3000);
+
+      return () => clearInterval(interval);
+    }, [totalImages]);
+
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        width={600}
+        height={350}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+          }`}
+      />
+    );
+  };
   const filteredServices = useMemo(() => {
     if (!searchTerm)
       return [
@@ -630,36 +629,34 @@ const AutoRotatingImage = ({ src, alt, totalImages, index }) => {
   }, [searchTerm, projectsData])
 
   return (
-    
+
     <div
       className={`min-h-screen transition-colors duration-300 ${isDarkMode ? "dark" : ""} ${themeClasses.bg} ${themeClasses.text}`}
     >
       {/* Header */}
-<header
-  className={`fixed top-0 left-0 right-0 z-50 ${themeClasses.headerBg} backdrop-blur-md border-b ${themeClasses.headerBorder} shadow-sm`}
->
-  <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="flex items-center justify-between h-20">
-      {/* Logo */}
-      <div className="flex items-center space-x-3">
-        <div
-          className={`w-8 h-8 ${
-            isDarkMode ? "bg-white" : "bg-gray-900"
-          } rounded-full flex items-center justify-center`}
-        >
-          <span
-            className={`${
-              isDarkMode ? "text-black" : "text-white"
-            } font-bold text-lg`}
-          >
-            S
-          </span>
-        </div>
-        <span className="text-xl font-medium">Smail Yazidi</span>
-      </div>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 ${themeClasses.headerBg} backdrop-blur-md border-b ${themeClasses.headerBorder} shadow-sm`}
+      >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            {/* Logo */}
+            <div className="flex items-center space-x-3">
+              <div
+                className={`w-8 h-8 ${isDarkMode ? "bg-white" : "bg-gray-900"
+                  } rounded-full flex items-center justify-center`}
+              >
+                <span
+                  className={`${isDarkMode ? "text-black" : "text-white"
+                    } font-bold text-lg`}
+                >
+                  S
+                </span>
+              </div>
+              <span className="text-xl font-medium">Smail Yazidi</span>
+            </div>
 
-    <>
-  <style jsx>{`
+            <>
+              <style jsx>{`
     .custom-nav-spacing > *:not(:last-child) {
       margin-right: 20px;
     }
@@ -671,212 +668,208 @@ const AutoRotatingImage = ({ src, alt, totalImages, index }) => {
     }
   `}</style>
 
-  {/* Desktop Navigation */}
-  <nav className="hidden lg:flex items-center custom-nav-spacing">
-    {navItems.map((item) => (
-      <button
-        key={item.id}
-        onClick={() => scrollToSection(item.id)}
-        className={`text-sm font-medium transition-colors hover:text-[rgb(var(--portfolio-gold))] ${
-          activeSection === item.id
-            ? "text-[rgb(var(--portfolio-gold))]"
-            : themeClasses.textSecondary
-        }`}
-      >
-        {item.label}
-      </button>
-    ))}
-  </nav>
-</>
-
-
-      {/* Desktop Controls */}
-      <div className="hidden lg:flex items-center space-x-3">
-        {/* Language Dropdown */}
-        <div className="relative language-menu">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-            className={`p-2 ${
-              isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"
-            } flex items-center gap-2`}
-          >
-            <Globe className="w-4 h-4" />
-            <span className="text-xs font-medium">{currentLang.toUpperCase()}</span>
-            <ChevronDown
-              className={`w-3 h-3 transition-transform ${
-                isLangMenuOpen ? "rotate-180" : ""
-              }`}
-            />
-          </Button>
-
-          {isLangMenuOpen && (
-            <div
-              className={`absolute top-full right-0 mt-2 ${themeClasses.dropdownBg} ${themeClasses.dropdownBorder} border rounded-lg shadow-lg py-2 min-w-[140px] z-50`}
-            >
-              {languageOptions.map((option) => (
-                <button
-                  key={option.code}
-                  onClick={() => changeLanguage(option.code as "fr" | "en")}
-                  className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 ${
-                    currentLang === option.code
+              {/* Desktop Navigation */}
+              <nav className="hidden lg:flex items-center custom-nav-spacing">
+                {navItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className={`text-sm font-medium transition-colors hover:text-[rgb(var(--portfolio-gold))] ${activeSection === item.id
                       ? "text-[rgb(var(--portfolio-gold))]"
-                      : themeClasses.text
-                  }`}
+                      : themeClasses.textSecondary
+                      }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+            </>
+
+
+            {/* Desktop Controls */}
+            <div className="hidden lg:flex items-center space-x-3">
+              {/* Language Dropdown */}
+              <div className="relative language-menu">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+                  className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"
+                    } flex items-center gap-2`}
                 >
-                  <span>{option.flag}</span>
-                  <span>{option.label}</span>
-                </button>
-              ))}
+                  <Globe className="w-4 h-4" />
+                  <span className="text-xs font-medium">{currentLang.toUpperCase()}</span>
+                  <ChevronDown
+                    className={`w-3 h-3 transition-transform ${isLangMenuOpen ? "rotate-180" : ""
+                      }`}
+                  />
+                </Button>
+
+                {isLangMenuOpen && (
+                  <div
+                    className={`absolute top-full right-0 mt-2 ${themeClasses.dropdownBg} ${themeClasses.dropdownBorder} border rounded-lg shadow-lg py-2 min-w-[140px] z-50`}
+                  >
+                    {languageOptions.map((option) => (
+                      <button
+                        key={option.code}
+                        onClick={() => changeLanguage(option.code as "fr" | "en")}
+                        className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 ${currentLang === option.code
+                          ? "text-[rgb(var(--portfolio-gold))]"
+                          : themeClasses.text
+                          }`}
+                      >
+                        <span>{option.flag}</span>
+                        <span>{option.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Theme Toggle */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleTheme}
+                className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"}`}
+              >
+                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </Button>
+
+              {/* Search Toggle */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"}`}
+              >
+                {isSearchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
+              </Button>
+<Button
+  className="bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-gray-900 font-medium px-8 py-3 rounded-full"
+  onClick={() => window.location.href = "/cv"}
+>
+  CV
+</Button>
+
+              {/* Hire Me Button */}
+              <Button
+                className={`${isDarkMode
+                  ? "bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-black"
+                  : "bg-gray-900 hover:bg-gray-800 text-white"
+                  } font-medium px-6 py-2 rounded-full`}
+                onClick={() => scrollToSection("contact")}
+              >
+                {t.hireMe}
+              </Button>
             </div>
-          )}
-        </div>
 
-        {/* Theme Toggle */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={toggleTheme}
-          className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"}`}
-        >
-          {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-        </Button>
+            {/* Mobile Controls */}
+            <div className="flex lg:hidden items-center space-x-2">
+              <div className="relative language-menu">
+                <Button variant="ghost" size="sm" onClick={() => setIsLangMenuOpen(!isLangMenuOpen)} className="p-2">
+                  <Globe className="w-4 h-4" />
+                </Button>
 
-        {/* Search Toggle */}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => setIsSearchOpen(!isSearchOpen)}
-          className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"}`}
-        >
-          {isSearchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
-        </Button>
+                {isLangMenuOpen && (
+                  <div
+                    className={`absolute top-full right-0 mt-2 ${themeClasses.dropdownBg} ${themeClasses.dropdownBorder} border rounded-lg shadow-lg py-2 min-w-[120px] z-50`}
+                  >
+                    {languageOptions.map((option) => (
+                      <button
+                        key={option.code}
+                        onClick={() => changeLanguage(option.code as "fr" | "en")}
+                        className={`w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 ${currentLang === option.code
+                          ? "text-[rgb(var(--portfolio-gold))]"
+                          : themeClasses.text
+                          }`}
+                      >
+                        <span className="text-xs">{option.flag}</span>
+                        <span className="text-xs">{option.code.toUpperCase()}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
 
-        {/* Hire Me Button */}
-        <Button
-          className={`${
-            isDarkMode
-              ? "bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-black"
-              : "bg-gray-900 hover:bg-gray-800 text-white"
-          } font-medium px-6 py-2 rounded-full`}
-          onClick={() => scrollToSection("contact")}
-        >
-          {t.hireMe}
-        </Button>
-      </div>
+              <Button variant="ghost" size="sm" onClick={toggleTheme} className="p-2">
+                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </Button>
 
-      {/* Mobile Controls */}
-      <div className="flex lg:hidden items-center space-x-2">
-        <div className="relative language-menu">
-          <Button variant="ghost" size="sm" onClick={() => setIsLangMenuOpen(!isLangMenuOpen)} className="p-2">
-            <Globe className="w-4 h-4" />
-          </Button>
+              {/* Search Toggle for Mobile */}
+              <Button variant="ghost" size="sm" onClick={() => setIsSearchOpen(!isSearchOpen)} className="p-2">
+                {isSearchOpen ? <X className="w-6 h-6" /> : <Search className="w-6 h-6" />}
+              </Button>
 
-          {isLangMenuOpen && (
-            <div
-              className={`absolute top-full right-0 mt-2 ${themeClasses.dropdownBg} ${themeClasses.dropdownBorder} border rounded-lg shadow-lg py-2 min-w-[120px] z-50`}
-            >
-              {languageOptions.map((option) => (
-                <button
-                  key={option.code}
-                  onClick={() => changeLanguage(option.code as "fr" | "en")}
-                  className={`w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 ${
-                    currentLang === option.code
-                      ? "text-[rgb(var(--portfolio-gold))]"
-                      : themeClasses.text
-                  }`}
-                >
-                  <span className="text-xs">{option.flag}</span>
-                  <span className="text-xs">{option.code.toUpperCase()}</span>
-                </button>
-              ))}
+              <button className="p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
             </div>
-          )}
-        </div>
-
-        <Button variant="ghost" size="sm" onClick={toggleTheme} className="p-2">
-          {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-        </Button>
-
-        {/* Search Toggle for Mobile */}
-        <Button variant="ghost" size="sm" onClick={() => setIsSearchOpen(!isSearchOpen)} className="p-2">
-          {isSearchOpen ? <X className="w-6 h-6" /> : <Search className="w-6 h-6" />}
-        </Button>
-
-        <button className="p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
-      </div>
-    </div>
-
-    {/* Mobile Navigation */}
-    {isMenuOpen && (
-      <div className={`lg:hidden py-6 border-t ${themeClasses.headerBorder}`}>
-        <nav className="flex flex-col space-y-2">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollToSection(item.id)}
-              className={`text-left px-4 py-2 text-sm font-medium transition-colors hover:text-[rgb(var(--portfolio-gold))] ${
-                activeSection === item.id
-                  ? `text-[rgb(var(--portfolio-gold))] ${
-                      isDarkMode ? "bg-gray-800" : "bg-gray-100"
-                    }`
-                  : themeClasses.textSecondary
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
-          <div className="px-4 pt-4">
- 
-            <Button
-              className={`w-full ${
-                isDarkMode
-                    ? "bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-black"
-              : "bg-gray-900 hover:bg-gray-800 text-white"
-              } font-medium py-2 rounded-full`}
-              onClick={() => scrollToSection("contact")}
-            >
-              {t.hireMe}
-            </Button>
           </div>
-        </nav>
-      </div>
-    )}
 
-{/* Search Input */}
-{isSearchOpen && (
-  <div
-    className={`relative z-50 top-full left-0 right-0 py-4 px-4 sm:px-6 lg:px-8 ${themeClasses.headerBg} border-t ${themeClasses.headerBorder} shadow-md`}
-  >
-    <div className="relative">
-      <input
-        type="text"
-        placeholder={currentLang === "fr" ? "Rechercher..." : "Search..."}
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className={`w-full p-3 pr-10 rounded-md ${
-          isDarkMode
-            ? "bg-gray-800 text-white border border-gray-700"
-            : "bg-gray-100 text-gray-900 border border-gray-300"
-        } focus:outline-none focus:ring-2 focus:ring-[rgb(var(--portfolio-gold))]`}
-      />
-      {searchTerm && (
-        <button
-          onClick={() => setSearchTerm("")}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-white"
-          aria-label="Clear search"
-        >
-          <X size={18} />
-        </button>
-      )}
-    </div>
-  </div>
-)}
-  </div>
-</header>
+          {/* Mobile Navigation */}
+          {isMenuOpen && (
+            <div className={`lg:hidden py-6 border-t ${themeClasses.headerBorder}`}>
+              <nav className="flex flex-col space-y-2">
+                {navItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className={`text-left px-4 py-2 text-sm font-medium transition-colors hover:text-[rgb(var(--portfolio-gold))] ${activeSection === item.id
+                      ? `text-[rgb(var(--portfolio-gold))] ${isDarkMode ? "bg-gray-800" : "bg-gray-100"
+                      }`
+                      : themeClasses.textSecondary
+                      }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+                <div className="px-4 pt-4">
+
+                  <Button
+                    className={`w-full ${isDarkMode
+                      ? "bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-black"
+                      : "bg-gray-900 hover:bg-gray-800 text-white"
+                      } font-medium py-2 rounded-full`}
+                    onClick={() => scrollToSection("contact")}
+                  >
+                    {t.hireMe}
+                  </Button>
+                </div>
+              </nav>
+            </div>
+          )}
+
+          {/* Search Input */}
+          {isSearchOpen && (
+            <div
+              className={`relative z-50 top-full left-0 right-0 py-4 px-4 sm:px-6 lg:px-8 ${themeClasses.headerBg} border-t ${themeClasses.headerBorder} shadow-md`}
+            >
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder={currentLang === "fr" ? "Rechercher..." : "Search..."}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className={`w-full p-3 pr-10 rounded-md ${isDarkMode
+                    ? "bg-gray-800 text-white border border-gray-700"
+                    : "bg-gray-100 text-gray-900 border border-gray-300"
+                    } focus:outline-none focus:ring-2 focus:ring-[rgb(var(--portfolio-gold))]`}
+                />
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-white"
+                    aria-label="Clear search"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </header>
 
 
       {/* Hero Section */}
@@ -897,66 +890,73 @@ const AutoRotatingImage = ({ src, alt, totalImages, index }) => {
               >
                 {t.heroDescription}
               </p>
-<div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-  <Button
-    className="bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-gray-900 font-medium px-8 py-3 rounded-full"
-    onClick={() => scrollToSection("experience")}
-  >
-    {t.viewJourney}
-  </Button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Button
+                  className="bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-gray-900 font-medium px-8 py-3 rounded-full"
+                  onClick={() => window.location.href = "/cv"}
+                >
+                  CV
+                </Button>
 
-  <Button
-    variant="ghost"
-    className={`${isDarkMode
-      ? "text-white border-gray-700 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
-      : "text-gray-900 border-gray-300 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
-    } font-medium px-8 py-3 rounded-full border flex items-center`}
-  >
-    <Mail className="w-4 h-4 mr-2" />
-    smail.yazidi.work@gmail.com
-  </Button>
-<Button
-  variant="ghost"
-  onClick={() => window.open("https://www.linkedin.com", "_blank")}
-  className={`${isDarkMode
-    ? "text-white border-gray-700 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
-    : "text-gray-900 border-gray-300 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
-  } font-medium px-8 py-3 rounded-full border flex items-center cursor-pointer`}
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-    className="w-4 h-4 mr-2"
-    aria-hidden="true"
-  >
-    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-9h3v9zm-1.5-10.3c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 10.3h-3v-4.5c0-1.07-.93-1.93-2-1.93s-2 .86-2 1.93v4.5h-3v-9h3v1.35c.59-.89 1.88-1.35 3-1.35 2.21 0 4 1.79 4 4v4.65z" />
-  </svg>
-  LinkedIn
-</Button>
+                <Button
+                  className="bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-gray-900 font-medium px-8 py-3 rounded-full"
+                  onClick={() => scrollToSection("experience")}
+                >
+                  {t.viewJourney}
+                </Button>
 
-<Button
-  variant="ghost"
-  onClick={() => window.open("https://github.com/SmailYazidi", "_blank")}
-  className={`${isDarkMode
-    ? "text-white border-gray-700 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
-    : "text-gray-900 border-gray-300 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
-  } font-medium px-8 py-3 rounded-full border flex items-center cursor-pointer`}
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-    className="w-4 h-4 mr-2"
-    aria-hidden="true"
-  >
-    <path d="M12 .5a12 12 0 00-3.79 23.39c.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.4-1.35-1.77-1.35-1.77-1.1-.75.08-.74.08-.74 1.21.08 1.85 1.25 1.85 1.25 1.08 1.84 2.84 1.31 3.54 1 .11-.78.42-1.31.76-1.61-2.66-.3-5.47-1.33-5.47-5.92 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.48 11.48 0 016 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.65.25 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.6-2.82 5.61-5.5 5.91.43.37.81 1.1.81 2.22 0 1.6-.01 2.88-.01 3.27 0 .32.22.7.83.58A12 12 0 0012 .5z" />
-  </svg>
-  GitHub
-</Button>
+                <Button
+                  variant="ghost"
+                  className={`${isDarkMode
+                    ? "text-white border-gray-700 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
+                    : "text-gray-900 border-gray-300 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
+                    } font-medium px-8 py-3 rounded-full border flex items-center`}
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  smail.yazidi.work@gmail.com
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => window.open("https://www.linkedin.com", "_blank")}
+                  className={`${isDarkMode
+                    ? "text-white border-gray-700 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
+                    : "text-gray-900 border-gray-300 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
+                    } font-medium px-8 py-3 rounded-full border flex items-center cursor-pointer`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    className="w-4 h-4 mr-2"
+                    aria-hidden="true"
+                  >
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-9h3v9zm-1.5-10.3c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 10.3h-3v-4.5c0-1.07-.93-1.93-2-1.93s-2 .86-2 1.93v4.5h-3v-9h3v1.35c.59-.89 1.88-1.35 3-1.35 2.21 0 4 1.79 4 4v4.65z" />
+                  </svg>
+                  LinkedIn
+                </Button>
 
-  
-</div>
+                <Button
+                  variant="ghost"
+                  onClick={() => window.open("https://github.com/SmailYazidi", "_blank")}
+                  className={`${isDarkMode
+                    ? "text-white border-gray-700 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
+                    : "text-gray-900 border-gray-300 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
+                    } font-medium px-8 py-3 rounded-full border flex items-center cursor-pointer`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    className="w-4 h-4 mr-2"
+                    aria-hidden="true"
+                  >
+                    <path d="M12 .5a12 12 0 00-3.79 23.39c.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.4-1.35-1.77-1.35-1.77-1.1-.75.08-.74.08-.74 1.21.08 1.85 1.25 1.85 1.25 1.08 1.84 2.84 1.31 3.54 1 .11-.78.42-1.31.76-1.61-2.66-.3-5.47-1.33-5.47-5.92 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.48 11.48 0 016 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.65.25 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.6-2.82 5.61-5.5 5.91.43.37.81 1.1.81 2.22 0 1.6-.01 2.88-.01 3.27 0 .32.22.7.83.58A12 12 0 0012 .5z" />
+                  </svg>
+                  GitHub
+                </Button>
+
+
+              </div>
 
             </div>
 
@@ -1211,103 +1211,100 @@ const AutoRotatingImage = ({ src, alt, totalImages, index }) => {
         </div>
       </section>
 
-{/* Projects Section */}
-<section
-  id="projects"
-  className={`py-16 sm:py-20 px-4 sm:px-6 lg:px-8 ${themeClasses.sectionBg}`}
->
-  <div className="container mx-auto max-w-7xl">
-    <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-12 sm:mb-16 relative pb-4">
-      {t.myProjects}
-      <span className="absolute bottom-0 left-0 w-20 h-1 bg-[rgb(var(--portfolio-gold))]"></span>
-    </h2>
+      {/* Projects Section */}
+      <section
+        id="projects"
+        className={`py-16 sm:py-20 px-4 sm:px-6 lg:px-8 ${themeClasses.sectionBg}`}
+      >
+        <div className="container mx-auto max-w-7xl">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-12 sm:mb-16 relative pb-4">
+            {t.myProjects}
+            <span className="absolute bottom-0 left-0 w-20 h-1 bg-[rgb(var(--portfolio-gold))]"></span>
+          </h2>
 
-    <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-      {filteredProjectsData.map((project, index) => (
-        <Card
-          key={index}
-          className={`${themeClasses.cardBg} ${themeClasses.cardBorder} overflow-hidden transition-all duration-300 hover:border-[rgb(var(--portfolio-gold))] hover:shadow-lg`}
-        >
-          {/* Images container with auto-rotating images */}
-          <div className="relative h-48 sm:h-56 overflow-hidden">
-            {project.images && project.images.length > 0 ? (
-              project.images.map((imgSrc, imgIndex) => (
-                <AutoRotatingImage
-                  key={imgIndex}
-                  src={imgSrc}
-                  alt={`${project.title} screenshot ${imgIndex + 1}`}
-                  totalImages={project.images.length}
-                  index={imgIndex}
-                />
-              ))
-            ) : (
-              <Image
-                src="/placeholder.svg"
-                alt={project.title}
-                width={800}
-                height={800}
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            )}
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+            {filteredProjectsData.map((project, index) => (
+              <Card
+                key={index}
+                className={`${themeClasses.cardBg} ${themeClasses.cardBorder} overflow-hidden transition-all duration-300 hover:border-[rgb(var(--portfolio-gold))] hover:shadow-lg`}
+              >
+                {/* Images container with auto-rotating images */}
+                <div className="relative h-48 sm:h-56 overflow-hidden">
+                  {project.images && project.images.length > 0 ? (
+                    project.images.map((imgSrc, imgIndex) => (
+                      <AutoRotatingImage
+                        key={imgIndex}
+                        src={imgSrc}
+                        alt={`${project.title} screenshot ${imgIndex + 1}`}
+                        totalImages={project.images.length}
+                        index={imgIndex}
+                      />
+                    ))
+                  ) : (
+                    <Image
+                      src="/placeholder.svg"
+                      alt={project.title}
+                      width={800}
+                      height={800}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  )}
+                </div>
+
+                <CardContent className="p-6">
+                  <h3 className="text-xl sm:text-2xl font-medium mb-2 sm:mb-3">
+                    {project.title}
+                  </h3>
+                  <p
+                    className={`${themeClasses.textSecondary} text-sm sm:text-base leading-relaxed mb-4 sm:mb-6`}
+                  >
+                    {project.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
+                    {project.tech.map((tech, techIndex) => (
+                      <Badge
+                        key={techIndex}
+                        className={`${isDarkMode
+                          ? "bg-gray-800 text-white border-gray-700"
+                          : "bg-gray-100 text-gray-900 border-gray-300"
+                          } border px-3 py-1 text-xs`}
+                      >
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="flex gap-3 sm:gap-4">
+                    <Button
+                      variant="outline"
+                      className={`${isDarkMode
+                        ? "border-gray-700 text-white hover:bg-gray-800"
+                        : "border-gray-300 text-gray-900 hover:bg-gray-100"
+                        } flex items-center gap-2 text-sm sm:text-base`}
+                      onClick={() => window.open(project.github, "_blank")}
+                      disabled={project.github === "#"}
+                    >
+                      <Github className="w-4 h-4" />
+                      {t.github}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className={`${isDarkMode
+                        ? "border-gray-700 text-white hover:bg-gray-800"
+                        : "border-gray-300 text-gray-900 hover:bg-gray-100"
+                        } flex items-center gap-2 text-sm sm:text-base`}
+                      onClick={() => window.open(project.live, "_blank")}
+                      disabled={project.live === "#"}
+                    >
+                      <Link className="w-4 h-4" />
+                      {t.live}
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-
-          <CardContent className="p-6">
-            <h3 className="text-xl sm:text-2xl font-medium mb-2 sm:mb-3">
-              {project.title}
-            </h3>
-            <p
-              className={`${themeClasses.textSecondary} text-sm sm:text-base leading-relaxed mb-4 sm:mb-6`}
-            >
-              {project.description}
-            </p>
-            <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
-              {project.tech.map((tech, techIndex) => (
-                <Badge
-                  key={techIndex}
-                  className={`${
-                    isDarkMode
-                      ? "bg-gray-800 text-white border-gray-700"
-                      : "bg-gray-100 text-gray-900 border-gray-300"
-                  } border px-3 py-1 text-xs`}
-                >
-                  {tech}
-                </Badge>
-              ))}
-            </div>
-            <div className="flex gap-3 sm:gap-4">
-              <Button
-                variant="outline"
-                className={`${
-                  isDarkMode
-                    ? "border-gray-700 text-white hover:bg-gray-800"
-                    : "border-gray-300 text-gray-900 hover:bg-gray-100"
-                } flex items-center gap-2 text-sm sm:text-base`}
-                onClick={() => window.open(project.github, "_blank")}
-                disabled={project.github === "#"}
-              >
-                <Github className="w-4 h-4" />
-                {t.github}
-              </Button>
-              <Button
-                variant="outline"
-                className={`${
-                  isDarkMode
-                    ? "border-gray-700 text-white hover:bg-gray-800"
-                    : "border-gray-300 text-gray-900 hover:bg-gray-100"
-                } flex items-center gap-2 text-sm sm:text-base`}
-                onClick={() => window.open(project.live, "_blank")}
-                disabled={project.live === "#"}
-              >
-                <Link className="w-4 h-4" />
-                {t.live}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  </div>
-</section>
+        </div>
+      </section>
 
 
       {/* About Section */}
@@ -1411,7 +1408,7 @@ const AutoRotatingImage = ({ src, alt, totalImages, index }) => {
           <div className="grid md:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12">
             <div className="text-center">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[rgb(var(--portfolio-gold))] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-               <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
+                <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
 
 
               </div>
@@ -1420,24 +1417,24 @@ const AutoRotatingImage = ({ src, alt, totalImages, index }) => {
             </div>
             <div className="text-center">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[rgb(var(--portfolio-gold))] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-               <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
+                <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
 
-          </div>
+              </div>
               <h3 className="font-medium text-base sm:text-lg mb-1 sm:mb-2">{t.phone}</h3>
               <p className={`${themeClasses.textSecondary} text-sm sm:text-base`}>0719270155</p>
             </div>
             <div className="text-center">
               <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[rgb(var(--portfolio-gold))] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-       <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-black" />   </div>
+                <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-black" />   </div>
               <h3 className="font-medium text-base sm:text-lg mb-1 sm:mb-2">{t.location}</h3>
               <p className={`${themeClasses.textSecondary} text-sm sm:text-base`}>{t.locationValue}</p>
             </div>
           </div>
 
-<Button className="bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-black font-medium px-8 py-3 rounded-full text-base sm:text-lg">
-  <Mail className="w-5 h-5 mr-2 text-black" />
-  {t.startProject}
-</Button>
+          <Button className="bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-black font-medium px-8 py-3 rounded-full text-base sm:text-lg">
+            <Mail className="w-5 h-5 mr-2 text-black" />
+            {t.startProject}
+          </Button>
 
         </div>
       </section>
