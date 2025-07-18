@@ -121,3 +121,8 @@
     padding: 0;
   }
 }
+@media (max-width: 299px) {
+    .hide-under-300 {
+      display: none !important;
+    }
+  }

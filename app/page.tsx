@@ -645,16 +645,16 @@ export default function Portfolio() {
   className="flex items-center space-x-3 cursor-pointer"
   onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
 >
-  <div
-    className={`w-8 h-8 ${isDarkMode ? "bg-white" : "bg-gray-900"} rounded-full flex items-center justify-center`}
+ <div
+  className={`w-8 h-8 ${isDarkMode ? "bg-white" : "bg-gray-900"} rounded-full flex items-center justify-center hide-under-300`}
+>
+  <span
+    className={`${isDarkMode ? "text-black" : "text-white"} font-bold text-lg`}
   >
-    <span
-      className={`${isDarkMode ? "text-black" : "text-white"} font-bold text-lg`}
-    >
-      S
-    </span>
-  </div>
-  <span className="text-xl font-medium">Smail Yazidi</span>
+    S
+  </span>
+</div>
+<span className="text-base sm:text-xl font-medium">Smail Yazidi</span>
 </div>
 
 
