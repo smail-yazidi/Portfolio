@@ -1019,8 +1019,8 @@ export default function Portfolio() {
               >
                 <CardContent className="p-0">
                   <div className="flex items-start justify-between mb-4 sm:mb-6">
-                    <span className={`${themeClasses.textMuted} text-sm`}>0{index + 1}</span>
-                    <ArrowUpRight
+                 <span className={`${themeClasses.textMuted} text-sm text-yellow-500`}>0{index + 1}</span>
+  <ArrowUpRight
                       className={`w-5 h-5 ${themeClasses.textMuted} group-hover:text-[rgb(var(--portfolio-gold))] transition-colors`}
                     />
                   </div>
