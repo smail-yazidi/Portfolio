@@ -87,7 +87,7 @@ export default function CvPage() {
         <div className="flex items-center gap-4">
           <Select value={language} onValueChange={(value: "fr" | "en") => setLanguage(value)}>
             <SelectTrigger
-              className={`min-w-[120px] w-auto ${isDarkMode ? "bg-gray-800 text-white border-gray-700" : "bg-gray-100 text-gray-900 border-gray-300"}`}
+              className={`min-w-[135px] w-auto ${isDarkMode ? "bg-gray-800 text-white border-gray-700" : "bg-gray-100 text-gray-900 border-gray-300"}`}
             >
               <SelectValue placeholder="Select Language" />
             </SelectTrigger>
@@ -148,7 +148,7 @@ export default function CvPage() {
         <div className="flex flex-grow flex-col md:flex-row">
           {/* Left Column (Sidebar) */}
           <div
-            className={`w-full md:w-1/3 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"} p-4 md:p-8 border-r ${themeClasses.cardBorder}`}
+            className={`w-full md:w-1/2 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"} p-4 md:p-8 border-r ${themeClasses.cardBorder}`}
           >
             <div className="mb-8">
               <h2
@@ -201,7 +201,7 @@ export default function CvPage() {
               >
                 {content.skills}
               </h2>
-              <h3 className="font-medium mb-0.5">{content.programmingLanguages}</h3>
+              <h3 className="font-semibold  mb-0.5">{content.programmingLanguages}</h3>
               <div className="grid grid-cols-2 gap-x-4 mb-2">
                 <ul className="list-disc list-inside space-y-0.5">
                   <li>PHP</li>
@@ -212,7 +212,7 @@ export default function CvPage() {
                   <li>Node.js</li>
                 </ul>
               </div>
-              <h3 className="font-medium mb-0.5">{content.frameworksLibraries}</h3>
+              <h3 className="font-semibold mb-0.5">{content.frameworksLibraries}</h3>
               <div className="grid grid-cols-2 gap-x-4 mb-2">
                 <ul className="list-disc list-inside space-y-0.5">
                   <li>Laravel</li>
@@ -222,7 +222,7 @@ export default function CvPage() {
                   <li>Bootstrap</li>
                 </ul>
               </div>
-              <h3 className="font-medium mb-0.5">{content.databases}</h3>
+              <h3 className="font-semibold  mb-0.5">{content.databases}</h3>
               <div className="grid grid-cols-2 gap-x-4 mb-2">
                 <ul className="list-disc list-inside space-y-0.5">
                   <li>MySQL</li>
@@ -231,9 +231,10 @@ export default function CvPage() {
                   <li>MongoDB</li>
                 </ul>
               </div>
-              <h3 className="font-medium mb-0.5">{content.otherTechnicalSkills}</h3>
+              <h3 className="font-semibold  mb-0.5">{content.otherTechnicalSkills}</h3>
               <div className="grid grid-cols-2 gap-x-4 mb-2">
                 <ul className="list-disc list-inside space-y-0.5">
+                  <li>PowerApps</li>
                   <li>Technical Analysis</li>
                   <li>Web Application Development</li>
                 </ul>
@@ -242,7 +243,7 @@ export default function CvPage() {
                   <li>Version Control: Git</li>
                 </ul>
               </div>
-              <h3 className="font-medium mb-0.5">{content.softSkills}</h3>
+              <h3 className="font-semibold  mb-0.5">{content.softSkills}</h3>
               <div className="grid grid-cols-2 gap-x-4">
                 <ul className="list-disc list-inside space-y-0.5">
                   <li>Teamwork</li>

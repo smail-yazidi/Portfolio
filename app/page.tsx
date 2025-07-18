@@ -43,6 +43,7 @@ const translations = {
     about: "À Propos",
     contact: "Contact",
     hireMe: "Me Contacter",
+     
 
     // Hero
     specialist: "Développeur Web Full Stack",
@@ -640,20 +641,22 @@ export default function Portfolio() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             {/* Logo */}
-            <div className="flex items-center space-x-3">
-              <div
-                className={`w-8 h-8 ${isDarkMode ? "bg-white" : "bg-gray-900"
-                  } rounded-full flex items-center justify-center`}
-              >
-                <span
-                  className={`${isDarkMode ? "text-black" : "text-white"
-                    } font-bold text-lg`}
-                >
-                  S
-                </span>
-              </div>
-              <span className="text-xl font-medium">Smail Yazidi</span>
-            </div>
+           <div
+  className="flex items-center space-x-3 cursor-pointer"
+  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+>
+  <div
+    className={`w-8 h-8 ${isDarkMode ? "bg-white" : "bg-gray-900"} rounded-full flex items-center justify-center`}
+  >
+    <span
+      className={`${isDarkMode ? "text-black" : "text-white"} font-bold text-lg`}
+    >
+      S
+    </span>
+  </div>
+  <span className="text-xl font-medium">Smail Yazidi</span>
+</div>
+
 
             <>
               <style jsx>{`
@@ -669,20 +672,26 @@ export default function Portfolio() {
   `}</style>
 
               {/* Desktop Navigation */}
-              <nav className="hidden lg:flex items-center custom-nav-spacing">
-                {navItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className={`text-sm font-medium transition-colors hover:text-[rgb(var(--portfolio-gold))] ${activeSection === item.id
-                      ? "text-[rgb(var(--portfolio-gold))]"
-                      : themeClasses.textSecondary
-                      }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </nav>
+           <nav className="hidden lg:flex items-center custom-nav-spacing">
+  {navItems.map((item) => (
+    <button
+      key={item.id}
+      onClick={() => scrollToSection(item.id)}
+      className={`text-sm font-medium transition-colors hover:text-[rgb(var(--portfolio-gold))] ${
+        activeSection === item.id
+          ? "text-[rgb(var(--portfolio-gold))]"
+          : themeClasses.textSecondary
+      }`}
+    >
+      {item.label}
+    </button>
+  ))}
+
+
+
+
+</nav>
+
             </>
 
 
