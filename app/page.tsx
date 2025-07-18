@@ -49,7 +49,7 @@ const translations = {
     heroTitle: "Transformez vos idées en applications web puissantes",
     heroDescription:
       "Je suis une personne dynamique et ambitieuse avec des compétences en développement web et applications web. Diplômé en développement web full-stack et formé au Centre Azrou pour le Développement Communautaire, je cherche à utiliser mes compétences et à faire partie d'une équipe motivée.",
-    viewJourney: "Voir Mon Parcours",
+    viewJourney: "Voir Mon CV",
 
     // Services
     servicesTitle: "Services",
@@ -184,7 +184,7 @@ const translations = {
     heroTitle: "Transform your ideas into powerful web applications",
     heroDescription:
       "I'm a dynamic and ambitious person with skills in web development and web applications. I have a diploma in full-stack web development and trained at the Centre Azrou for Community Development. I'm looking to use my skills and be part of a motivated team.",
-    viewJourney: "View My Journey",
+    viewJourney: "View My CV",
 
     // Services
     servicesTitle: "Services",
@@ -891,17 +891,11 @@ export default function Portfolio() {
                 {t.heroDescription}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button
-                  className="bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-gray-900 font-medium px-8 py-3 rounded-full"
-                  onClick={() => window.location.href = "/cv"}
-                >
-                  CV
-                </Button>
+             
 
                 <Button
                   className="bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-gray-900 font-medium px-8 py-3 rounded-full"
-                  onClick={() => scrollToSection("experience")}
-                >
+                onClick={() => window.location.href = "/cv"} >
                   {t.viewJourney}
                 </Button>
 

@@ -76,11 +76,18 @@ export default function CvPage() {
           <ChevronLeft className="w-5 h-5" />
           <span className="text-sm font-medium">{language === "fr" ? "Retour" : "Back"}</span>
         </Button>
-
+   <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleTheme}
+            className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"}`}
+          >
+            {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          </Button>
         <div className="flex items-center gap-4">
           <Select value={language} onValueChange={(value: "fr" | "en") => setLanguage(value)}>
             <SelectTrigger
-              className={`min-w-[140px] w-auto ${isDarkMode ? "bg-gray-800 text-white border-gray-700" : "bg-gray-100 text-gray-900 border-gray-300"}`}
+              className={`min-w-[120px] w-auto ${isDarkMode ? "bg-gray-800 text-white border-gray-700" : "bg-gray-100 text-gray-900 border-gray-300"}`}
             >
               <SelectValue placeholder="Select Language" />
             </SelectTrigger>
@@ -90,14 +97,7 @@ export default function CvPage() {
             </SelectContent>
           </Select>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleTheme}
-            className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"}`}
-          >
-            {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </Button>
+       
 
           <Button
             onClick={handleDownloadPdf}
@@ -127,11 +127,18 @@ export default function CvPage() {
         {/* Header Section */}
         <div className="bg-gray-900 text-white p-8 flex items-center justify-between">
           <div className="flex items-center">
-            <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white mr-6">
-              <Image src="/images/profile.jpg" alt={content.name} width={96} height={96} className="object-cover" />
-            </div>
+          <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-white mr-4 sm:mr-6">
+  <Image
+    src="/images/profile.jpg"
+    alt={content.name}
+    width={96}
+    height={96}
+    className="object-cover"
+  />
+</div>
+
             <div>
-              <h1 className="text-4xl font-bold uppercase">{content.name}</h1>
+              <h1 className="text-2xl font-bold uppercase">{content.name}</h1>
               <p className="text-xl mt-1">{content.title}</p>
             </div>
           </div>
