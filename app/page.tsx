@@ -771,7 +771,14 @@ export default function Portfolio() {
             </div>
 
             {/* Mobile Controls */}
-            <div className="flex lg:hidden items-center space-x-2">
+            <div className="flex lg:hidden items-center space-x-2"><Button
+  variant="ghost"
+  size="sm"
+  onClick={toggleTheme}
+  className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))]"
+>
+  {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+</Button>
         <div className="relative language-menu">
  <Button
   variant="ghost"
@@ -809,15 +816,7 @@ export default function Portfolio() {
 </div>
 
 
-          {/* Theme Toggle */}
-<Button
-  variant="ghost"
-  size="sm"
-  onClick={toggleTheme}
-  className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))]"
->
-  {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-</Button>
+
 
 {/* Search Toggle for Mobile */}
 <Button
