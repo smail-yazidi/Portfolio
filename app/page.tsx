@@ -1371,9 +1371,10 @@ export default function Portfolio() {
                   {[
                     { lang: "Tamazight", level: t.native, width: "100%" },
                     { lang: currentLang === "fr" ? "Arabe" : "Arabic", level: t.good, width: "85%" },
+                        { lang: currentLang === "fr" ? "Anglais" : "English", level: t.good, width: "85%" },
+                 
                     { lang: currentLang === "fr" ? "Français" : "French", level: t.average, width: "60%" },
-                    { lang: currentLang === "fr" ? "Anglais" : "English", level: t.average, width: "60%" },
-                  ].map((item, index) => (
+                 ].map((item, index) => (
                     <div key={index}>
                       <div className="flex justify-between mb-1 sm:mb-2">
                         <span className="font-medium text-sm sm:text-base">{item.lang}</span>

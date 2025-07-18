@@ -179,18 +179,20 @@ export default function CvPage() {
                 {content.languages}
               </h2>
               <ul className="list-disc list-inside space-y-1">
-                <li>
-                  {content.arabic}: {content.langMotherTongue}
-                </li>
+              
                 <li>
                   {content.amazigh}: {content.langMotherTongue}
+                </li>
+                  <li>
+                  {content.arabic}: {content.longbein}
+                </li>
+                 <li>
+                  {content.english}: {content.longbein}
                 </li>
                 <li>
                   {content.french}: {content.langMedium}
                 </li>
-                <li>
-                  {content.english}: {content.langMedium}
-                </li>
+               
               </ul>
             </div>
 
