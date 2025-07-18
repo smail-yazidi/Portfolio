@@ -1,5 +1,4 @@
 "use client"
-
 import Image from "next/image"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
@@ -76,14 +75,14 @@ export default function CvPage() {
           <ChevronLeft className="w-5 h-5" />
           <span className="text-sm font-medium">{language === "fr" ? "Retour" : "Back"}</span>
         </Button>
-   <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleTheme}
-            className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"}`}
-          >
-            {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={toggleTheme}
+          className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"}`}
+        >
+          {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+        </Button>
         <div className="flex items-center gap-4">
           <Select value={language} onValueChange={(value: "fr" | "en") => setLanguage(value)}>
             <SelectTrigger
@@ -96,9 +95,6 @@ export default function CvPage() {
               <SelectItem value="en">English</SelectItem>
             </SelectContent>
           </Select>
-
-       
-
           <Button
             onClick={handleDownloadPdf}
             className={`${
@@ -119,31 +115,22 @@ export default function CvPage() {
           </Button>
         </div>
       </div>
-
       {/* Responsive container for screen, A4 dimensions applied only for print via CSS */}
       <div
-        className={`cv-a4-page ${themeClasses.cardBg} shadow-lg rounded-lg overflow-hidden w-full max-w-4xl flex flex-col ${themeClasses.text} md:max-w-[794px] md:h-[1123px]`}
+        className={`cv-a4-page ${themeClasses.cardBg} shadow-lg rounded-lg overflow-hidden w-full max-w-4xl flex flex-col ${themeClasses.text} md:max-w-[794px]`}
       >
         {/* Header Section */}
         <div className="bg-gray-900 text-white p-8 flex items-center justify-between">
           <div className="flex items-center">
-          <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-white mr-4 sm:mr-6">
-  <Image
-    src="/images/profile.jpg"
-    alt={content.name}
-    width={96}
-    height={96}
-    className="object-cover"
-  />
-</div>
-
+            <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-white mr-4 sm:mr-6">
+              <Image src="/images/profile.jpg" alt={content.name} width={96} height={96} className="object-cover" />
+            </div>
             <div>
               <h1 className="text-2xl font-bold uppercase">{content.name}</h1>
               <p className="text-xl mt-1">{content.title}</p>
             </div>
           </div>
         </div>
-
         {/* Main Content Area */}
         <div className="flex flex-grow flex-col md:flex-row">
           {/* Left Column (Sidebar) */}
@@ -154,170 +141,123 @@ export default function CvPage() {
               <h2
                 className={`text-lg font-semibold ${themeClasses.textSecondary} mb-3 uppercase border-b pb-2 ${themeClasses.cardBorder}`}
               >
-                {content.contact}
+                {content.headings.contact}
               </h2>
               <div className="flex flex-col">
                 <div className="flex items-center flex-wrap mb-2">
                   <Phone className={`w-4 h-4 mr-2 ${themeClasses.textMuted} shrink-0`} />
-                  <span className="flex-1 min-w-0">{content.phone}</span>
+                  <span className="flex-1 min-w-0">{content.contact.phone}</span>
                 </div>
                 <div className="flex items-center flex-wrap mb-2">
                   <Mail className={`w-4 h-4 mr-2 ${themeClasses.textMuted} shrink-0`} />
-                  <span className="flex-1 min-w-0">{content.email}</span>
+                  <span className="flex-1 min-w-0">{content.contact.email}</span>
                 </div>
                 <div className="flex items-start flex-wrap mb-2">
                   <MapPin className={`w-4 h-4 mr-2 mt-1 ${themeClasses.textMuted} shrink-0`} />
-                  <span className="flex-1 min-w-0">{content.location}</span>
+                  <span className="flex-1 min-w-0">{content.contact.location}</span>
                 </div>
               </div>
             </div>
-
             <div className="mb-8">
               <h2
                 className={`text-lg font-semibold ${themeClasses.textSecondary} mb-3 uppercase border-b pb-2 ${themeClasses.cardBorder}`}
               >
-                {content.languages}
+                {content.headings.languages}
               </h2>
               <ul className="list-disc list-inside space-y-1">
-              
-                <li>
-                  {content.amazigh}: {content.langMotherTongue}
-                </li>
-                  <li>
-                  {content.arabic}: {content.longbein}
-                </li>
-                 <li>
-                  {content.english}: {content.longbein}
-                </li>
-                <li>
-                  {content.french}: {content.langMedium}
-                </li>
-               
+                {Object.entries(content.languages).map(([lang, proficiency]) => (
+                  <li key={lang}>
+                    {lang}: {proficiency}
+                  </li>
+                ))}
               </ul>
             </div>
-
             {/* Skills */}
             <div className="mb-6 text-sm leading-tight">
               <h2
                 className={`text-lg font-semibold ${themeClasses.textSecondary} mb-2 uppercase border-b pb-1 ${themeClasses.cardBorder}`}
               >
-                {content.skills}
+                {content.headings.skills}
               </h2>
-              <h3 className="font-semibold  mb-0.5">{content.programmingLanguages}</h3>
-              <div className="grid grid-cols-2 gap-x-4 mb-2">
-                <ul className="list-disc list-inside space-y-0.5">
-                  <li>PHP</li>
-                  <li>Python</li>
-                </ul>
-                <ul className="list-disc list-inside space-y-0.5">
-                  <li>JavaScript</li>
-                  <li>Node.js</li>
-                </ul>
-              </div>
-              <h3 className="font-semibold mb-0.5">{content.frameworksLibraries}</h3>
-              <div className="grid grid-cols-2 gap-x-4 mb-2">
-                <ul className="list-disc list-inside space-y-0.5">
-                  <li>Laravel</li>
-                </ul>
-                <ul className="list-disc list-inside space-y-0.5">
-                  <li>React.js</li>
-                  <li>Bootstrap</li>
-                </ul>
-              </div>
-              <h3 className="font-semibold  mb-0.5">{content.databases}</h3>
-              <div className="grid grid-cols-2 gap-x-4 mb-2">
-                <ul className="list-disc list-inside space-y-0.5">
-                  <li>MySQL</li>
-                </ul>
-                <ul className="list-disc list-inside space-y-0.5">
-                  <li>MongoDB</li>
-                </ul>
-              </div>
-              <h3 className="font-semibold  mb-0.5">{content.otherTechnicalSkills}</h3>
-              <div className="grid grid-cols-2 gap-x-4 mb-2">
-                <ul className="list-disc list-inside space-y-0.5">
-                  <li>PowerApps</li>
-                  <li>Technical Analysis</li>
-                  <li>Web Application Development</li>
-                </ul>
-                <ul className="list-disc list-inside space-y-0.5">
-                  <li>Web Project Management</li>
-                  <li>Version Control: Git</li>
-                </ul>
-              </div>
-              <h3 className="font-semibold  mb-0.5">{content.softSkills}</h3>
-              <div className="grid grid-cols-2 gap-x-4">
-                <ul className="list-disc list-inside space-y-0.5">
-                  <li>Teamwork</li>
-                  <li>Effective Communication</li>
-                  <li>Problem Solving</li>
-                  <li>Time Management</li>
-                </ul>
-                <ul className="list-disc list-inside space-y-0.5">
-                  <li>Adaptability</li>
-                  <li>Critical Thinking</li>
-                  <li>Creativity</li>
-                  <li>Initiative</li>
-                </ul>
-              </div>
+              <h3 className="font-semibold  mb-0.5">{content.headings.programmingLanguages}</h3>
+              <ul className="list-disc list-inside space-y-0.5 mb-2">
+                {content.skills.programmingLanguages.map((skill) => (
+                  <li key={skill}>{skill}</li>
+                ))}
+              </ul>
+              <h3 className="font-semibold mb-0.5">{content.headings.frameworks}</h3>
+              <ul className="list-disc list-inside space-y-0.5 mb-2">
+                {content.skills.frameworks.map((skill) => (
+                  <li key={skill}>{skill}</li>
+                ))}
+              </ul>
+              <h3 className="font-semibold  mb-0.5">{content.headings.databases}</h3>
+              <ul className="list-disc list-inside space-y-0.5 mb-2">
+                {content.skills.databases.map((skill) => (
+                  <li key={skill}>{skill}</li>
+                ))}
+              </ul>
+              <h3 className="font-semibold  mb-0.5">{content.headings.otherTechnicalSkills}</h3>
+              <ul className="list-disc list-inside space-y-0.5 mb-2">
+                {content.skills.other.map((skill) => (
+                  <li key={skill}>{skill}</li>
+                ))}
+              </ul>
+              <h3 className="font-semibold  mb-0.5">{content.headings.softSkills}</h3>
+              <ul className="list-disc list-inside space-y-0.5">
+                {content.skills.softSkills.map((skill) => (
+                  <li key={skill}>{skill}</li>
+                ))}
+              </ul>
             </div>
           </div>
-
           {/* Right Column (Main Content) */}
-          <div className={`w-full md:w-2/3 p-4 md:p-8 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}  ${themeClasses.cardBg}`}>
+          <div
+            className={`w-full md:w-2/3 p-4 md:p-8 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}  ${themeClasses.cardBg}`}
+          >
             <div className="mb-8">
               <h2
                 className={`text-lg font-semibold ${themeClasses.textSecondary} mb-3 uppercase border-b pb-2 ${themeClasses.cardBorder}`}
               >
-                {content.aboutMe}
+                {content.headings.aboutMe}
               </h2>
-              <p className={`text-sm leading-relaxed ${themeClasses.textSecondary}`}>{content.aboutMeText}</p>
+              <p className={`text-sm leading-relaxed ${themeClasses.textSecondary}`}>{content.aboutMe}</p>
             </div>
-
             <div className="mb-8">
               <h2
                 className={`text-lg font-semibold ${themeClasses.textSecondary} mb-3 uppercase border-b pb-2 ${themeClasses.cardBorder}`}
               >
-                {content.education}
+                {content.headings.education}
               </h2>
-              <div className={`mb-4 pb-4 border-b ${themeClasses.cardBorder} last:border-b-0`}>
-                <h3 className={`font-semibold text-base ${themeClasses.text}`}>{content.webDev}</h3>
-                <p className={`text-sm ${themeClasses.textSecondary}`}>{content.centreAzrou}</p>
-                <p className={`text-sm ${themeClasses.textSecondary}`}>2024 - 2025</p>
-                <p className={`text-sm ${themeClasses.textMuted} mt-1`}>{content.webDevTraining}</p>
-              </div>
-              <div className={`mb-4 pb-4 border-b ${themeClasses.cardBorder} last:border-b-0`}>
-                <h3 className={`font-semibold text-base ${themeClasses.text}`}>{content.fullStackDiploma}</h3>
-                <p className={`text-sm ${themeClasses.textSecondary}`}>{content.istaIfrane}</p>
-                <p className={`text-sm ${themeClasses.textSecondary}`}>2022 - 2024</p>
-                <p className={`text-sm ${themeClasses.textMuted} mt-1`}>{content.fullStackTraining}</p>
-              </div>
-              <div>
-                <h3 className={`font-semibold text-base ${themeClasses.text}`}>{content.baccalaureate}</h3>
-                <p className={`text-sm ${themeClasses.textSecondary}`}>{content.lyceeSidiMakhfi}</p>
-                <p className={`text-sm ${themeClasses.textSecondary}`}>2021</p>
-                <p className={`text-sm ${themeClasses.textMuted} mt-1`}>{content.highSchoolDiploma}</p>
-              </div>
+              {content.education.map((edu, index) => (
+                <div
+                  key={index}
+                  className={`mb-4 pb-4 border-b ${themeClasses.cardBorder} ${index === content.education.length - 1 ? "last:border-b-0" : ""}`}
+                >
+                  <h3 className={`font-semibold text-base ${themeClasses.text}`}>{edu.title}</h3>
+                  <p className={`text-sm ${themeClasses.textSecondary}`}>{edu.institution}</p>
+                  <p className={`text-sm ${themeClasses.textSecondary}`}>{edu.date}</p>
+                  <p className={`text-sm ${themeClasses.textMuted} mt-1`}>{edu.description}</p>
+                </div>
+              ))}
             </div>
-
             <div className="mb-8">
               <h2
                 className={`text-lg font-semibold ${themeClasses.textSecondary} mb-3 uppercase border-b pb-2 ${themeClasses.cardBorder}`}
               >
-                {content.experience}
+                {content.headings.experience}
               </h2>
-              <div className={`mb-4 pb-4 border-b ${themeClasses.cardBorder} last:border-b-0`}>
-                <h3 className={`font-semibold text-base ${themeClasses.text}`}>{content.webDevInternship}</h3>
-                <p className={`text-sm ${themeClasses.textSecondary}`}>{content.alAkhawayn}</p>
-                <p className={`text-sm ${themeClasses.textSecondary}`}>10 juin 2025 au 10 juillet 2025</p>
-                <p className={`text-sm ${themeClasses.textMuted} mt-1`}>{content.practicalInternship}</p>
-              </div>
-              <div>
-                <h3 className={`font-semibold text-base ${themeClasses.text}`}>{content.webDevInternship}</h3>
-                <p className={`text-sm ${themeClasses.textSecondary}`}>{content.communeSidiMokhfi}</p>
-                <p className={`text-sm ${themeClasses.textSecondary}`}>11 mars 2024 au 11 avril 2024</p>
-                <p className={`text-sm ${themeClasses.textMuted} mt-1`}>{content.applicationSkills}</p>
-              </div>
+              {content.experience.map((exp, index) => (
+                <div
+                  key={index}
+                  className={`mb-4 pb-4 border-b ${themeClasses.cardBorder} ${index === content.experience.length - 1 ? "last:border-b-0" : ""}`}
+                >
+                  <h3 className={`font-semibold text-base ${themeClasses.text}`}>{exp.title}</h3>
+                  <p className={`text-sm ${themeClasses.textSecondary}`}>{exp.company}</p>
+                  <p className={`text-sm ${themeClasses.textSecondary}`}>{exp.date}</p>
+                  <p className={`text-sm ${themeClasses.textMuted} mt-1`}>{exp.description}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>

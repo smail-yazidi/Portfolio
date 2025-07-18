@@ -49,7 +49,7 @@ const translations = {
     specialist: "Développeur Web Full Stack",
     heroTitle: "Transformez vos idées en applications web puissantes",
     heroDescription:
-      "Je suis une personne dynamique et ambitieuse avec des compétences en développement web et applications web. Diplômé en développement web full-stack et formé au Centre Azrou pour le Développement Communautaire, je cherche à utiliser mes compétences et à faire partie d'une équipe motivée.",
+      "Je suis une personne dynamique et ambitieuse, spécialisée dans le développement web et les applications web. Diplômé en développement web full-stack et formé au Centre Azrou pour le Développement Communautaire, je souhaite mettre mes compétences à profit et intégrer une équipe motivée.",
     viewJourney: "Voir Mon CV",
 
     // Services
@@ -154,9 +154,9 @@ const translations = {
     // Remove: reading: "📚 Lecture",
 
     // Language levels
-    native: "Maternelle",
-    good: "Bien",
-    average: "Moyen",
+    native: "Bien",
+    good: "Bon",
+    average: "Intermédiaire",
 
     // Contact
     contactTitle: "Travaillons Ensemble",
@@ -184,7 +184,7 @@ const translations = {
     specialist: "Full Stack Web Developer",
     heroTitle: "Transform your ideas into powerful web applications",
     heroDescription:
-      "I'm a dynamic and ambitious person with skills in web development and web applications. I have a diploma in full-stack web development and trained at the Centre Azrou for Community Development. I'm looking to use my skills and be part of a motivated team.",
+      "I am a dynamic and ambitious web developer with skills in building web applications. I hold a diploma in full-stack web development and received additional training from the Azrou Center for Community Development. I am seeking opportunities to apply my skills and contribute to a motivated and collaborative team.",
     viewJourney: "View My CV",
 
     // Services
@@ -288,9 +288,9 @@ const translations = {
     // Remove: reading: "📚 Reading",
 
     // Language levels
-    native: "Native",
+    native: "Good",
     good: "Good",
-    average: "Average",
+    average: "Medium",
 
     // Contact
     contactTitle: "Let's Work Together",
@@ -1369,11 +1369,12 @@ export default function Portfolio() {
                 </h3>
                 <div className="space-y-3 sm:space-y-4">
                   {[
-                    { lang: "Tamazight", level: t.native, width: "100%" },
-                    { lang: currentLang === "fr" ? "Arabe" : "Arabic", level: t.good, width: "85%" },
-                        { lang: currentLang === "fr" ? "Anglais" : "English", level: t.good, width: "85%" },
+                         { lang: currentLang === "fr" ? "Anglais" : "English", level: t.good, width: "80%" },
                  
                     { lang: currentLang === "fr" ? "Français" : "French", level: t.average, width: "60%" },
+                    { lang: "Tamazight", level: t.native, width: "85%" },
+                    { lang: currentLang === "fr" ? "Arabe" : "Arabic", level: t.native, width: "85%" },
+                   
                  ].map((item, index) => (
                     <div key={index}>
                       <div className="flex justify-between mb-1 sm:mb-2">
