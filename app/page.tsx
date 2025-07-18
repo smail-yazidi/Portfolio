@@ -698,62 +698,64 @@ export default function Portfolio() {
             {/* Desktop Controls */}
             <div className="hidden lg:flex items-center space-x-3">
               {/* Language Dropdown */}
-              <div className="relative language-menu">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                  className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"
-                    } flex items-center gap-2`}
-                >
-                  <Globe className="w-4 h-4" />
-                  <span className="text-xs font-medium">{currentLang.toUpperCase()}</span>
-                  <ChevronDown
-                    className={`w-3 h-3 transition-transform ${isLangMenuOpen ? "rotate-180" : ""
-                      }`}
-                  />
-                </Button>
+           <div className="relative language-menu">
+  <Button
+    variant="ghost"
+    size="sm"
+    onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+    className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))] flex items-center gap-2"
+  >
+  <span className="text-xs font-medium">{currentLang.toUpperCase()}</span>
+<ChevronDown
+    className={`w-3 h-3 mb-1 transition-transform ${isLangMenuOpen ? "rotate-180" : ""}`}
+  />
+  </Button>
 
-                {isLangMenuOpen && (
-                  <div
-                    className={`absolute top-full right-0 mt-2 ${themeClasses.dropdownBg} ${themeClasses.dropdownBorder} border rounded-lg shadow-lg py-2 min-w-[140px] z-50`}
-                  >
-                    {languageOptions.map((option) => (
-                      <button
-                        key={option.code}
-                        onClick={() => changeLanguage(option.code as "fr" | "en")}
-                        className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-3 ${currentLang === option.code
-                          ? "text-[rgb(var(--portfolio-gold))]"
-                          : themeClasses.text
-                          }`}
-                      >
-                        <span>{option.flag}</span>
-                        <span>{option.label}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+  {isLangMenuOpen && (
+    <div
+      className={`absolute top-full right-0 mt-2 ${themeClasses.dropdownBg} ${themeClasses.dropdownBorder} border rounded-lg shadow-lg py-2 min-w-[140px] z-50`}
+    >
+      {languageOptions.map((option) => (
+        <button
+          key={option.code}
+          onClick={() => changeLanguage(option.code as "fr" | "en")}
+          className={`w-full px-4 py-2 text-left text-sm flex items-center gap-3 
+            hover:bg-[rgb(var(--portfolio-gold-hover))] transition-colors
+            ${currentLang === option.code
+              ? "text-[rgb(var(--portfolio-gold))]"
+              : themeClasses.text
+            }`}
+        >
+          <span>{option.flag}</span>
+          <span>{option.label}</span>
+        </button>
+      ))}
+    </div>
+  )}
+</div>
+
 
               {/* Theme Toggle */}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={toggleTheme}
-                className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"}`}
-              >
-                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </Button>
+            {/* Theme Toggle */}
+<Button
+  variant="ghost"
+  size="sm"
+  onClick={toggleTheme}
+  className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))]"
+>
+  {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+</Button>
 
-              {/* Search Toggle */}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"}`}
-              >
-                {isSearchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
-              </Button>
+{/* Search Toggle */}
+<Button
+  variant="ghost"
+  size="sm"
+  onClick={() => setIsSearchOpen(!isSearchOpen)}
+  className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))]"
+>
+  {isSearchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
+</Button>
+
 
 
               {/* Hire Me */}
@@ -770,40 +772,63 @@ export default function Portfolio() {
 
             {/* Mobile Controls */}
             <div className="flex lg:hidden items-center space-x-2">
-              <div className="relative language-menu">
-                <Button variant="ghost" size="sm" onClick={() => setIsLangMenuOpen(!isLangMenuOpen)} className="p-2">
-                  <Globe className="w-4 h-4" />
-                </Button>
+        <div className="relative language-menu">
+ <Button
+  variant="ghost"
+  size="sm"
+  onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+  className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))] transition-colors flex items-center gap-1"
+>  <span className="text-xs font-medium">{currentLang.toUpperCase()}</span>
+<ChevronDown
+    className={`w-3 h-3 mb-1 transition-transform ${isLangMenuOpen ? "rotate-180" : ""}`}
+  />
+</Button>
 
-                {isLangMenuOpen && (
-                  <div
-                    className={`absolute top-full right-0 mt-2 ${themeClasses.dropdownBg} ${themeClasses.dropdownBorder} border rounded-lg shadow-lg py-2 min-w-[120px] z-50`}
-                  >
-                    {languageOptions.map((option) => (
-                      <button
-                        key={option.code}
-                        onClick={() => changeLanguage(option.code as "fr" | "en")}
-                        className={`w-full px-3 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-2 ${currentLang === option.code
-                          ? "text-[rgb(var(--portfolio-gold))]"
-                          : themeClasses.text
-                          }`}
-                      >
-                        <span className="text-xs">{option.flag}</span>
-                        <span className="text-xs">{option.code.toUpperCase()}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
 
-              <Button variant="ghost" size="sm" onClick={toggleTheme} className="p-2">
-                {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </Button>
+  {isLangMenuOpen && (
+    <div
+      className={`absolute top-full right-0 mt-2 ${themeClasses.dropdownBg} ${themeClasses.dropdownBorder} border rounded-lg shadow-lg py-2 min-w-[120px] z-50`}
+    >
+      {languageOptions.map((option) => (
+        <button
+          key={option.code}
+          onClick={() => changeLanguage(option.code as "fr" | "en")}
+          className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 
+            hover:bg-[rgb(var(--portfolio-gold-hover))] transition-colors
+            ${currentLang === option.code
+              ? "text-[rgb(var(--portfolio-gold))]"
+              : themeClasses.text
+            }`}
+        >
+          <span className="text-xs">{option.flag}</span>
+          <span className="text-xs">{option.code.toUpperCase()}</span>
+        </button>
+      ))}
+    </div>
+  )}
+</div>
 
-              {/* Search Toggle for Mobile */}
-              <Button variant="ghost" size="sm" onClick={() => setIsSearchOpen(!isSearchOpen)} className="p-2">
-                {isSearchOpen ? <X className="w-6 h-6" /> : <Search className="w-6 h-6" />}
-              </Button>
+
+          {/* Theme Toggle */}
+<Button
+  variant="ghost"
+  size="sm"
+  onClick={toggleTheme}
+  className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))]"
+>
+  {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+</Button>
+
+{/* Search Toggle for Mobile */}
+<Button
+  variant="ghost"
+  size="sm"
+  onClick={() => setIsSearchOpen(!isSearchOpen)}
+  className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))]"
+>
+  {isSearchOpen ? <X className="w-6 h-6" /> : <Search className="w-6 h-6" />}
+</Button>
+
 
               <button className="p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
