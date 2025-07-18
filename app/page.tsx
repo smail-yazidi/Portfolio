@@ -745,12 +745,7 @@ export default function Portfolio() {
               >
                 {isSearchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
               </Button>
-<Button
-  className="bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-gray-900 font-medium px-8 py-3 rounded-full"
-  onClick={() => window.location.href = "/cv"}
->
-  CV
-</Button>
+
 
               {/* Hire Me */}
               <Button
