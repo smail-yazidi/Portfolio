@@ -513,7 +513,8 @@ export default function Portfolio() {
         title: t.tableManagementTitle,
         description: t.tableManagementDesc,
         images: [
-          "/images/table-management/2.png",
+          "/images/table-management/1.png",
+            "/images/table-management/2.png"
 
         ],
         tech: ["Next.js", "Node.js", "Atlas MongoDB", "Tailwind"],
