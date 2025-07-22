@@ -506,8 +506,8 @@ export default function Portfolio() {
           "/images/animov/3.png"
         ],
         tech: ["Next.js", "Node.js", "Atlas MongoDB", "Tailwind"],
-        github: "#",
-        live: "#",
+        github: "https://github.com/SmailYazidi/AniMov",
+        live: "https://ani-mov.vercel.app",
       },
       {
         title: t.tableManagementTitle,
@@ -518,8 +518,8 @@ export default function Portfolio() {
 
         ],
         tech: ["Next.js", "Node.js", "Atlas MongoDB", "Tailwind"],
-        github: "#",
-        live: "#",
+        github: "https://github.com/SmailYazidi/Table-Management-System",
+        live: "https://table-management-system-five.vercel.app",
       },
     ],
     [t]
@@ -1304,7 +1304,7 @@ export default function Portfolio() {
                         : "border-gray-300 text-gray-900 hover:bg-gray-100"
                         } flex items-center gap-2 text-sm sm:text-base`}
                       onClick={() => window.open(project.github, "_blank")}
-                      disabled={project.github === "#"}
+                    
                     >
                       <Github className="w-4 h-4" />
                       {t.github}
@@ -1316,7 +1316,7 @@ export default function Portfolio() {
                         : "border-gray-300 text-gray-900 hover:bg-gray-100"
                         } flex items-center gap-2 text-sm sm:text-base`}
                       onClick={() => window.open(project.live, "_blank")}
-                      disabled={project.live === "#"}
+                      
                     >
                       <Link className="w-4 h-4" />
                       {t.live}
