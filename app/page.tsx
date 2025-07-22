@@ -133,7 +133,9 @@ const translations = {
       "Un système d'affichage numérique en temps réel développé pour le département CLE de l'Université Al Akhawayn. Il aide les étudiants à identifier rapidement leurs tuteurs et tables assignés grâce à une interface intuitive et photo-supportée.",
     github: "GitHub",
     live: "Live",
-
+ sNoteTitle: "Application S-Note",
+  sNoteDesc: "Une application sécurisée et intuitive pour stocker et gérer vos notes et mots de passe.",
+ // (You fill in the details)
     // About
     aboutTitle: "À Propos de Moi",
     aboutDescription:
@@ -265,9 +267,11 @@ const translations = {
     tableManagementTitle: "Table Management System",
     tableManagementDesc:
       "A real-time digital display system developed for the CLE department at Akhawayn University. It helps students quickly identify their assigned tutors and tables using an intuitive, photo-supported interface.",
-    github: "GitHub",
+   
+    sNoteTitle: "S-Note App",
+sNoteDesc: "An application for securely storing and managing notes and passwords, offering features like...", 
+ github: "GitHub",
     live: "Live",
-
     // About
     aboutTitle: "About Me",
     aboutDescription:
@@ -521,6 +525,17 @@ export default function Portfolio() {
         github: "https://github.com/SmailYazidi/Table-Management-System",
         live: "https://table-management-system-five.vercel.app",
       },
+       {
+      title: t.sNoteTitle, // Assuming you'll add this to your translation file
+      description: t.sNoteDesc, // Assuming you'll add this to your translation file
+      images: [
+        "/images/s-note/1.png",
+        "/images/s-note/2.png"
+      ],
+      tech: ["Next.js", "Node.js", "MongoDB", "TailwindCSS"], 
+      github: "https://github.com/SmailYazidi/S-Note",
+      live: "https://s-note.vercel.app",
+    },
     ],
     [t]
   );
