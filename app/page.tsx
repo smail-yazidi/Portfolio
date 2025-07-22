@@ -501,6 +501,18 @@ export default function Portfolio() {
 
   const projectsData = useMemo(
     () => [
+       {
+        title: t.tableManagementTitle,
+        description: t.tableManagementDesc,
+        images: [
+          "/images/table-management/1.png",
+            "/images/table-management/2.png"
+
+        ],
+        tech: ["Next.js", "Node.js", "Atlas MongoDB", "Tailwind"],
+        github: "https://github.com/SmailYazidi/Table-Management-System",
+        live: "https://table-management-system-five.vercel.app",
+      },
       {
         title: t.animovTitle,
         description: t.animovDesc,
@@ -513,18 +525,7 @@ export default function Portfolio() {
         github: "https://github.com/SmailYazidi/AniMov",
         live: "https://ani-mov.vercel.app",
       },
-      {
-        title: t.tableManagementTitle,
-        description: t.tableManagementDesc,
-        images: [
-          "/images/table-management/1.png",
-            "/images/table-management/2.png"
-
-        ],
-        tech: ["Next.js", "Node.js", "Atlas MongoDB", "Tailwind"],
-        github: "https://github.com/SmailYazidi/Table-Management-System",
-        live: "https://table-management-system-five.vercel.app",
-      },
+     
        {
       title: t.sNoteTitle, // Assuming you'll add this to your translation file
       description: t.sNoteDesc, // Assuming you'll add this to your translation file
