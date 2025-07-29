@@ -133,8 +133,12 @@ const translations = {
       "Un système d'affichage numérique en temps réel développé pour le département CLE de l'Université Al Akhawayn. Il aide les étudiants à identifier rapidement leurs tuteurs et tables assignés grâce à une interface intuitive et photo-supportée.",
     github: "GitHub",
     live: "Live",
+        weatherAppTitle: "Weather Forecast App",
+    weatherAppDesc: "A comprehensive weather application providing real-time forecasts, 14-day outlooks, and hourly predictions with multi-language support and dark/light mode.",
+  
  sNoteTitle: "Application S-Note",
   sNoteDesc: "Une application sécurisée et intuitive pour stocker et gérer vos notes et mots de passe.",
+
  // (You fill in the details)
     // About
     aboutTitle: "À Propos de Moi",
@@ -272,6 +276,8 @@ const translations = {
 sNoteDesc: "An application for securely storing and managing notes and passwords, offering features like...", 
  github: "GitHub",
     live: "Live",
+      weatherAppTitle: "Application Météo",
+    weatherAppDesc: "Une application météo complète fournissant des prévisions en temps réel, des prévisions sur 14 jours et des prédictions horaires avec support multilingue et mode sombre/clair.",
     // About
     aboutTitle: "About Me",
     aboutDescription:
@@ -521,11 +527,21 @@ export default function Portfolio() {
           "/images/animov/2.png",
           "/images/animov/3.png"
         ],
-        tech: ["Next.js", "Node.js", "Atlas MongoDB", "Tailwind"],
+        tech: ["Next.js", "Node.js", "MongoDB", "Tailwind"],
         github: "https://github.com/SmailYazidi/AniMov",
         live: "https://ani-mov.vercel.app",
       },
-     
+        {
+      title: t.weatherAppTitle, // Assuming you'll add this to your translation file
+      description: t.weatherAppDesc, // Assuming you'll add this to your translation file
+      images: [
+        "/images/Weather/1.png",
+        "/images/Weather/2.png"
+      ],
+      tech: ["Next.js", "Node.js", "WeatherAPI", "Tailwind"], 
+      github: "https://github.com/SmailYazidi/S-Weather",
+      live: "https://s-weather-sandy.vercel.app",
+    },
        {
       title: t.sNoteTitle, // Assuming you'll add this to your translation file
       description: t.sNoteDesc, // Assuming you'll add this to your translation file
@@ -533,10 +549,10 @@ export default function Portfolio() {
         "/images/s-note/1.png",
         "/images/s-note/2.png"
       ],
-      tech: ["Next.js", "Node.js", "MongoDB", "TailwindCSS"], 
+      tech: ["Next.js", "Node.js", "MongoDB", "Tailwind"], 
       github: "https://github.com/SmailYazidi/S-Note",
       live: "https://s-note.vercel.app",
-    },
+    },  
     ],
     [t]
   );
