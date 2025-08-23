@@ -976,7 +976,7 @@ shadow: 'shadow-xl',
 </h3>
 
               <div className="space-y-8">
-                {mockData.education.education.map((event, index) => (
+                {mockData.education.education.slice().reverse().map((event, index) => (
    <div
   key={index}
   className={`relative ${
@@ -1034,7 +1034,7 @@ shadow: 'shadow-xl',
 </h3>
 
               <div className="space-y-8">
-                {mockData.education.experience.map((event, index) => (
+                {mockData.education.experience.slice().reverse().map((event, index) => (
             <div
   key={index}
   className={`relative ${
