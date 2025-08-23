@@ -774,26 +774,31 @@ shadow: 'shadow-xl',
 
           {/* Search Bar */}
           {isSearchOpen && (
-            <div className={`${themeClasses.glassDark} rounded-2xl mb-4 p-4 ${themeClasses.shadow} transition-all duration-300 animate-in slide-in-from-top-2`}>
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder={currentLang === "fr" ? "Rechercher..." : currentLang === "en" ? "Search..." : "البحث..."}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className={`w-full px-4 py-3 ${themeClasses.glassDark} border border-white/20 rounded-2xl ${themeClasses.text} placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0A2647] transition-all duration-300`}
-                />
-                {searchTerm && (
-                  <button
-                    onClick={() => setSearchTerm("")}
-                    aria-label="Clear search"
-                    className={`absolute right-3 top-1/2 -translate-y-1/2 ${themeClasses.textMuted} hover:${themeClasses.accent} transition-colors duration-300`}
-                  >
-                    <X size={18} />
-                  </button>
-                )}
-              </div>
-            </div>
+          <div className={`${themeClasses.glassDark} rounded-2xl mb-4 p-4 ${themeClasses.shadow} transition-all duration-300 animate-in slide-in-from-top-2`}>
+  <div className="relative">
+    <input
+      type="text"
+      placeholder={
+        currentLang === "fr" ? "Rechercher..." :
+        currentLang === "en" ? "Search..." :
+        "البحث..."
+      }
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      className={`w-full px-4 py-3 ${themeClasses.glassDark} border border-white/20 rounded-2xl ${themeClasses.text} placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0A2647] transition-all duration-300`}
+    />
+    {searchTerm && (
+      <button
+        onClick={() => setSearchTerm("")}
+        aria-label="Clear search"
+        className={`absolute top-1/2 -translate-y-1/2 ${currentLang === "ar" ? "left-3" : "right-3"} ${themeClasses.textMuted} hover:${themeClasses.accent} transition-colors duration-300`}
+      >
+        <X size={18} />
+      </button>
+    )}
+  </div>
+</div>
+
           )}
         </div>
       </header>
