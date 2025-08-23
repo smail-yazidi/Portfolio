@@ -1,267 +1,255 @@
 "use client"
-import Image from "next/image"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Phone, Mail, MapPin, ChevronLeft, Sun, Moon, Loader2 } from "lucide-react"
-import { cvContent } from "@/components/cv-content"
+import { ChevronLeft, Sun, Moon, Loader2, Download ,ChevronDown} from "lucide-react"
 import { useRouter } from "next/navigation"
+import Loading from '@/components/Loading'
 
 export default function CvPage() {
   const router = useRouter()
-  const [language, setLanguage] = useState<"fr" | "en">("fr")
-  const [isDarkMode, setIsDarkMode] = useState(true) // Default to dark mode, consistent with home page
   const [isDownloading, setIsDownloading] = useState(false)
-  const content = cvContent[language]
+  const [cvUrls, setCvUrls] = useState<{ fr?: string; en?: string }>({})
+  const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
+// Initialize with safe defaults
+const [isDarkMode, setIsDarkMode] = useState(true)
+const [language, setLanguage] = useState<"fr" | "en">("fr") // only fr | en
 
-  const handleDownloadPdf = async () => {
-    setIsDownloading(true)
-    const pdfFileName = `smail_yazidi_cv_${language}.pdf`
-    const link = document.createElement("a")
-    link.href = `/${pdfFileName}` // Path to the PDF in the public folder
-    link.download = pdfFileName
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    // Simulate a short delay for download, as actual download might be instant
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsDownloading(false)
-  }
+// Hydrate client-side state after mount
+useEffect(() => {
+  setMounted(true)
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode)
+  const savedDarkMode = sessionStorage.getItem('darkMode')
+  const savedLanguage = sessionStorage.getItem('language')
+
+  setIsDarkMode(savedDarkMode ? JSON.parse(savedDarkMode) : true)
+
+  // Replace "ar" with "fr"; allow only "fr" or "en"
+  if (savedLanguage === "en") {
+    setLanguage("en")
+  } else {
+    setLanguage("fr") // "ar" or anything else becomes "fr"
   }
+}, [])
+
+
+  // Persist preferences
+  useEffect(() => {
+    if (!mounted) return
+    sessionStorage.setItem('DarkMode', JSON.stringify(isDarkMode))
+    document.documentElement.classList.toggle("dark", isDarkMode)
+  }, [isDarkMode, mounted])
 
   useEffect(() => {
-    // Apply dark/light mode class to the root HTML element
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark")
-    }
-  }, [isDarkMode])
+    if (!mounted) return
+    sessionStorage.setItem('Language', language)
+  }, [language, mounted])
 
-  // Theme classes, consistent with app/page.tsx
-  const themeClasses = {
-    bg: isDarkMode ? "bg-[#0a0a0a]" : "bg-white",
-    text: isDarkMode ? "text-white" : "text-gray-900",
-    textSecondary: isDarkMode ? "text-gray-400" : "text-gray-600",
-    textMuted: isDarkMode ? "text-gray-500" : "text-gray-500",
-    cardBg: isDarkMode ? "bg-[#111111]" : "bg-white",
-    cardBorder: isDarkMode ? "border-gray-800" : "border-gray-200",
-    headerBg: isDarkMode ? "bg-[#0a0a0a]/95" : "bg-white/95",
-    headerBorder: isDarkMode ? "border-gray-800" : "border-gray-200",
-    sectionBg: isDarkMode ? "bg-[#111111]" : "bg-gray-50",
-    dropdownBg: isDarkMode ? "bg-gray-800" : "bg-white",
-    dropdownBorder: isDarkMode ? "border-gray-700" : "border-gray-200",
-    accentGold: "rgb(var(--portfolio-gold))",
-    accentGoldHover: "rgb(var(--portfolio-gold-hover))",
-    accentGoldForeground: "rgb(var(--portfolio-gold-foreground))",
-    accentRed: "var(--portfolio-red)", // Using the new CSS variable
-    accentRedForeground: "var(--portfolio-red-foreground)",
+// Fetch CV URLs
+useEffect(() => {
+  const fetchCvUrls = async () => {
+    try {
+      const res = await fetch('/api/cv', {
+        headers: {
+          "x-api-key": process.env.NEXT_PUBLIC_API_SECRET || ""
+        }
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch CV URLs");
+
+      const data = await res.json();
+      setCvUrls(data);
+    } catch (err) {
+      console.error("Failed to fetch CV URLs:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchCvUrls();
+}, []);
+
+  const toggleTheme = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    sessionStorage.setItem('darkMode', JSON.stringify(newMode));
+  };
+
+  const handleDownloadPdf = async () => {
+    if (!cvUrls[language]) return
+    
+    setIsDownloading(true)
+    try {
+      const link = document.createElement("a")
+      link.href = cvUrls[language]!
+      link.download = `loubna_semlali_${language}.pdf`
+      link.target = "_blank"
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    } catch (err) {
+      console.error("Download failed:", err)
+    } finally {
+      setIsDownloading(false)
+    }
   }
 
-  return (
-    <div
-      className={`flex flex-col items-center p-4 min-h-screen ${isDarkMode ? "dark" : ""} ${themeClasses.bg} ${themeClasses.text}`}
-    >
-      <div className="flex flex-row flex-wrap items-center justify-between w-full max-w-4xl gap-4 mb-6 no-print">
+  const getGoogleViewerUrl = (pdfUrl: string) => 
+    `https://docs.google.com/gview?url=${encodeURIComponent(pdfUrl)}&embedded=true`
+
+  // Theme classes
+ const themeClasses = {
+  background: isDarkMode ? 'bg-black' : 'bg-[#f5f5dc]',
+  surface: isDarkMode ? 'bg-black/40' : 'bg-white/40',
+  surfaceSolid: isDarkMode ? 'bg-black' : 'bg-white',
+  text: isDarkMode ? 'text-white' : 'text-gray-900',
+  textMuted: isDarkMode ? 'text-gray-400' : 'text-gray-600',
+accent: isDarkMode ? 'text-[#00BFFF]' : 'text-[#0A2647]',
+accentBg: isDarkMode ? 'bg-[#3A6EA5]' : 'bg-[#0A2647]',
+accentBorder: isDarkMode ? 'border-[#3A6EA5]' : 'border-[#0A2647]',
+
+ glassDark: isDarkMode
+  ? 'bg-black/40 backdrop-blur-lg border border-white/20 shadow-xl' 
+  : 'bg-white/40 backdrop-blur-lg border border-black/20 shadow-xl',
+shadow: 'shadow-xl',
+};
+  const languageOptions = [
+    { code: "fr", label: "Français", flag: "🇫🇷" },
+    { code: "en", label: "English", flag: "🇺🇸" },
+  ]
+  if (loading) {
+    return (
+      <div>
+        <Loading />
+      </div>
+    )
+  }
+
+return (
+  <div className={`flex flex-col h-screen ${themeClasses.background} ${themeClasses.text}`}>
+    
+    {/* Top controls fixed height */}
+    <div className="flex flex-row flex-wrap items-center justify-between w-full max-w-4xl mx-auto gap-4 p-4">
+      {/* Back Button */}
+      <div>
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => router.back()}
-          className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"} flex items-center gap-2`}
+          onClick={() => router.push("/")}
+          className={`
+            ${themeClasses.glassDark} border-white/20 ${themeClasses.text} 
+            hover:${themeClasses.accentBg} rounded-2xl px-8 py-3
+            transition-all duration-300 sm:hover:scale-105 text-lg
+          `}
         >
           <ChevronLeft className="w-5 h-5" />
-          <span className="text-sm font-medium">{language === "fr" ? "Retour" : "Back"}</span>
+          <span className="text-sm font-medium">
+            {mounted && language === "fr" ? "Retour" : "Back"}
+          </span>
         </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={toggleTheme}
-          className={`p-2 ${isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-100"}`}
-        >
-          {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-        </Button>
-        <div className="flex items-center gap-4">
-          <Select value={language} onValueChange={(value: "fr" | "en") => setLanguage(value)}>
-            <SelectTrigger
-              className={`min-w-[135px] w-auto ${isDarkMode ? "bg-gray-800 text-white border-gray-700" : "bg-gray-100 text-gray-900 border-gray-300"}`}
-            >
-              <SelectValue placeholder="Select Language" />
-            </SelectTrigger>
-            <SelectContent className={`${themeClasses.dropdownBg} ${themeClasses.dropdownBorder}`}>
-              <SelectItem value="fr">Français</SelectItem>
-              <SelectItem value="en">English</SelectItem>
-            </SelectContent>
-          </Select>
+      </div>
+
+      {/* Language Selector */}
+      <div className="flex items-center gap-4">
+        <div className="relative language-menu">
           <Button
-            onClick={handleDownloadPdf}
-            className={`${
-              isDarkMode
-                ? "bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-black"
-                : "bg-gray-900 hover:bg-gray-800 text-white"
-            } font-medium px-6 py-2 rounded-full`}
-            disabled={isDownloading}
+            variant="outline"
+            onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+            className={`
+              ${themeClasses.glassDark} border-white/20 ${themeClasses.text} 
+              hover:${themeClasses.accent} rounded-2xl transition-all duration-300 sm:hover:scale-105
+            `}
           >
-            {isDownloading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {language === "fr" ? "Téléchargement..." : "Downloading..."}
-              </>
-            ) : (
-              content.downloadCv
-            )}
+            <span>{language.toUpperCase()}</span>
+            <ChevronDown
+              className={`ml-2 h-4 w-4 transition-transform duration-300 ${
+                isLangMenuOpen ? "rotate-180" : ""
+              }`}
+            />
           </Button>
+
+          {isLangMenuOpen && (
+            <div
+              className={`
+                absolute top-full right-0 mt-2 ${themeClasses.glassDark} 
+                rounded-2xl ${themeClasses.shadow} border border-white/10 
+                min-w-[150px] z-50 transition-all duration-300 animate-in slide-in-from-top-2
+              `}
+            >
+              {languageOptions.map((option) => (
+                <button
+                  key={option.code}
+                  onClick={() =>{  setLanguage(option.code as "fr" | "en");setIsLangMenuOpen(!isLangMenuOpen)}}
+                  className="w-full px-4 py-3 text-left rounded-2xl transition-all duration-300 flex items-center space-x-3"
+                >
+                  <span className="text-lg">{option.flag}</span>
+                  <span>{option.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
-      {/* Responsive container for screen, A4 dimensions applied only for print via CSS */}
-      <div
-        className={`cv-a4-page ${themeClasses.cardBg} shadow-lg rounded-lg overflow-hidden w-full max-w-4xl flex flex-col ${themeClasses.text} md:max-w-[794px]`}
-      >
-        {/* Header Section */}
-        <div className="bg-gray-900 text-white p-8 flex items-center justify-between">
-          <div className="flex items-center">
-            <div className="relative w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 border-white mr-4 sm:mr-6">
-              <Image src="/images/profile.jpg" alt={content.name} width={96} height={96} className="object-cover" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold uppercase">{content.name}</h1>
-              <p className="text-xl mt-1">{content.title}</p>
-            </div>
-          </div>
-        </div>
-        {/* Main Content Area */}
-        <div className="flex flex-grow flex-col md:flex-row">
-          {/* Left Column (Sidebar) */}
-          <div
-            className={`w-full md:w-1/2 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"} p-4 md:p-8 border-r ${themeClasses.cardBorder}`}
-          >
-            <div className="mb-8">
-              <h2
-                className={`text-lg font-semibold ${themeClasses.textSecondary} mb-3 uppercase border-b pb-2 ${themeClasses.cardBorder}`}
-              >
-                {content.headings.contact}
-              </h2>
-              <div className="flex flex-col">
-                <div className="flex items-center flex-wrap mb-2">
-                  <Phone className={`w-4 h-4 mr-2 ${themeClasses.textMuted} shrink-0`} />
-                  <span className="flex-1 min-w-0">{content.contact.phone}</span>
-                </div>
-                <div className="flex items-center flex-wrap mb-2">
-                  <Mail className={`w-4 h-4 mr-2 ${themeClasses.textMuted} shrink-0`} />
-                  <span className="flex-1 min-w-0">{content.contact.email}</span>
-                </div>
-                <div className="flex items-start flex-wrap mb-2">
-                  <MapPin className={`w-4 h-4 mr-2 mt-1 ${themeClasses.textMuted} shrink-0`} />
-                  <span className="flex-1 min-w-0">{content.contact.location}</span>
-                </div>
-              </div>
-            </div>
-            <div className="mb-8">
-              <h2
-                className={`text-lg font-semibold ${themeClasses.textSecondary} mb-3 uppercase border-b pb-2 ${themeClasses.cardBorder}`}
-              >
-                {content.headings.languages}
-              </h2>
-              <ul className="list-disc list-inside space-y-1">
-                {Object.entries(content.languages).map(([lang, proficiency]) => (
-                  <li key={lang}>
-                    {lang}: {proficiency}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            {/* Skills */}
-            <div className="mb-6 text-sm leading-tight">
-              <h2
-                className={`text-lg font-semibold ${themeClasses.textSecondary} mb-2 uppercase border-b pb-1 ${themeClasses.cardBorder}`}
-              >
-                {content.headings.skills}
-              </h2>
-              <h3 className="font-semibold  mb-0.5">{content.headings.programmingLanguages}</h3>
-              <ul className="list-disc list-inside space-y-0.5 mb-2">
-                {content.skills.programmingLanguages.map((skill) => (
-                  <li key={skill}>{skill}</li>
-                ))}
-              </ul>
-              <h3 className="font-semibold mb-0.5">{content.headings.frameworks}</h3>
-              <ul className="list-disc list-inside space-y-0.5 mb-2">
-                {content.skills.frameworks.map((skill) => (
-                  <li key={skill}>{skill}</li>
-                ))}
-              </ul>
-              <h3 className="font-semibold  mb-0.5">{content.headings.databases}</h3>
-              <ul className="list-disc list-inside space-y-0.5 mb-2">
-                {content.skills.databases.map((skill) => (
-                  <li key={skill}>{skill}</li>
-                ))}
-              </ul>
-              <h3 className="font-semibold  mb-0.5">{content.headings.otherTechnicalSkills}</h3>
-              <ul className="list-disc list-inside space-y-0.5 mb-2">
-                {content.skills.other.map((skill) => (
-                  <li key={skill}>{skill}</li>
-                ))}
-              </ul>
-              <h3 className="font-semibold  mb-0.5">{content.headings.softSkills}</h3>
-              <ul className="list-disc list-inside space-y-0.5">
-                {content.skills.softSkills.map((skill) => (
-                  <li key={skill}>{skill}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          {/* Right Column (Main Content) */}
-          <div
-            className={`w-full md:w-2/3 p-4 md:p-8 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}  ${themeClasses.cardBg}`}
-          >
-            <div className="mb-8">
-              <h2
-                className={`text-lg font-semibold ${themeClasses.textSecondary} mb-3 uppercase border-b pb-2 ${themeClasses.cardBorder}`}
-              >
-                {content.headings.aboutMe}
-              </h2>
-              <p className={`text-sm leading-relaxed ${themeClasses.textSecondary}`}>{content.aboutMe}</p>
-            </div>
-            <div className="mb-8">
-              <h2
-                className={`text-lg font-semibold ${themeClasses.textSecondary} mb-3 uppercase border-b pb-2 ${themeClasses.cardBorder}`}
-              >
-                {content.headings.education}
-              </h2>
-              {content.education.map((edu, index) => (
-                <div
-                  key={index}
-                  className={`mb-4 pb-4 border-b ${themeClasses.cardBorder} ${index === content.education.length - 1 ? "last:border-b-0" : ""}`}
-                >
-                  <h3 className={`font-semibold text-base ${themeClasses.text}`}>{edu.title}</h3>
-                  <p className={`text-sm ${themeClasses.textSecondary}`}>{edu.institution}</p>
-                  <p className={`text-sm ${themeClasses.textSecondary}`}>{edu.date}</p>
-                  <p className={`text-sm ${themeClasses.textMuted} mt-1`}>{edu.description}</p>
-                </div>
-              ))}
-            </div>
-            <div className="mb-8">
-              <h2
-                className={`text-lg font-semibold ${themeClasses.textSecondary} mb-3 uppercase border-b pb-2 ${themeClasses.cardBorder}`}
-              >
-                {content.headings.experience}
-              </h2>
-              {content.experience.map((exp, index) => (
-                <div
-                  key={index}
-                  className={`mb-4 pb-4 border-b ${themeClasses.cardBorder} ${index === content.experience.length - 1 ? "last:border-b-0" : ""}`}
-                >
-                  <h3 className={`font-semibold text-base ${themeClasses.text}`}>{exp.title}</h3>
-                  <p className={`text-sm ${themeClasses.textSecondary}`}>{exp.company}</p>
-                  <p className={`text-sm ${themeClasses.textSecondary}`}>{exp.date}</p>
-                  <p className={`text-sm ${themeClasses.textMuted} mt-1`}>{exp.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+
+      {/* Download & Theme Buttons */}
+      <div className="flex items-center gap-2">
+        <Button
+          onClick={handleDownloadPdf}
+          className={`
+            ${themeClasses.accentBg} hover:bg-[#0A2647]/90 text-white 
+            rounded-2xl px-8 py-3 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105 text-lg
+          `}
+          disabled={isDownloading || !cvUrls[language]}
+        >
+          {isDownloading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {language === "fr" ? "Téléchargement..." : "Downloading..."}
+            </>
+          ) : (
+            <>
+              <Download className="mr-2 h-4 w-4" />
+              {language === "fr" ? "Télécharger" : "Download"}
+            </>
+          )}
+        </Button>
+
+        <Button
+          variant="outline"
+          onClick={toggleTheme}
+          className={`
+            ${themeClasses.glassDark} border-white/20 ${themeClasses.text} 
+            rounded-xl sm:rounded-2xl px-2 py-1 sm:px-3 sm:py-2
+          `}
+        >
+          {isDarkMode ? <Sun className="h-4 w-4 sm:h-5 sm:w-5" /> : <Moon className="h-4 w-4 sm:h-5 sm:w-5" />}
+        </Button>
       </div>
     </div>
-  )
+
+    {/* PDF Viewer: fill remaining space */}
+    <section
+      className={`
+        flex-1
+        ${themeClasses.background}  
+        w-full max-w-4xl md:max-w-[794px] mx-auto my-2 rounded-2xl
+      `}
+    >
+      {cvUrls[language] ? (
+        <iframe
+          src={getGoogleViewerUrl(cvUrls[language])}
+          className="w-full h-full"
+          title={`CV PDF (${language})`}
+          allowFullScreen
+        />
+      ) : (
+        <div className="flex items-center justify-center w-full h-full text-center text-gray-400">
+          {language === "fr" ? "CV non disponible" : "CV not available"}
+        </div>
+      )}
+    </section>
+  </div>
+);
+
 }

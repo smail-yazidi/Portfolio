@@ -12,6 +12,9 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+		 fontFamily: {
+        cairo: ['Cairo', 'system-ui', 'Segoe UI', 'Roboto', 'Arial', 'sans-serif'],
+      },
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

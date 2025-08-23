@@ -1,14 +1,15 @@
 "use client"
-import Head from 'next/head';
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
+
+import { useRouter } from "next/navigation";
+
+import Loading from "@/components/LoadingAdmin";
 import {
-  Mail,
-  Phone,
-  MapPin,
+  Send,
   Star,
   Menu,
   X,
@@ -19,19 +20,12 @@ import {
   Heart,
   Sun,
   Moon,
-  Globe,
   ChevronDown,
-  Code,
-  Database,
-  LayoutGrid,
-  Users,
-  MapPinIcon,
-  Github,
   Link,
   Search,
 } from "lucide-react"
+import * as LucideIcons from "lucide-react";
 
-// Translation data for Smail Yazidi
 const translations = {
   fr: {
     // Header
@@ -43,135 +37,24 @@ const translations = {
     about: "À Propos",
     contact: "Contact",
     hireMe: "Me Contacter",
-     
-
-    // Hero
-    specialist: "Développeur Web Full Stack",
-    heroTitle: "Transformez vos idées en applications web puissantes",
-    heroDescription:
-      "Je suis une personne dynamique et ambitieuse, spécialisée dans le développement web et les applications web. Diplômé en développement web full-stack et formé au Centre Azrou pour le Développement Communautaire, je souhaite mettre mes compétences à profit et intégrer une équipe motivée.",
     viewJourney: "Voir Mon CV",
 
     // Services
     servicesTitle: "Services",
-    service1Title: "Développement Web",
-    service1Desc: "Conception et développement d'applications web robustes et évolutives, du front-end au back-end.",
-    service2Title: "Applications Mobiles",
-    service2Desc:
-      "Création d'applications mobiles performantes et intuitives pour iOS et Android, avec des expériences utilisateur fluides.",
-    service3Title: "Gestion de Projets Web",
-    service3Desc:
-      "Organisation et direction de projets web, assurant une livraison efficace et la satisfaction du client.",
 
     // Experience & Education Timeline
     journeyTitle: "Parcours Professionnel & Éducatif",
-    internshipIT: "Stage en Informatique",
-    alAkhawaynUniversity: "Al Akhawayn University",
-    ifrane: "Ifrane",
-    internshipITDesc: "Stage pratique en informatique et développement web.",
-    itWebDev: "Informatique et Développement Web",
-    centreAzrou: "Centre Azrou pour le développement communautaire",
-    itWebDevDesc: "Formation en Informatique et Développement Web.",
-    internshipWebDev: "Stage en Développement Web",
-    communeSidiMokhfi: "Commune de Sidi Mokhfi",
-    sidiMokhfi: "Sidi Mokhfi",
-    internshipWebDevDesc: "Application des compétences en développement web et contribution à une équipe dynamique.",
-    diplomaFullStack: "Diplôme en Développement Digital Web Full Stack",
-    istaIfrane: "Institut Spécialisé de Technologie Appliquée Ifrane (OFPPT)",
-    diplomaFullStackDesc: "Formation complète en développement web full stack.",
-    baccalaureate: "Baccalauréat en Sciences de la Vie et de la Terre",
-    lyceeSidiElMakhfi: "Lycée Qualifiant Sidi El Makhfi",
-    baccalaureateDesc: "Diplôme de fin d'études secondaires.",
 
     // Skills
     skillsTitle: "Mes Compétences",
-    programmingLanguages: "Langages de Programmation",
-    backendLanguage: "Langage Backend",
-    scriptingLanguage: "Langage de Scripting",
-    backendRuntime: "Environnement d'exécution Backend",
-    frameworksLibraries: "Frameworks et Bibliothèques",
-    phpFramework: "Framework PHP",
-    frontendFramework: "Framework Frontend",
-    cssFramework: "Framework CSS",
-    databases: "Bases de Données",
-    relationalDatabase: "Base de Données Relationnelle",
-    nosqlDatabase: "Base de Données NoSQL",
-    otherTechnicalSkills: "Autres Compétences Techniques",
-    technicalAnalysis: "Analyse Technique",
-    understandingSystemsNeeds: "Compréhension des systèmes et des besoins",
-    webAppDevelopment: "Développement d'Applications Web",
-    buildingFunctionalWebApps: "Construction d'applications web fonctionnelles",
-    webProjectManagement: "Gestion de Projets Web",
-    organizingLeadingWebProjects: "Organisation et direction de projets web",
-    versionControlGit: "Contrôle de Version : Git",
-    managingCodeVersions: "Gestion des versions de code",
-    softSkills: "Compétences Non Techniques",
-    teamwork: "Travail d'Équipe",
-    workingWellWithOthers: "Bien travailler avec les autres",
-    effectiveCommunication: "Communication Efficace",
-    sharingIdeasClearly: "Partager des idées clairement",
-    problemSolving: "Résolution de Problèmes",
-    findingSmartSolutions: "Trouver des solutions intelligentes",
-    timeManagement: "Gestion du Temps",
-    usingTimeWisely: "Utiliser le temps judicieusement",
-    adaptability: "Adaptabilité",
-    adjustingToChange: "S'adapter au changement",
-    criticalThinking: "Pensée Critique",
-    analyzingReasoning: "Analyser et raisonner",
-    creativity: "Créativité",
-    thinkingOutsideTheBox: "Penser différemment",
-    initiative: "Initiative",
-    takingActionIndependently: "Agir de manière indépendante",
 
     // Projects
     myProjects: "Mes Projets",
-    animovTitle: "Animov",
-    animovDesc:
-      "AniMov est une plateforme pour suivre, noter et discuter de films, séries, livres, mangas et animes — créez des listes de visionnage, de lecture, de favoris et partagez vos pensées avec vos amis.",
-    tableManagementTitle: "Système de Gestion de Table",
-    tableManagementDesc:
-      "Un système d'affichage numérique en temps réel développé pour le département CLE de l'Université Al Akhawayn. Il aide les étudiants à identifier rapidement leurs tuteurs et tables assignés grâce à une interface intuitive et photo-supportée.",
-    github: "GitHub",
-    live: "Live",
-        weatherAppTitle: "Weather Forecast App",
-    weatherAppDesc: "A comprehensive weather application providing real-time forecasts, 14-day outlooks, and hourly predictions with multi-language support and dark/light mode.",
-  
- sNoteTitle: "Application S-Note",
-  sNoteDesc: "Une application sécurisée et intuitive pour stocker et gérer vos notes et mots de passe.",
 
- // (You fill in the details)
     // About
     aboutTitle: "À Propos de Moi",
-    aboutDescription:
-      "Jeune professionnel passionné par le développement web, je développe mes compétences avec une approche moderne et innovante, cherchant à contribuer à des projets stimulants.",
-    age: "Âge",
-    location: "Localisation",
-    status: "Statut",
-    nationality: "Nationalité",
-    years: "21 ans",
-    locationValue: "IFRANE, MOROC",
-    single: "Célibataire",
-    moroccan: "Marocaine",
-    languages: "Langues",
-    interests: "Centres d'Intérêt",
-    sport: "🏃 Sport",
-    travel: "✈️ Voyage",
-    coding: "💻 Codage",
-    // Remove: reading: "📚 Lecture",
-
-    // Language levels
-    native: "Bien",
-    good: "Bon",
-    average: "Intermédiaire",
-
-    // Contact
-    contactTitle: "Travaillons Ensemble",
-    contactDescription:
-      "Prêt à donner vie à votre projet ? Contactez-moi pour discuter de vos besoins et découvrir comment nous pouvons collaborer.",
-    email: "Email",
-    phone: "Téléphone",
-    startProject: "Commencer un Projet",
-
+    interests:"Centres d'Intérêt",
+    
     // Footer
     rightsReserved: "Tous droits réservés",
   },
@@ -185,146 +68,180 @@ const translations = {
     about: "About",
     contact: "Contact",
     hireMe: "Hire Me",
-
-    // Hero
-    specialist: "Full Stack Web Developer",
-    heroTitle: "Transform your ideas into powerful web applications",
-    heroDescription:
-      "I am a dynamic and ambitious web developer with skills in building web applications. I hold a diploma in full-stack web development and received additional training from the Azrou Center for Community Development. I am seeking opportunities to apply my skills and contribute to a motivated and collaborative team.",
+    interests:"Interests",
     viewJourney: "View My CV",
 
     // Services
     servicesTitle: "Services",
-    service1Title: "Web Development",
-    service1Desc: "Design and development of robust and scalable web applications, from front-end to back-end.",
-    service2Title: "Mobile Applications",
-    service2Desc:
-      "Creation of high-performance and intuitive mobile applications for iOS and Android, with fluid user experiences.",
-    service3Title: "Web Project Management",
-    service3Desc: "Organization and leadership of web projects, ensuring efficient delivery and client satisfaction.",
-
+  
     // Experience & Education Timeline
     journeyTitle: "Work Experience & Education Timeline",
-    internshipIT: "Web Development Internship",
-    alAkhawaynUniversity: "Al Akhawayn University",
-    ifrane: "Ifrane",
-    internshipITDesc: "Practical internship in web development.",
-    itWebDev: "Web Development",
-    centreAzrou: "Centre Azrou for Community Development",
-    itWebDevDesc: "Training in Web Development.",
-    internshipWebDev: "Web Development Internship",
-    communeSidiMokhfi: "Commune de Sidi Mokhfi",
-    sidiMokhfi: "Sidi Mokhfi",
-    internshipWebDevDesc: "Application of web development skills and contribution to a dynamic team.",
-    diplomaFullStack: "Full Stack Digital Web Development Diploma",
-    istaIfrane: "Specialized Institute of Applied Technology Ifrane (OFPPT)",
-    diplomaFullStackDesc: "Comprehensive training in full stack web development.",
-    baccalaureate: "Baccalaureate in Life and Earth Sciences",
-    lyceeSidiElMakhfi: "Qualifying High School Sidi El Makhfi",
-    baccalaureateDesc: "High school diploma.",
-
+ 
     // Skills
     skillsTitle: "My Skills",
-    programmingLanguages: "Programming Languages",
-    backendLanguage: "Backend Language",
-    scriptingLanguage: "Scripting Language",
-    backendRuntime: "Backend Runtime",
-    frameworksLibraries: "Frameworks and Libraries",
-    phpFramework: "PHP Framework",
-    frontendFramework: "Frontend Framework",
-    cssFramework: "CSS Framework",
-    databases: "Databases",
-    relationalDatabase: "Relational Database",
-    nosqlDatabase: "NoSQL Database",
-    otherTechnicalSkills: "Other Technical Skills",
-    technicalAnalysis: "Technical Analysis",
-    understandingSystemsNeeds: "Understanding systems and needs",
-    webAppDevelopment: "Web Application Development",
-    buildingFunctionalWebApps: "Building functional web apps",
-    webProjectManagement: "Web Project Management",
-    organizingLeadingWebProjects: "Organizing and leading web projects",
-    versionControlGit: "Version Control: Git",
-    managingCodeVersions: "Managing code versions",
-    softSkills: "Soft Skills",
-    teamwork: "Teamwork",
-    workingWellWithOthers: "Working well with others",
-    effectiveCommunication: "Effective Communication",
-    sharingIdeasClearly: "Sharing ideas clearly",
-    problemSolving: "Problem Solving",
-    findingSmartSolutions: "Finding smart solutions",
-    timeManagement: "Time Management",
-    usingTimeWisely: "Using Time wisely",
-    adaptability: "Adaptability",
-    adjustingToChange: "Adjusting to change",
-    criticalThinking: "Critical Thinking",
-    analyzingReasoning: "Analyzing and reasoning",
-    creativity: "Creativity",
-    thinkingOutsideTheBox: "Thinking outside the box",
-    initiative: "Initiative",
-    takingActionIndependently: "Taking action independently",
 
     // Projects
     myProjects: "My Projects",
-    animovTitle: "Animov",
-    animovDesc:
-      "AniMov a platform to track, rate, and discuss movies, series, books, manga, and anime — create watchlists, read lists, favorites, and share your thoughts with friends.",
-    tableManagementTitle: "Table Management System",
-    tableManagementDesc:
-      "A real-time digital display system developed for the CLE department at Akhawayn University. It helps students quickly identify their assigned tutors and tables using an intuitive, photo-supported interface.",
    
-    sNoteTitle: "S-Note App",
-sNoteDesc: "An application for securely storing and managing notes and passwords, offering features like...", 
- github: "GitHub",
-    live: "Live",
-      weatherAppTitle: "Application Météo",
-    weatherAppDesc: "Une application météo complète fournissant des prévisions en temps réel, des prévisions sur 14 jours et des prédictions horaires avec support multilingue et mode sombre/clair.",
-    // About
     aboutTitle: "About Me",
-    aboutDescription:
-      "Young professional passionate about web development, I develop my skills with a modern and innovative approach, seeking to contribute to challenging projects.",
-    age: "Age",
-    location: "Location",
-    status: "Status",
-    nationality: "Nationality",
-    years: "21 years",
-    locationValue: "IFRANE, MOROCCO",
-    single: "Single",
-    moroccan: "Moroccan",
-    languages: "Languages",
-    interests: "Interests",
-    sport: "🏃 Sports",
-    travel: "✈️ Travel",
-    coding: "💻 Coding",
-    // Remove: reading: "📚 Reading",
-
-    // Language levels
-    native: "Good",
-    good: "Good",
-    average: "Medium",
-
-    // Contact
-    contactTitle: "Let's Work Together",
-    contactDescription:
-      "Ready to bring your project to life? Contact me to discuss your needs and discover how we can collaborate.",
-    email: "Email",
-    phone: "Phone",
-    startProject: "Start a Project",
-
     // Footer
     rightsReserved: "All rights reserved",
   },
+  ar: {
+    // Header
+    home: "الرئيسية",
+    services: "الخدمات",
+    experience: "المسيرة المهنية",
+    skills: "المهارات",
+    projects: "المشاريع",
+    about: "عنّي",
+    contact: "التواصل",
+    hireMe: "وظفني",
+    interests: "الاهتمامات",
+    viewJourney: "عرض سيرتي الذاتية",
+
+    // Services
+    servicesTitle: "الخدمات",
+
+    // Experience & Education Timeline
+    journeyTitle: "المسيرة المهنية والتعليمية",
+
+    // Skills
+    skillsTitle: "مهاراتي",
+
+    // Projects
+    myProjects: "مشاريعي",
+
+    aboutTitle: "نبذة عني",
+    // Footer
+    rightsReserved: "جميع الحقوق محفوظة",
+  }
 }
+const baseMockData = {
+  username: { fr: "Jean Dupont", en: "John Doe", ar: "جون دو" },
+  hero: { /* ... initial local hero data ... */ },
+  services: { servicesList: [] },
+  education: { education: [], experience: [] },
+  skills: { skills: [] },
+  projects: { projects: [] },
+  about: { aboutDescription: {}, personalInfo: [], languages: {}, interests: [] },
+  contact: { contactTitle: {}, contactDescription: {}, contactInfo: [], contactButton: {} },
+  photoUrl: ""
+};
+
 
 export default function Portfolio() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
-  const [isDarkMode, setIsDarkMode] = useState(true)
-  const [currentLang, setCurrentLang] = useState<"en" | "fr">("en")
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
+
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+const [mockData, setMockData] = useState(baseMockData);
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
+  const [isMessageSent, setIsMessageSent] = useState(false);
+  const [isLimitReached, setIsLimitReached] = useState(false);
+  const router = useRouter();
+ const [loading, setLoading] = useState(true);
+
+const [searchTerm, setSearchTerm] = useState("");
+const [searchResults, setSearchResults] = useState<any[]>([]);
+
+
+
+  // check daily limit on mount
+  useEffect(() => {
+    const today = new Date().toDateString();
+    const storedData = JSON.parse(localStorage.getItem("messageLimit")) || {};
+    if (storedData.date === today && storedData.count >= 8) {
+      setIsLimitReached(true);
+    }
+  }, []);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // --- email check ---
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+
+    // --- daily limit check ---
+    const today = new Date().toDateString();
+    const storedData = JSON.parse(localStorage.getItem("messageLimit")) || {};
+    let { date, count } = storedData;
+
+    if (date !== today) {
+      date = today;
+      count = 0;
+    }
+
+    if (count >= 8) {
+      setIsLimitReached(true);
+      alert("You can only send 8 messages per day. hhhhhhhhhhhhhhhhhhhh");
+      return;
+    }
+
+    setIsSendingMessage(true);
+    setIsMessageSent(false);
+
+    try {
+      const response = await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        // update localStorage
+        localStorage.setItem(
+          "messageLimit",
+          JSON.stringify({ date: today, count: count + 1 })
+        );
+
+        if (count + 1 >= 8) {
+          setIsLimitReached(true);
+        }
+
+        setIsMessageSent(true);
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        alert("Failed to send message.");
+      }
+    } catch (err) {
+      console.error(err);
+   
+    } finally {
+      setIsSendingMessage(false);
+    }
+  };
+
+   const [currentLang, setCurrentLang] = useState<"fr" | "en" | "ar">(() => {
+      if (typeof window !== 'undefined') {
+        const saved = sessionStorage.getItem('language');
+        return saved !== null ? saved as "fr" | "en" | "ar" : "fr";
+      }
+      return "fr";
+    });
 
   const t = translations[currentLang]
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+      if (typeof window !== 'undefined') {
+        const saved = sessionStorage.getItem('darkMode');
+        return saved !== null ? JSON.parse(saved) : false;
+      }
+      return false;
+    });
+  
+  
+  
+
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
@@ -333,25 +250,143 @@ export default function Portfolio() {
     }
     setIsMenuOpen(false)
   }
-
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode)
-  }
-
-  const changeLanguage = (lang: "fr" | "en") => {
-    setCurrentLang(lang)
-    setIsLangMenuOpen(false)
-  }
+  useEffect(() => {
+    sessionStorage.setItem('darkMode', JSON.stringify(isDarkMode));
+  }, [isDarkMode]);
 
   useEffect(() => {
-    document.documentElement.lang = currentLang
-    document.documentElement.dir = currentLang === "fr" ? "ltr" : "ltr" // Assuming French is LTR, Arabic would be RTL
-  }, [currentLang])
+    sessionStorage.setItem('language', currentLang);
+    document.documentElement.lang = currentLang;
+    // Set RTL direction for Arabic
+    document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+  }, [currentLang]);
+
+  // Modify your theme toggle function to persist the setting
+  const toggleTheme = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    sessionStorage.setItem('darkMode', JSON.stringify(newMode));
+  };
+ 
+ // Modify your language change function to persist the setting
+  const changeLanguage = (lang: "fr" | "en" | "ar") => {
+    setCurrentLang(lang);
+    setIsLangMenuOpen(false);
+    sessionStorage.setItem('language', lang);
+  };
+
+
+useEffect(() => {
+  if (!searchTerm) {
+    setSearchResults([]);
+
+    return;
+  }
+
+  const term = searchTerm.toLowerCase();
+  const results: any[] = [];
+
+  // Search in projects
+  mockData.projects.projects.forEach(project => {
+    if (
+      project.title?.[currentLang]?.toLowerCase().includes(term) ||
+      project.description?.[currentLang]?.toLowerCase().includes(term)
+    ) {
+      results.push({ type: "Project", item: project });
+    }
+  });
+
+  // Search in skills
+  mockData.skills.skills.forEach(category => {
+    category.items.forEach(skill => {
+      if (
+        skill.name?.[currentLang]?.toLowerCase().includes(term) ||
+        skill.examples?.some(ex => ex?.[currentLang]?.toLowerCase().includes(term))
+      ) {
+        results.push({ type: "Skill", item: skill });
+      }
+    });
+  });
+
+  // Search in experience / education
+  [...mockData.education.education, ...mockData.education.experience].forEach(event => {
+    if (
+      event.title?.[currentLang]?.toLowerCase().includes(term) ||
+      event.institution?.[currentLang]?.toLowerCase().includes(term) ||
+      event.description?.[currentLang]?.toLowerCase().includes(term)
+    ) {
+      results.push({ type: "Experience", item: event });
+    }
+  });
+
+  // Search in About Me description
+  if (
+    mockData.about.aboutDescription?.[currentLang]?.toLowerCase().includes(term)
+  ) {
+    results.push({ type: "About", item: { description: mockData.about.aboutDescription } });
+  }
+
+  // Search in personal info
+  mockData.about.personalInfo.forEach(info => {
+    if (
+      info.label?.[currentLang]?.toLowerCase().includes(term) ||
+      info.value?.[currentLang]?.toLowerCase().includes(term)
+    ) {
+      results.push({ type: "PersonalInfo", item: info });
+    }
+  });
+
+  // Search in languages
+  mockData.about.languages.list.forEach(lang => {
+    if (
+      lang.name?.[currentLang]?.toLowerCase().includes(term) ||
+      (lang.level && lang.level.toLowerCase().includes(term))
+    ) {
+      results.push({ type: "Language", item: lang });
+    }
+  });
+
+  // Search in interests
+  mockData.about.interests.forEach(interest => {
+    if (
+      interest.name?.[currentLang]?.toLowerCase().includes(term)
+    ) {
+      results.push({ type: "Interest", item: interest });
+    }
+  });
+
+  // Search in Contact
+  const contact = mockData.contact;
+  if (
+    contact.contactTitle?.[currentLang]?.toLowerCase().includes(term) ||
+    contact.contactDescription?.[currentLang]?.toLowerCase().includes(term) ||
+    contact.contactInfo?.some(info => info.label?.[currentLang]?.toLowerCase().includes(term) || info.value?.toLowerCase().includes(term))
+  ) {
+    results.push({ type: "Contact", item: contact });
+  }
+
+  // Search in Services
+  mockData.services.servicesList.forEach(service => {
+    if (
+      service.title?.[currentLang]?.toLowerCase().includes(term) ||
+      service.description?.[currentLang]?.toLowerCase().includes(term)
+    ) {
+      results.push({ type: "Service", item: service });
+    }
+  });
+
+  setSearchResults(results);
+}, [searchTerm, currentLang]);
+
+
+
+
+
 
   useEffect(() => {
     const handleScroll = () => {
       const sections = ["home", "services", "experience", "skills", "projects", "about", "contact"]
-      const scrollPosition = window.scrollY + 100
+      const scrollPosition = window.scrollY + 110
 
       for (const section of sections) {
         const element = document.getElementById(section)
@@ -371,7 +406,95 @@ export default function Portfolio() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Close language menu when clicking outside
+
+
+
+ useEffect(() => {
+  const fetchAllData = async () => {
+    try {
+      const endpoints = {
+        photo: "/api/photo",
+        hero: "/api/hero",
+        username: "/api/username",
+        about: "/api/about_me",
+        contact: "/api/contact",
+        services: "/api/services",
+        education: "/api/education",
+        skills: "/api/skills",
+        projects: "/api/projets"
+      };
+
+      // Fetch all endpoints in parallel
+      const results = await Promise.all(
+        Object.entries(endpoints).map(async ([key, url]) => {
+          try {
+            const res = await fetch(url, {
+              headers: {
+                "x-api-key": process.env.NEXT_PUBLIC_API_SECRET || ""
+              }
+            });
+
+            if (!res.ok) throw new Error(`${url} failed`);
+            const data = await res.json();
+            return { key, data };
+          } catch (err) {
+            console.error(`Error fetching ${key}:`, err);
+            return { key, data: null }; // fallback
+          }
+        })
+      );
+
+      // Build new mockData from base + API
+      let updatedData = { ...baseMockData };
+
+      results.forEach(({ key, data }) => {
+        if (!data) return; // skip failed fetches
+        switch (key) {
+          case "photo":
+            updatedData = { ...updatedData, photoUrl: data.url };
+            break;
+          case "hero":
+            updatedData = { ...updatedData, hero: data };
+            break;
+          case "username":
+            updatedData = { ...updatedData, username: data };
+            break;
+          case "about":
+            updatedData = { ...updatedData, about: data };
+            break;
+          case "contact":
+            updatedData = { ...updatedData, contact: data };
+            break;
+          case "services":
+            updatedData = { ...updatedData, services: data };
+            break;
+          case "education":
+            updatedData = { ...updatedData, education: data };
+            break;
+          case "skills":
+            updatedData = { ...updatedData, skills: data };
+            break;
+          case "projects":
+            updatedData = { ...updatedData, projects: data };
+            break;
+          default:
+            break;
+        }
+      });
+
+      setMockData(updatedData);
+    } catch (err) {
+      console.error("Error fetching all data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchAllData();
+}, []);
+
+
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as HTMLElement
@@ -384,544 +507,287 @@ export default function Portfolio() {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
-  const navItems = [
-    { id: "services", label: t.services },
-    { id: "experience", label: t.experience },
-    { id: "skills", label: t.skills },
-    { id: "projects", label: t.projects },
-    { id: "about", label: t.about },
-    { id: "contact", label: t.contact },
-  ]
-
   const languageOptions = [
     { code: "fr", label: "Français", flag: "🇫🇷" },
     { code: "en", label: "English", flag: "🇺🇸" },
+    { code: "ar", label: "العربية", flag: "🇸🇦" },
   ]
 
-  // Theme classes
-  const themeClasses = {
-    bg: isDarkMode ? "bg-[#0a0a0a]" : "bg-white",
-    text: isDarkMode ? "text-white" : "text-gray-900",
-    textSecondary: isDarkMode ? "text-gray-400" : "text-gray-600",
-    textMuted: isDarkMode ? "text-gray-500" : "text-gray-500",
-    cardBg: isDarkMode ? "bg-[#111111]" : "bg-white",
-    cardBorder: isDarkMode ? "border-gray-800" : "border-gray-200",
-    headerBg: isDarkMode ? "bg-[#0a0a0a]/95" : "bg-white/95",
-    headerBorder: isDarkMode ? "border-gray-800" : "border-gray-200",
-    sectionBg: isDarkMode ? "bg-[#111111]" : "bg-gray-50",
-    dropdownBg: isDarkMode ? "bg-gray-800" : "bg-white",
-    dropdownBorder: isDarkMode ? "border-gray-700" : "border-gray-200",
-    accentGold: "rgb(var(--portfolio-gold))",
-    accentGoldHover: "rgb(var(--portfolio-gold-hover))",
-    accentGoldForeground: "rgb(var(--portfolio-gold-foreground))",
-    accentRed: "var(--portfolio-red)", // Using the new CSS variable
-    accentRedForeground: "var(--portfolio-red-foreground)",
-  }
-  const educationEvents = useMemo(
-    () => [
-      {
-        year: "2024 - 2025",
-        title: t.itWebDev, // Informatique et Développement Web
-        institution: t.centreAzrou, // Centre Azrou pour le développement communautaire
-        location: "",
-        description: t.itWebDevDesc, // Formation en Informatique et Développement Web.
-      },
-      {
-        year: "2022 - 2024",
-        title: t.diplomaFullStack, // Diplôme en Développement Digital Web Full Stack
-        institution: t.istaIfrane, // Institut Spécialisé de Technologie Appliquée Ifrane (OFPPT)
-        location: "",
-        description: t.diplomaFullStackDesc, // Formation complète en développement web full stack.
-      },
-      {
-        year: "2021",
-        title: t.baccalaureate, // Baccalauréat en Sciences de la Vie et de la Terre
-        institution: t.lyceeSidiElMakhfi, // Lycée Qualifiant Sidi El Makhfi
-        location: "",
-        description: t.baccalaureateDesc, // Diplôme de fin d'études secondaires
-      },
+  const navItems = [
+   { id: "skills", label: t.skills },
+    { id: "experience", label: t.experience },
+    { id: "projects", label: t.projects },
+    { id: "about", label: t.about },
+       { id: "services", label: t.services },
+    { id: "contact", label: t.contact },
+  ];
 
-
-    ],
-    [t],
-  )
-
-  const experienceEvents = useMemo(
-    () => [
-
-      {
-        year: "10 juin 2025 au 10 juillet 2025",
-        duration: t.oneMonth, // 1 mois
-        title: t.internshipIT, // Stage en Informatique
-        institution: t.alAkhawaynUniversity, // Al Akhawayn University
-        location: t.ifrane, // Ifrane
-        description: [t.internshipITDesc], // Stage pratique en informatique et développement web.
-      },
-      {
-        year: "11 mars 2024 au 11 avril 2024",
-        duration: t.oneMonth, // 1 mois
-        title: t.internshipWebDev, // Stage en Développement Web
-        institution: t.communeSidiMokhfi, // Commune de Sidi Mokhfi
-        location: t.sidiMokhfi, // Sidi Mokhfi
-        description: [t.internshipWebDevDesc], // Application des compétences en développement web et contribution à une équipe dynamique.
-      },
-    ],
-    [t],
-  )
-  const skillsData = useMemo(
-    () => ({
-      programmingLanguages: [
-        { name: "PHP", desc: t.backendLanguage, icon: Code },
-        { name: "Python", desc: t.scriptingLanguage, icon: Code },
-        { name: "JavaScript", desc: t.scriptingLanguage, icon: Code },
-        { name: "Node.js", desc: t.backendRuntime, icon: Code },
-      ],
-      frameworksLibraries: [
-        { name: "Laravel", desc: t.phpFramework, icon: LayoutGrid },
-        { name: "React.js", desc: t.frontendFramework, icon: LayoutGrid },
-        { name: "Bootstrap", desc: t.cssFramework, icon: LayoutGrid },
-      ],
-      databases: [
-        { name: "MySQL", desc: t.relationalDatabase, icon: Database },
-        { name: "MongoDB", desc: t.nosqlDatabase, icon: Database },
-      ],
-      otherTechnicalSkills: [
-        { name: t.technicalAnalysis, desc: t.understandingSystemsNeeds, icon: Star },
-        { name: t.webAppDevelopment, desc: t.buildingFunctionalWebApps, icon: Star },
-        { name: t.webProjectManagement, desc: t.organizingLeadingWebProjects, icon: Star },
-        { name: t.versionControlGit, desc: t.managingCodeVersions, icon: Star },
-      ],
-      softSkills: [
-        { name: t.teamwork, desc: t.workingWellWithOthers, icon: Users },
-        { name: t.effectiveCommunication, desc: t.sharingIdeasClearly, icon: Users },
-        { name: t.problemSolving, desc: t.findingSmartSolutions, icon: Users },
-        { name: t.timeManagement, desc: t.usingTimeWisely, icon: Users },
-        { name: t.adaptability, desc: t.adjustingToChange, icon: Users },
-        { name: t.criticalThinking, desc: t.analyzingReasoning, icon: Users },
-        { name: t.creativity, desc: t.thinkingOutsideTheBox, icon: Users },
-        { name: "Initiative", desc: t.takingActionIndependently, icon: Users },
-      ],
-    }),
-    [t],
-  )
-
-  const projectsData = useMemo(
-    () => [
-       {
-        title: t.tableManagementTitle,
-        description: t.tableManagementDesc,
-        images: [
-          "/images/table-management/1.png",
-            "/images/table-management/2.png"
-
-        ],
-        tech: ["Next.js", "Node.js", "Atlas MongoDB", "Tailwind"],
-        github: "https://github.com/SmailYazidi/Table-Management-System",
-        live: "https://table-management-system-five.vercel.app",
-      },
-      {
-        title: t.animovTitle,
-        description: t.animovDesc,
-        images: [
-          "/images/animov/1.png",
-          "/images/animov/2.png",
-          "/images/animov/3.png"
-        ],
-        tech: ["Next.js", "Node.js", "MongoDB", "Tailwind"],
-        github: "https://github.com/SmailYazidi/AniMov",
-        live: "https://ani-mov.vercel.app",
-      },
-        {
-      title: t.weatherAppTitle, // Assuming you'll add this to your translation file
-      description: t.weatherAppDesc, // Assuming you'll add this to your translation file
-      images: [
-        "/images/Weather/1.png",
-        "/images/Weather/2.png"
-      ],
-      tech: ["Next.js", "Node.js", "WeatherAPI", "Tailwind"], 
-      github: "https://github.com/SmailYazidi/S-Weather",
-      live: "https://s-weather-sandy.vercel.app",
-    },
-       {
-      title: t.sNoteTitle, // Assuming you'll add this to your translation file
-      description: t.sNoteDesc, // Assuming you'll add this to your translation file
-      images: [
-        "/images/s-note/1.png",
-        "/images/s-note/2.png"
-      ],
-      tech: ["Next.js", "Node.js", "MongoDB", "Tailwind"], 
-      github: "https://github.com/SmailYazidi/S-Note",
-      live: "https://s-note.vercel.app",
-    },  
-    ],
-    [t]
-  );
-
-
-  // AutoRotatingImage component (define this outside your Projects section)
-  const AutoRotatingImage = ({ src, alt, totalImages, index }) => {
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-    useEffect(() => {
-      if (totalImages <= 1) return;
-
-      const interval = setInterval(() => {
-        setCurrentImageIndex(prev => (prev + 1) % totalImages);
-      }, 3000);
-
-      return () => clearInterval(interval);
-    }, [totalImages]);
-
-    return (
-      <Image
-        src={src}
-        alt={alt}
-        width={600}
-        height={350}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${index === currentImageIndex ? 'opacity-100' : 'opacity-0'
-          }`}
-      />
-    );
+  const getIcon = (iconName?: string) => {
+    if (!iconName) return null; 
+    const pascalCase = iconName.charAt(0).toUpperCase() + iconName.slice(1);
+    return LucideIcons[pascalCase] || null; 
   };
-  const filteredServices = useMemo(() => {
-    if (!searchTerm)
-      return [
-        { title: t.service1Title, desc: t.service1Desc },
-        { title: t.service2Title, desc: t.service2Desc },
-        { title: t.service3Title, desc: t.service3Desc },
-      ]
-    const lowerCaseSearchTerm = searchTerm.toLowerCase()
-    return [
-      { title: t.service1Title, desc: t.service1Desc },
-      { title: t.service2Title, desc: t.service2Desc },
-      { title: t.service3Title, desc: t.service3Desc },
-    ].filter(
-      (service) =>
-        service.title.toLowerCase().includes(lowerCaseSearchTerm) ||
-        service.desc.toLowerCase().includes(lowerCaseSearchTerm),
-    )
-  }, [searchTerm, t])
 
+  // Theme classes
+ const themeClasses = {
+  background: isDarkMode ? 'bg-black' : 'bg-[#f5f5dc]',
+  surface: isDarkMode ? 'bg-black/40' : 'bg-white/40',
+  surfaceSolid: isDarkMode ? 'bg-black' : 'bg-white',
+  text: isDarkMode ? 'text-white' : 'text-gray-900',
+  textMuted: isDarkMode ? 'text-gray-400' : 'text-gray-600',
+accent: isDarkMode ? 'text-[#00BFFF]' : 'text-[#0A2647]',
+accentBg: isDarkMode ? 'bg-[#3A6EA5]' : 'bg-[#0A2647]',
+accentBorder: isDarkMode ? 'border-[#3A6EA5]' : 'border-[#0A2647]',
 
-  const filteredEducationEvents = useMemo(() => {
-    if (!searchTerm) return educationEvents
-    const lowerCaseSearchTerm = searchTerm.toLowerCase()
-    return educationEvents.filter(
-      (event) =>
-        event.title.toLowerCase().includes(lowerCaseSearchTerm) ||
-        event.institution.toLowerCase().includes(lowerCaseSearchTerm) ||
-        event.description.toLowerCase().includes(lowerCaseSearchTerm) ||
-        (event.location && event.location.toLowerCase().includes(lowerCaseSearchTerm)) ||
-        event.year.toLowerCase().includes(lowerCaseSearchTerm),
-    )
-  }, [searchTerm, educationEvents])
+ glassDark: isDarkMode
+  ? 'bg-black/40 backdrop-blur-lg border border-white/20 shadow-xl' 
+  : 'bg-white/40 backdrop-blur-lg border border-black/20 shadow-xl',
+shadow: 'shadow-xl',
+};
 
-  const filteredExperienceEvents = useMemo(() => {
-    if (!searchTerm) return experienceEvents
-    const lowerCaseSearchTerm = searchTerm.toLowerCase()
-    return experienceEvents.filter(
-      (event) =>
-        event.title.toLowerCase().includes(lowerCaseSearchTerm) ||
-        event.institution.toLowerCase().includes(lowerCaseSearchTerm) ||
-        (Array.isArray(event.description)
-          ? event.description.some((desc) => desc.toLowerCase().includes(lowerCaseSearchTerm))
-          : event.description.toLowerCase().includes(lowerCaseSearchTerm)) ||
-        (event.location && event.location.toLowerCase().includes(lowerCaseSearchTerm)) ||
-        event.year.toLowerCase().includes(lowerCaseSearchTerm) ||
-        (event.duration && event.duration.toLowerCase().includes(lowerCaseSearchTerm)),
-    )
-  }, [searchTerm, experienceEvents])
-
-  const filteredSkillsData = useMemo(() => {
-    if (!searchTerm) return skillsData
-    const lowerCaseSearchTerm = searchTerm.toLowerCase()
-    const filterCategory = (category: any[]) =>
-      category.filter(
-        (skill) =>
-          skill.name.toLowerCase().includes(lowerCaseSearchTerm) ||
-          skill.desc.toLowerCase().includes(lowerCaseSearchTerm),
-      )
-
-    return {
-      programmingLanguages: filterCategory(skillsData.programmingLanguages),
-      frameworksLibraries: filterCategory(skillsData.frameworksLibraries),
-      databases: filterCategory(skillsData.databases),
-      otherTechnicalSkills: filterCategory(skillsData.otherTechnicalSkills),
-      softSkills: filterCategory(skillsData.softSkills),
-    }
-  }, [searchTerm, skillsData])
-
-  const filteredProjectsData = useMemo(() => {
-    if (!searchTerm) return projectsData
-    const lowerCaseSearchTerm = searchTerm.toLowerCase()
-    return projectsData.filter(
-      (project) =>
-        project.title.toLowerCase().includes(lowerCaseSearchTerm) ||
-        project.description.toLowerCase().includes(lowerCaseSearchTerm) ||
-        project.tech.some((tech) => tech.toLowerCase().includes(lowerCaseSearchTerm)),
-    )
-  }, [searchTerm, projectsData])
-
+  if (loading) return <Loading/>;
   return (
-
-    <div
-      className={`min-h-screen transition-colors duration-300 ${isDarkMode ? "dark" : ""} ${themeClasses.bg} ${themeClasses.text}`}
-    >
+    <div className={`min-h-screen transition-all duration-500 ${themeClasses.background} ${themeClasses.text} ${currentLang === 'ar' ? 'font-arabic' : ''}`} style={{ direction: currentLang === 'ar' ? 'rtl' : 'ltr' }}>
       {/* Header */}
-      <header
-        className={`fixed top-0 left-0 right-0 z-50 ${themeClasses.headerBg} backdrop-blur-md border-b ${themeClasses.headerBorder} shadow-sm`}
-      >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
+      <header className={`fixed top-0 w-full z-50 ${themeClasses.glassDark} ${themeClasses.shadow} transition-all duration-500`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4 ">
             {/* Logo */}
-           <div
-  className="flex items-center space-x-3 cursor-pointer"
-  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
->
- <div
-  className={`w-8 h-8 ${isDarkMode ? "bg-white" : "bg-gray-900"} rounded-full flex items-center justify-center hide-under-300`}
->
-  <span
-    className={`${isDarkMode ? "text-black" : "text-white"} font-bold text-lg`}
-  >
-    S
-  </span>
+            <div className="flex-shrink-0">
+
+<div className={`${themeClasses.glassDark} ${isDarkMode ? 'text-white' : 'text-[#0A2647]'} border border-white/20 min-w-[30px] w-10 h-10  hover:${themeClasses.accent} rounded-full transition-all duration-300 sm:hover:scale-105
+ flex items-center justify-center text-2xl font-bold sm:hidden`}>
+  {/* Show first English letter, uppercased */}
+<span>
+  {
+    (
+      mockData.username[currentLang]
+        .trim() // remove leading/trailing spaces
+        .charAt(0) // first character
+        || 'L' // fallback
+    ).toUpperCase()
+  }
+</span>
+
 </div>
-<span className="text-base sm:text-xl font-medium">Smail Yazidi</span>
+
+  {/* Full username for larger screens */}
+  <div className={`hidden sm:block text-xl font-bold ${   isDarkMode ? 'text-white' : 'text-[#0A2647]'}  `}>
+    <span>{mockData.username[currentLang].toUpperCase()}</span>
+  </div>
 </div>
 
 
-            <>
-              <style jsx>{`
-    .custom-nav-spacing > *:not(:last-child) {
-      margin-right: 20px;
-    }
+            {/* Desktop Navigation */}
+            <nav className="hidden xl:flex space-x-2">
+              {navItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => scrollToSection(item.id)}
+                  className={`px-4 py-2 rounded-2xl transition-all duration-300 sm:hover:scale-105
+ ${
+                    activeSection === item.id
+                      ? `${themeClasses.accentBg} text-white ${themeClasses.shadow}`
+                      : `${themeClasses.text} hover:${themeClasses.accent}`
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
 
-    @media (min-width: 1990px) {
-      .custom-nav-spacing > *:not(:last-child) {
-        margin-right: 48px;
-      }
-    }
-  `}</style>
-
-              {/* Desktop Navigation */}
-           <nav className="hidden lg:flex items-center custom-nav-spacing">
-  {navItems.map((item) => (
-    <button
-      key={item.id}
-      onClick={() => scrollToSection(item.id)}
-      className={`text-sm font-medium transition-colors hover:text-[rgb(var(--portfolio-gold))] ${
-        activeSection === item.id
-          ? "text-[rgb(var(--portfolio-gold))]"
-          : themeClasses.textSecondary
-      }`}
+        {/* Desktop Controls */}
+<div
+  className={`hidden xl:flex items-center ${
+    currentLang === "ar" ? "space-x-reverse space-x-4" : "space-x-4"
+  }`}
+>
+  {/* Language Selector */}
+  <div className="relative language-menu">
+    <Button
+      variant="outline"
+      onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+      className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} hover:${themeClasses.accent} rounded-2xl transition-all duration-300 sm:hover:scale-105`}
     >
-      {item.label}
-    </button>
-  ))}
+      <span>{currentLang.toUpperCase()}</span>
+      <ChevronDown
+        className={`ml-2 h-4 w-4 transition-transform duration-300 ${
+          isLangMenuOpen ? "rotate-180" : ""
+        }`}
+      />
+    </Button>
 
+    {isLangMenuOpen && (
+      <div
+        className={`absolute top-full right-0 mt-2 ${themeClasses.glassDark} rounded-2xl ${themeClasses.shadow} border border-white/10 min-w-[150px] z-50 transition-all duration-300 animate-in slide-in-from-top-2`}
+      >
+        {languageOptions.map((option) => (
+          <button
+            key={option.code}
+            onClick={() => changeLanguage(option.code as "fr" | "en" | "ar")}
+            className={`w-full px-4 py-3 text-left  rounded-2xl transition-all duration-300 flex items-center ${
+              currentLang === "ar" ? "space-x-reverse space-x-3" : "space-x-3"
+            }`}
+          >
+            <span className="text-lg">{option.flag}</span>
+            <span>{option.label}</span>
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
 
-
-
-</nav>
-
-            </>
-
-
-            {/* Desktop Controls */}
-            <div className="hidden lg:flex items-center space-x-3">
-              {/* Language Dropdown */}
-           <div className="relative language-menu">
+  {/* Theme Toggle */}
   <Button
-    variant="ghost"
-    size="sm"
-    onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-    className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))] flex items-center gap-2"
+    variant="outline"
+    onClick={toggleTheme}
+    className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} hover:${themeClasses.accent} rounded-2xl transition-all duration-300 sm:hover:scale-105`}
   >
-  <span className="text-xs font-medium">{currentLang.toUpperCase()}</span>
-<ChevronDown
-    className={`w-3 h-3 mb-1 transition-transform ${isLangMenuOpen ? "rotate-180" : ""}`}
-  />
+    {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
   </Button>
 
-  {isLangMenuOpen && (
-    <div
-      className={`absolute top-full right-0 mt-2 ${themeClasses.dropdownBg} ${themeClasses.dropdownBorder} border rounded-lg shadow-lg py-2 min-w-[140px] z-50`}
+  {/* Search Toggle */}
+  <Button
+    variant="outline"
+ onClick={() => {
+  setIsSearchOpen(!isSearchOpen);
+  setSearchTerm("");
+}}
+
+    className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} hover:${themeClasses.accent} rounded-2xl transition-all duration-300 sm:hover:scale-105`}
+  >
+    {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
+  </Button>
+
+  {/* Hire Me Button */}
+  <Button
+    onClick={() => scrollToSection("contact")}
+    className={`${themeClasses.accentBg} hover:bg-[#0A2647]/90 text-white rounded-2xl px-6 py-2 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105`}
+  >
+    {t.hireMe}
+  </Button>
+</div>
+
+{/* Mobile & Tablet Controls */}
+<div
+  className={`xl:hidden flex items-center ${
+    currentLang === "ar" ? "space-x-reverse space-x-2 sm:space-x-2 md:space-x-3" : "space-x-2 sm:space-x-2 md:space-x-3"
+  }`}
+>
+  {/* Theme Toggle */}
+  <Button
+    variant="outline"
+    onClick={toggleTheme}
+    className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} rounded-xl sm:rounded-2xl px-2 py-1 sm:px-3 sm:py-2`}
+  >
+    {isDarkMode ? <Sun className="h-4 w-4 sm:h-5 sm:w-5" /> : <Moon className="h-4 w-4 sm:h-5 sm:w-5" />}
+  </Button>
+
+  {/* Language Menu */}
+  <div className="relative language-menu">
+    <Button
+      variant="outline"
+      onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+      className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} rounded-xl sm:rounded-2xl px-2 py-1 sm:px-3 sm:py-2`}
     >
-      {languageOptions.map((option) => (
-        <button
-          key={option.code}
-          onClick={() => changeLanguage(option.code as "fr" | "en")}
-          className={`w-full px-4 py-2 text-left text-sm flex items-center gap-3 
-            hover:bg-[rgb(var(--portfolio-gold-hover))] transition-colors
-            ${currentLang === option.code
-              ? "text-[rgb(var(--portfolio-gold))]"
-              : themeClasses.text
-            }`}
-        >
-          <span>{option.flag}</span>
-          <span>{option.label}</span>
-        </button>
-      ))}
-    </div>
-  )}
+      <span className="text-xs sm:text-sm">{currentLang.toUpperCase()}</span>
+      <ChevronDown
+        className={`ml-1 h-3 w-3 sm:h-4 sm:w-4 ${isLangMenuOpen ? 'rotate-180' : ''} transition-transform duration-300`}
+      />
+    </Button>
+
+    {isLangMenuOpen && (
+      <div
+        className={`absolute top-full right-0 mt-1 sm:mt-2 ${themeClasses.glassDark} rounded-xl sm:rounded-2xl ${themeClasses.shadow} border border-white/10 min-w-[100px] sm:min-w-[120px] z-50`}
+      >
+        {languageOptions.map((option) => (
+          <button
+            key={option.code}
+            onClick={() => changeLanguage(option.code as "fr" | "en" | "ar")}
+            className={`w-full px-2 py-1 sm:px-3 sm:py-2 text-left  rounded-xl sm:rounded-2xl transition-all duration-300 flex items-center ${
+              currentLang === "ar" ? "space-x-reverse space-x-1 sm:space-x-2" : "space-x-1 sm:space-x-2"
+            } text-xs sm:text-sm`}
+          >
+            <span>{option.flag}</span>
+            <span>{option.code.toUpperCase()}</span>
+          </button>
+        ))}
+      </div>
+    )}
+  </div>
+
+  {/* Search Button */}
+  <Button
+    variant="outline"
+    onClick={() => {setIsSearchOpen(!isSearchOpen);setIsMenuOpen(false); setSearchTerm("");}}
+    className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} rounded-xl sm:rounded-2xl px-2 py-1 sm:px-3 sm:py-2`}
+  >
+    {isSearchOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Search className="h-4 w-4 sm:h-5 sm:w-5" />}
+  </Button>
+
+  {/* Menu Toggle */}
+  <button
+    onClick={() => {setIsMenuOpen(!isMenuOpen);setIsSearchOpen(false); setSearchTerm("");}}
+    className={`${themeClasses.text} hover:${themeClasses.accent} transition-colors duration-300`}
+  >
+    {isMenuOpen ? <X className="h-6 w-6 sm:h-6 sm:w-6" /> : <Menu className="h-6 w-6 sm:h-6 sm:w-6" />}
+  </button>
 </div>
 
 
-              {/* Theme Toggle */}
-            {/* Theme Toggle */}
-<Button
-  variant="ghost"
-  size="sm"
-  onClick={toggleTheme}
-  className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))]"
->
-  {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-</Button>
-
-{/* Search Toggle */}
-<Button
-  variant="ghost"
-  size="sm"
-  onClick={() => setIsSearchOpen(!isSearchOpen)}
-  className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))]"
->
-  {isSearchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
-</Button>
-
-
-
-              {/* Hire Me */}
-              <Button
-                className={`${isDarkMode
-                  ? "bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-black"
-                  : "bg-gray-900 hover:bg-gray-800 text-white"
-                  } font-medium px-6 py-2 rounded-full`}
-                onClick={() => scrollToSection("contact")}
-              >
-                {t.hireMe}
-              </Button>
-            </div>
-
-            {/* Mobile Controls */}
-            <div className="flex lg:hidden items-center space-x-2"><Button
-  variant="ghost"
-  size="sm"
-  onClick={toggleTheme}
-  className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))]"
->
-  {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-</Button>
-        <div className="relative language-menu">
- <Button
-  variant="ghost"
-  size="sm"
-  onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-  className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))] transition-colors flex items-center gap-1"
->  <span className="text-xs font-medium">{currentLang.toUpperCase()}</span>
-<ChevronDown
-    className={`w-3 h-3 mb-1 transition-transform ${isLangMenuOpen ? "rotate-180" : ""}`}
-  />
-</Button>
-
-
-  {isLangMenuOpen && (
-    <div
-      className={`absolute top-full right-0 mt-2 ${themeClasses.dropdownBg} ${themeClasses.dropdownBorder} border rounded-lg shadow-lg py-2 min-w-[120px] z-50`}
-    >
-      {languageOptions.map((option) => (
-        <button
-          key={option.code}
-          onClick={() => changeLanguage(option.code as "fr" | "en")}
-          className={`w-full px-3 py-2 text-left text-sm flex items-center gap-2 
-            hover:bg-[rgb(var(--portfolio-gold-hover))] transition-colors
-            ${currentLang === option.code
-              ? "text-[rgb(var(--portfolio-gold))]"
-              : themeClasses.text
-            }`}
-        >
-          <span className="text-xs">{option.flag}</span>
-          <span className="text-xs">{option.code.toUpperCase()}</span>
-        </button>
-      ))}
-    </div>
-  )}
-</div>
-
-
-
-
-{/* Search Toggle for Mobile */}
-<Button
-  variant="ghost"
-  size="sm"
-  onClick={() => setIsSearchOpen(!isSearchOpen)}
-  className="p-2 hover:bg-[rgb(var(--portfolio-gold-hover))]"
->
-  {isSearchOpen ? <X className="w-6 h-6" /> : <Search className="w-6 h-6" />}
-</Button>
-
-
-              <button className="p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
           </div>
 
-          {/* Mobile Navigation */}
-          {isMenuOpen && (
-            <div className={`lg:hidden py-6 border-t ${themeClasses.headerBorder}`}>
-              <nav className="flex flex-col space-y-2">
-                {navItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollToSection(item.id)}
-                    className={`text-left px-4 py-2 text-sm font-medium transition-colors hover:text-[rgb(var(--portfolio-gold))] ${activeSection === item.id
-                      ? `text-[rgb(var(--portfolio-gold))] ${isDarkMode ? "bg-gray-800" : "bg-gray-100"
-                      }`
-                      : themeClasses.textSecondary
-                      }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-                <div className="px-4 pt-4">
+{/* Mobile Menu */}
+{isMenuOpen && (
+  <div
+    className={`xl:hidden ${themeClasses.glassDark} rounded-2xl mb-4 p-4 ${themeClasses.shadow} transition-all duration-300 animate-in slide-in-from-top-2`}
+    dir={currentLang === "ar" ? "rtl" : "ltr"} // set direction
+  >
+    <nav className="flex flex-col space-y-2">
+      {navItems.map((item) => (
+        <button
+          key={item.id}
+          onClick={() => scrollToSection(item.id)}
+          className={`px-4 py-3 rounded-2xl transition-all duration-300 ${
+            currentLang === "ar" ? "text-right" : "text-left"
+          } ${
+            activeSection === item.id
+              ? `${themeClasses.accentBg} text-white`
+              : `${themeClasses.text} hover:${themeClasses.accentBg} hover-text:${themeClasses.accentBg}`
+          }`}
+        >
+          {item.label}
+        </button>
+      ))}
+      <div className="pt-2">
+        <Button
+          onClick={() => scrollToSection("contact")}
+          className={`w-full ${themeClasses.accentBg} hover:bg-[#0A2647]/90 text-white rounded-2xl`}
+        >
+          {t.hireMe}
+        </Button>
+      </div>
+    </nav>
+  </div>
+)}
 
-                  <Button
-                    className={`w-full ${isDarkMode
-                      ? "bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-black"
-                      : "bg-gray-900 hover:bg-gray-800 text-white"
-                      } font-medium py-2 rounded-full`}
-                    onClick={() => scrollToSection("contact")}
-                  >
-                    {t.hireMe}
-                  </Button>
-                </div>
-              </nav>
-            </div>
-          )}
 
-          {/* Search Input */}
+          {/* Search Bar */}
           {isSearchOpen && (
-            <div
-              className={`relative z-50 top-full left-0 right-0 py-4 px-4 sm:px-6 lg:px-8 ${themeClasses.headerBg} border-t ${themeClasses.headerBorder} shadow-md`}
-            >
+            <div className={`${themeClasses.glassDark} rounded-2xl mb-4 p-4 ${themeClasses.shadow} transition-all duration-300 animate-in slide-in-from-top-2`}>
               <div className="relative">
                 <input
                   type="text"
-                  placeholder={currentLang === "fr" ? "Rechercher..." : "Search..."}
+                  placeholder={currentLang === "fr" ? "Rechercher..." : currentLang === "en" ? "Search..." : "البحث..."}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className={`w-full p-3 pr-10 rounded-md ${isDarkMode
-                    ? "bg-gray-800 text-white border border-gray-700"
-                    : "bg-gray-100 text-gray-900 border border-gray-300"
-                    } focus:outline-none focus:ring-2 focus:ring-[rgb(var(--portfolio-gold))]`}
+                  className={`w-full px-4 py-3 ${themeClasses.glassDark} border border-white/20 rounded-2xl ${themeClasses.text} placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#0A2647] transition-all duration-300`}
                 />
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm("")}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-white"
                     aria-label="Clear search"
+                    className={`absolute right-3 top-1/2 -translate-y-1/2 ${themeClasses.textMuted} hover:${themeClasses.accent} transition-colors duration-300`}
                   >
                     <X size={18} />
                   </button>
@@ -932,210 +798,285 @@ export default function Portfolio() {
         </div>
       </header>
 
-
       {/* Hero Section */}
-      <section id="home" className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-7xl">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* Left Content */}
-            <div className="space-y-6 sm:space-y-8 text-center lg:text-left">
-              <div className="flex items-center justify-center lg:justify-start gap-3">
-                <Star className="w-5 h-5 text-[rgb(var(--portfolio-gold))] fill-current" />
-                <span className={`${themeClasses.textSecondary} text-sm font-medium`}>{t.specialist}</span>
-              </div>
+      <section id="home" className={`pt-32 pb-20 ${themeClasses.background}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8 animate-in  duration-1000">
+              {mockData.hero.specialist?.[currentLang] && (
+             <div
+  className={`inline-flex items-center ${
+    currentLang === "ar" ? "space-x-reverse space-x-2" : "space-x-2"
+  } ${themeClasses.glassDark} px-4 py-2 rounded-2xl ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105`}
+>
+  <Star className={`h-5 w-5 ${themeClasses.accent}`} />
+  <span className={`${themeClasses.textMuted} font-medium`}>
+    {mockData.hero.specialist[currentLang]}
+  </span>
+</div>
 
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-light leading-tight">{t.heroTitle}</h1>
+              )}
 
-              <p
-                className={`${themeClasses.textSecondary} text-base sm:text-lg leading-relaxed max-w-lg mx-auto lg:mx-0`}
-              >
-                {t.heroDescription}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-             
+              {mockData.hero.heroTitle?.[currentLang] && (
+                <h1 className={`text-4xl md:text-6xl font-bold leading-tight ${themeClasses.text} transition-all duration-500`}>
+                  {mockData.hero.heroTitle[currentLang]}
+                </h1>
+              )}
 
-                <Button
-                  className="bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-gray-900 font-medium px-8 py-3 rounded-full"
-                onClick={() => window.location.href = "/cv"} >
-                  {t.viewJourney}
-                </Button>
+              {mockData.hero.heroDescription?.[currentLang] && (
+                <p className={`text-lg md:text-xl ${themeClasses.textMuted} max-w-2xl leading-relaxed font-sans`}>
+                  {mockData.hero.heroDescription[currentLang]}
+                </p>
+              )}
 
-                <Button
-                  variant="ghost"
-                  className={`${isDarkMode
-                    ? "text-white border-gray-700 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
-                    : "text-gray-900 border-gray-300 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
-                    } font-medium px-8 py-3 rounded-full border flex items-center`}
-                >
-                  <Mail className="w-4 h-4 mr-2" />
-                  smail.yazidi.work@gmail.com
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => window.open("https://www.linkedin.com", "_blank")}
-                  className={`${isDarkMode
-                    ? "text-white border-gray-700 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
-                    : "text-gray-900 border-gray-300 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
-                    } font-medium px-8 py-3 rounded-full border flex items-center cursor-pointer`}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    className="w-4 h-4 mr-2"
-                    aria-hidden="true"
-                  >
-                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.761 0 5-2.239 5-5v-14c0-2.761-2.239-5-5-5zm-11 19h-3v-9h3v9zm-1.5-10.3c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 10.3h-3v-4.5c0-1.07-.93-1.93-2-1.93s-2 .86-2 1.93v4.5h-3v-9h3v1.35c.59-.89 1.88-1.35 3-1.35 2.21 0 4 1.79 4 4v4.65z" />
-                  </svg>
-                  LinkedIn
-                </Button>
+              <div className="flex flex-wrap gap-4">
+            <Button
+       onClick={() => router.push("/cv")}
+      className={`${themeClasses.accentBg} hover:bg-[#0A2647]/90 text-white rounded-2xl px-8 py-3 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105 text-lg`}
+    >
+      {t.viewJourney}
+    </Button>
 
-                <Button
-                  variant="ghost"
-                  onClick={() => window.open("https://github.com/SmailYazidi", "_blank")}
-                  className={`${isDarkMode
-                    ? "text-white border-gray-700 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
-                    : "text-gray-900 border-gray-300 hover:border-[rgb(184,148,31)] hover:text-[rgb(184,148,31)] hover:bg-transparent"
-                    } font-medium px-8 py-3 rounded-full border flex items-center cursor-pointer`}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    className="w-4 h-4 mr-2"
-                    aria-hidden="true"
-                  >
-                    <path d="M12 .5a12 12 0 00-3.79 23.39c.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.4-1.35-1.77-1.35-1.77-1.1-.75.08-.74.08-.74 1.21.08 1.85 1.25 1.85 1.25 1.08 1.84 2.84 1.31 3.54 1 .11-.78.42-1.31.76-1.61-2.66-.3-5.47-1.33-5.47-5.92 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.48 11.48 0 016 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.65.25 2.87.12 3.17.77.84 1.24 1.91 1.24 3.22 0 4.6-2.82 5.61-5.5 5.91.43.37.81 1.1.81 2.22 0 1.6-.01 2.88-.01 3.27 0 .32.22.7.83.58A12 12 0 0012 .5z" />
-                  </svg>
-                  GitHub
-                </Button>
-
-
-              </div>
-
-            </div>
-
-            {/* Right Content - Profile Image */}
-            <div className="relative flex justify-center lg:justify-end mt-8 lg:mt-0">
-              <div className="relative">
-                <div
-                  className={`w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-full ${isDarkMode ? "bg-gradient-to-br from-gray-800 to-gray-900" : "bg-gradient-to-br from-gray-100 to-gray-200"} flex items-center justify-center overflow-hidden border-2 border-[rgb(var(--portfolio-gold))]`}
-                >
-                  <Image
-                    src="/images/profile.png"
-                    alt="Smail Yazidi"
-                    width={400}
-                    height={400}
-                    className="w-full h-full object-cover"
-                    priority
-                  />
-                </div>
+                {mockData.hero.heroButtons?.map((button, index) => {
+                  const Icon = getIcon(button.icon);
+                  const handleClick = () => {
+                    if (button.link) scrollToSection(button.link.replace('#', ''));
+                  };
+                  return (
+                    <Button
+                      key={index}
+                      variant="outline"
+                      onClick={handleClick}
+                      className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} hover:${themeClasses.accentBg} rounded-2xl px-8 py-3 transition-all duration-300 sm:hover:scale-105
+ text-lg`}
+                    >
+                      {Icon && <Icon className="mr-2 h-5 w-5" />}
+                      {button.text?.[currentLang]}
+                    </Button>
+                  );
+                })}
               </div>
             </div>
+
+         <div className="flex justify-center lg:justify-end lg:animate-in lg:slide-in-from-right duration-1000">
+  <div className={`relative ${themeClasses.glassDark} rounded-2xl p-4 sm:p-6 md:p-8 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105
+`}>
+    <div className="relative w-48 h-48 sm:w-60 sm:h-60 md:w-80 md:h-80 rounded-2xl overflow-hidden">
+      <Image
+        src={mockData.photoUrl || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face"}
+        alt="Profile photo"
+        width={400}
+        height={400}
+        priority
+        className="object-cover w-full h-full transition-transform duration-500 hover:scale-110"
+      />
+      <div className={`absolute inset-0 bg-gradient-to-t from-[#0A2647]/20 to-transparent`}></div>
+    </div>
+  </div>
+</div>
+
           </div>
         </div>
       </section>
 
-      {/* Services Section */}
-      <section id="services" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-7xl">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-12 sm:mb-16 relative pb-4">
-            {t.servicesTitle}
-            <span className="absolute bottom-0 left-0 w-20 h-1 bg-[rgb(var(--portfolio-gold))]"></span>
+    {/* Skills Section */}
+      <section id="skills" className={`py-20 ${themeClasses.background}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className={`text-3xl md:text-4xl font-bold text-center mb-16 ${themeClasses.text}`}>
+            {t.skillsTitle}
+            <span className={`block w-20 h-1 ${themeClasses.accentBg} mx-auto mt-4 rounded-full`}></span>
           </h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {filteredServices.map((service, index) => (
-              <Card
-                key={index}
-                className={`${themeClasses.cardBg} ${themeClasses.cardBorder} p-6 sm:p-8 hover:border-[rgb(var(--portfolio-gold))] transition-colors group shadow-lg`}
-              >
-                <CardContent className="p-0">
-                  <div className="flex items-start justify-between mb-4 sm:mb-6">
-                 <span className={`${themeClasses.textMuted} text-sm text-yellow-500`}>0{index + 1}</span>
-  <ArrowUpRight
-                      className={`w-5 h-5 ${themeClasses.textMuted} group-hover:text-[rgb(var(--portfolio-gold))] transition-colors`}
-                    />
+          <div className="space-y-12">
+            {mockData.skills.skills.map((category, catIndex) => {
+              const CategoryIcon = getIcon(category.skillicon);
+
+              return (
+                <div key={catIndex} className={`${themeClasses.glassDark} rounded-2xl p-8 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105
+`}>
+               <h3 className={`text-2xl font-semibold mb-8 ${themeClasses.text} flex items-center`}>
+  {CategoryIcon && (
+    <CategoryIcon
+      className={`h-6 w-6 ${themeClasses.accent} ${
+        currentLang === "ar" ? "ml-3" : "mr-3"
+      }`}
+    />
+  )}
+  {category.title?.[currentLang]}
+</h3>
+
+
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {category.items.map((skill, skillIndex) => {
+                      const SkillIcon = getIcon(skill.icon);
+
+                      return (
+                        <Card
+                          key={skillIndex}
+                          className={`${themeClasses.glassDark} border-white/10 rounded-2xl transition-all duration-300 sm:hover:scale-105
+ hover:shadow-lg group`}
+                        >
+                          <CardContent className="p-6">
+                            {SkillIcon && (
+                              <SkillIcon className={`h-8 w-8 ${themeClasses.accent} mb-4 group-hover:scale-110 transition-transform duration-300`} />
+                            )}
+                            <h4 className={`text-lg font-semibold mb-3 ${themeClasses.text} group-hover:${themeClasses.accent} transition-colors duration-300`}>
+                              {skill.name?.[currentLang]}
+                            </h4>
+                            {skill.examples?.length > 0 && (
+                           <ul className={`space-y-1 ${themeClasses.textMuted} text-sm`}>
+  {skill.examples.map((ex, exIndex) => (
+    <li key={exIndex} className="flex items-center">
+      <span
+        className={`w-2 h-2 ${themeClasses.accentBg} rounded-full ${
+          currentLang === "ar" ? "ml-2" : "mr-2"
+        }`}
+      ></span>
+      {ex?.[currentLang]}
+    </li>
+  ))}
+</ul>
+
+                            )}
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
                   </div>
-                  <h3 className="text-lg sm:text-xl font-medium mb-3 sm:mb-4">{service.title}</h3>
-                  <p className={`${themeClasses.textSecondary} text-sm sm:text-base leading-relaxed`}>{service.desc}</p>
-                </CardContent>
-              </Card>
-            ))}
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-
-
-      {/* Experience & Education Timeline Section */}
-      <section id="experience" className={`py-16 sm:py-20 px-4 sm:px-6 lg:px-8 ${themeClasses.sectionBg}`}>
-        <div className="container mx-auto max-w-7xl">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-12 sm:mb-16 relative pb-4">
+      {/* Experience Section */}
+      <section id="experience" className={`py-20 ${themeClasses.background}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className={`text-3xl md:text-4xl font-bold text-center mb-16 ${themeClasses.text}`}>
             {t.journeyTitle}
-            <span className="absolute bottom-0 left-0 w-20 h-1 bg-[rgb(var(--portfolio-gold))]"></span>
+            <span className={`block w-20 h-1 ${themeClasses.accentBg} mx-auto mt-4 rounded-full`}></span>
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-12 md:gap-8">
-            {/* Formation Column */}
-            <div>
-              <h3 className="text-xl sm:text-2xl font-medium mb-6 sm:mb-8 flex items-center gap-3">
-                <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6 text-[rgb(var(--portfolio-gold))]" />
-                {currentLang === "fr" ? "Formation" : "Education"}
-              </h3>
-              <div className="space-y-8 relative">
-                {filteredEducationEvents.map((event, index) => (
-                  <div key={index} className="relative pl-6">
-                    <div
-                      className={`absolute left-0 top-0 bottom-0 w-0.5 ${isDarkMode ? "bg-gray-700" : "bg-gray-300"}`}
-                    ></div>
-                    <div
-                      className={`absolute -left-2 top-0 w-4 h-4 rounded-full bg-[rgb(var(--portfolio-gold))]`}
-                    ></div>
-                    <p className={`${themeClasses.textSecondary} font-medium text-sm mb-1`}>{event.year}</p>
-                    <h4 className="text-base sm:text-lg font-medium mb-1">{event.title}</h4>
-                    <p className={`${themeClasses.textSecondary} text-sm mb-1`}>{event.institution}</p>
+          <div className="grid lg:grid-cols-2 gap-12">
+            {/* Education */}
+            <div className={`${themeClasses.glassDark} rounded-2xl p-8 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105
+`}>
+             <h3 className={`text-2xl font-semibold mb-8 ${themeClasses.text} flex items-center`}>
+  <GraduationCap
+    className={`h-6 w-6 ${themeClasses.accent} ${
+      currentLang === "ar" ? "ml-3" : "mr-3"
+    }`}
+  />
+  {currentLang === "fr"
+    ? "Formation"
+    : currentLang === "en"
+    ? "Education"
+    : "التعليم"}
+</h3>
+
+              <div className="space-y-8">
+                {mockData.education.education.map((event, index) => (
+   <div
+  key={index}
+  className={`relative ${
+    currentLang === "ar" 
+      ? "pr-8 border-r-2"   // RTL: الخط على اليمين
+      : "pl-8 border-l-2"   // LTR: الخط على اليسار
+  } ${
+    isDarkMode
+      ? "border-white/30"
+      : "border-[#0A2647]/30"
+  }`}
+>
+
+                 <div
+    className={`absolute top-0 w-4 h-4 ${themeClasses.accentBg} rounded-full 
+      ${currentLang === "ar" ? "-right-2" : "-left-2"}`}
+  ></div>
+  <div
+    className={`absolute top-1 w-2 h-2 bg-white rounded-full 
+      ${currentLang === "ar" ? "-right-1" : "-left-1"}`}
+  ></div>
+                    <p className={`text-sm ${themeClasses.accent} font-semibold mb-2`}>
+                      {event.year?.[currentLang]}
+                    </p>
+                    <h4 className={`text-lg font-semibold mb-2 ${themeClasses.text}`}>
+                      {event.title?.[currentLang]}
+                    </h4>
+                    <p className={`${themeClasses.textMuted} mb-2`}>
+                      {event.institution?.[currentLang]}
+                    </p>
                     {event.description && (
-                      <p className={`${themeClasses.textMuted} text-xs mt-2`}>{event.description}</p>
+                      <p className={`${themeClasses.textMuted} text-sm`}>
+                        {event.description?.[currentLang]}
+                      </p>
                     )}
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Experience Column */}
-            <div>
-              <h3 className="text-xl sm:text-2xl font-medium mb-6 sm:mb-8 flex items-center gap-3">
-                <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 text-[rgb(var(--portfolio-gold))]" />
-                {currentLang === "fr" ? "Expérience" : "Experience"}
-              </h3>
-              <div className="space-y-8 relative">
-                {filteredExperienceEvents.map((event, index) => (
-                  <div key={index} className="relative pl-6">
-                    <div
-                      className={`absolute left-0 top-0 bottom-0 w-0.5 ${isDarkMode ? "bg-gray-700" : "bg-gray-300"}`}
-                    ></div>
-                    <div
-                      className={`absolute -left-2 top-0 w-4 h-4 rounded-full bg-[rgb(var(--portfolio-gold))]`}
-                    ></div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <p className={`${themeClasses.textSecondary} font-medium text-sm`}>{event.year}</p>
+            {/* Experience */}
+            <div className={`${themeClasses.glassDark} rounded-2xl p-8 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105
+`}>
+              <h3 className={`text-2xl font-semibold mb-8 ${themeClasses.text} flex items-center`}>
+  <Briefcase
+    className={`h-6 w-6 ${themeClasses.accent} ${
+      currentLang === "ar" ? "ml-3" : "mr-3"
+    }`}
+  />
+  {currentLang === "fr"
+    ? "Expérience"
+    : currentLang === "en"
+    ? "Experience"
+    : "الخبرة"}
+</h3>
+
+              <div className="space-y-8">
+                {mockData.education.experience.map((event, index) => (
+            <div
+  key={index}
+  className={`relative ${
+    currentLang === "ar" 
+      ? "pr-8 border-r-2"   // RTL: الخط على اليمين
+      : "pl-8 border-l-2"   // LTR: الخط على اليسار
+  } ${
+    isDarkMode
+      ? "border-white/30"
+      : "border-[#0A2647]/30"
+  }`}
+>
+
+                 <div
+    className={`absolute top-0 w-4 h-4 ${themeClasses.accentBg} rounded-full 
+      ${currentLang === "ar" ? "-right-2" : "-left-2"}`}
+  ></div>
+  <div
+    className={`absolute top-1 w-2 h-2 bg-white rounded-full 
+      ${currentLang === "ar" ? "-right-1" : "-left-1"}`}
+  ></div>
+            
+                    <div className="flex items-center gap-3 mb-2">
+                      <p className={`text-sm ${themeClasses.accent} font-semibold`}>
+                        {event.year?.[currentLang]}
+                      </p>
                       {event.duration && (
-                        <Badge className="bg-[rgb(var(--portfolio-gold))] text-[rgb(var(--portfolio-gold-foreground))] text-xs">
+                        <Badge className={`${themeClasses.accentBg} text-white text-xs`}>
                           {event.duration}
                         </Badge>
                       )}
                     </div>
-                    <h4 className="text-base sm:text-lg font-medium mb-1">{event.title}</h4>
-                    <p className={`${themeClasses.textSecondary} text-sm mb-1`}>{event.institution}</p>
-                    {Array.isArray(event.description) ? (
-                      <ul className={`${themeClasses.textMuted} text-xs mt-2 list-disc pl-4`}>
-                        {event.description.map((item, i) => (
-                          <li key={i}>{item}</li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className={`${themeClasses.textMuted} text-xs mt-2`}>{event.description}</p>
+                    <h4 className={`text-lg font-semibold mb-2 ${themeClasses.text}`}>
+                      {event.title?.[currentLang]}
+                    </h4>
+                    <p className={`${themeClasses.textMuted} mb-2`}>
+                      {event.institution?.[currentLang]}
+                    </p>
+                    {event.description && (
+                      <p className={`${themeClasses.textMuted} text-sm`}>
+                        {event.description?.[currentLang]}
+                      </p>
                     )}
                   </div>
                 ))}
@@ -1144,216 +1085,68 @@ export default function Portfolio() {
           </div>
         </div>
       </section>
-      {/* Skills Section */}
-      <section id="skills" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-7xl">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-12 sm:mb-16 relative pb-4">
-            {t.skillsTitle}
-            <span className="absolute bottom-0 left-0 w-20 h-1 bg-[rgb(var(--portfolio-gold))]"></span>
-          </h2>
 
-          <div className="space-y-10 sm:space-y-12">
-            {/* Programming Languages */}
-            <div>
-              <h3 className="text-xl sm:text-2xl font-medium mb-6 sm:mb-8 flex items-center gap-3">
-                <Code className="w-5 h-5 sm:w-6 sm:h-6 text-[rgb(var(--portfolio-gold))]" />
-                {t.programmingLanguages}
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                {filteredSkillsData.programmingLanguages.map((skill, index) => (
-                  <Card
-                    key={index}
-                    className={`${themeClasses.cardBg} ${themeClasses.cardBorder} p-5 sm:p-6 text-center transition-all duration-300 hover:border-[rgb(var(--portfolio-gold))] hover:shadow-lg`}
-                  >
-                    <CardContent className="p-0 flex flex-col items-center">
-                      <skill.icon className="w-7 h-7 sm:w-8 sm:h-8 text-[rgb(var(--portfolio-gold))] mb-2 sm:mb-3" />
-                      <h4 className="font-medium text-base sm:text-lg mb-1">{skill.name}</h4>
-                      <p className={`${themeClasses.textMuted} text-xs sm:text-sm`}>{skill.desc}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Frameworks and Libraries */}
-            <div>
-              <h3 className="text-xl sm:text-2xl font-medium mb-6 sm:mb-8 flex items-center gap-3">
-                <LayoutGrid className="w-5 h-5 sm:w-6 sm:h-6 text-[rgb(var(--portfolio-gold))]" />
-                {t.frameworksLibraries}
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                {filteredSkillsData.frameworksLibraries.map((skill, index) => (
-                  <Card
-                    key={index}
-                    className={`${themeClasses.cardBg} ${themeClasses.cardBorder} p-5 sm:p-6 text-center transition-all duration-300 hover:border-[rgb(var(--portfolio-gold))] hover:shadow-lg`}
-                  >
-                    <CardContent className="p-0 flex flex-col items-center">
-                      <skill.icon className="w-7 h-7 sm:w-8 sm:h-8 text-[rgb(var(--portfolio-gold))] mb-2 sm:mb-3" />
-                      <h4 className="font-medium text-base sm:text-lg mb-1">{skill.name}</h4>
-                      <p className={`${themeClasses.textMuted} text-xs sm:text-sm`}>{skill.desc}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Databases */}
-            <div>
-              <h3 className="text-xl sm:text-2xl font-medium mb-6 sm:mb-8 flex items-center gap-3">
-                <Database className="w-5 h-5 sm:w-6 sm:h-6 text-[rgb(var(--portfolio-gold))]" />
-                {t.databases}
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                {filteredSkillsData.databases.map((skill, index) => (
-                  <Card
-                    key={index}
-                    className={`${themeClasses.cardBg} ${themeClasses.cardBorder} p-5 sm:p-6 text-center transition-all duration-300 hover:border-[rgb(var(--portfolio-gold))] hover:shadow-lg`}
-                  >
-                    <CardContent className="p-0 flex flex-col items-center">
-                      <skill.icon className="w-7 h-7 sm:w-8 sm:h-8 text-[rgb(var(--portfolio-gold))] mb-2 sm:mb-3" />
-                      <h4 className="font-medium text-base sm:text-lg mb-1">{skill.name}</h4>
-                      <p className={`${themeClasses.textMuted} text-xs sm:text-sm`}>{skill.desc}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Other Technical Skills */}
-            <div>
-              <h3 className="text-xl sm:text-2xl font-medium mb-6 sm:mb-8 flex items-center gap-3">
-                <Star className="w-5 h-5 sm:w-6 sm:h-6 text-[rgb(var(--portfolio-gold))]" />
-                {t.otherTechnicalSkills}
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                {filteredSkillsData.otherTechnicalSkills.map((skill, index) => (
-                  <Card
-                    key={index}
-                    className={`${themeClasses.cardBg} ${themeClasses.cardBorder} p-5 sm:p-6 text-center transition-all duration-300 hover:border-[rgb(var(--portfolio-gold))] hover:shadow-lg`}
-                  >
-                    <CardContent className="p-0 flex flex-col items-center">
-                      <skill.icon className="w-7 h-7 sm:w-8 sm:h-8 text-[rgb(var(--portfolio-gold))] mb-2 sm:mb-3" />
-                      <h4 className="font-medium text-base sm:text-lg mb-1">{skill.name}</h4>
-                      <p className={`${themeClasses.textMuted} text-xs sm:text-sm`}>{skill.desc}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Soft Skills */}
-            <div>
-              <h3 className="text-xl sm:text-2xl font-medium mb-6 sm:mb-8 flex items-center gap-3">
-                <Users className="w-5 h-5 sm:w-6 sm:h-6 text-[rgb(var(--portfolio-gold))]" />
-                {t.softSkills}
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-                {filteredSkillsData.softSkills.map((skill, index) => (
-                  <Card
-                    key={index}
-                    className={`${themeClasses.cardBg} ${themeClasses.cardBorder} p-5 sm:p-6 text-center transition-all duration-300 hover:border-[rgb(var(--portfolio-gold))] hover:shadow-lg`}
-                  >
-                    <CardContent className="p-0 flex flex-col items-center">
-                      <skill.icon className="w-7 h-7 sm:w-8 sm:h-8 text-[rgb(var(--portfolio-gold))] mb-2 sm:mb-3" />
-                      <h4 className="font-medium text-base sm:text-lg mb-1">{skill.name}</h4>
-                      <p className={`${themeClasses.textMuted} text-xs sm:text-sm`}>{skill.desc}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    
 
       {/* Projects Section */}
-      <section
-        id="projects"
-        className={`py-16 sm:py-20 px-4 sm:px-6 lg:px-8 ${themeClasses.sectionBg}`}
-      >
-        <div className="container mx-auto max-w-7xl">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-12 sm:mb-16 relative pb-4">
+      <section id="projects" className={`py-20 ${themeClasses.background}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className={`text-3xl md:text-4xl font-bold text-center mb-16 ${themeClasses.text}`}>
             {t.myProjects}
-            <span className="absolute bottom-0 left-0 w-20 h-1 bg-[rgb(var(--portfolio-gold))]"></span>
+            <span className={`block w-20 h-1 ${themeClasses.accentBg} mx-auto mt-4 rounded-full`}></span>
           </h2>
 
-          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-            {filteredProjectsData.map((project, index) => (
+          <div className="grid lg:grid-cols-2 gap-8">
+            {mockData.projects.projects.map((project: any) => (
               <Card
-                key={index}
-                className={`${themeClasses.cardBg} ${themeClasses.cardBorder} overflow-hidden transition-all duration-300 hover:border-[rgb(var(--portfolio-gold))] hover:shadow-lg`}
+                key={project._id}
+                className={` rounded-2xl overflow-hidden ${themeClasses.accent}   transition-all duration-300 sm:hover:scale-105
+ hover:shadow-2xl group ${themeClasses.glassDark}`}
               >
-                {/* Images container with auto-rotating images */}
-                <div className="relative h-48 sm:h-56 overflow-hidden">
-                  {project.images && project.images.length > 0 ? (
-                    project.images.map((imgSrc, imgIndex) => (
-                      <AutoRotatingImage
-                        key={imgIndex}
-                        src={imgSrc}
-                        alt={`${project.title} screenshot ${imgIndex + 1}`}
-                        totalImages={project.images.length}
-                        index={imgIndex}
-                      />
-                    ))
-                  ) : (
-                    <Image
-                      src="/placeholder.svg"
-                      alt={project.title}
-                      width={800}
-                      height={800}
-                      className="absolute inset-0 w-full h-full object-cover"
-                    />
-                  )}
+                <div className="relative h-64 overflow-hidden">
+                  <Image
+                    src={project.image}
+                    alt={project.title?.[currentLang] || 'Project'}
+                    width={800}
+                    height={450}
+                    className="object-cover w-full h-full transition-transform duration-500 sm:group-hover:scale-110"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
                 </div>
 
-                <CardContent className="p-6">
-                  <h3 className="text-xl sm:text-2xl font-medium mb-2 sm:mb-3">
-                    {project.title}
+                <CardContent className="p-8">
+                  <h3 className={`text-xl font-semibold mb-4 ${themeClasses.text} group-hover:${themeClasses.accent} transition-colors duration-300`}>
+                    {project.title?.[currentLang]}
                   </h3>
-                  <p
-                    className={`${themeClasses.textSecondary} text-sm sm:text-base leading-relaxed mb-4 sm:mb-6`}
-                  >
-                    {project.description}
+                  <p className={`${themeClasses.textMuted} mb-6 leading-relaxed`}>
+                    {project.description?.[currentLang]}
                   </p>
-                  <div className="flex flex-wrap gap-2 mb-4 sm:mb-6">
-                    {project.tech.map((tech, techIndex) => (
-                      <Badge
-                        key={techIndex}
-                        className={`${isDarkMode
-                          ? "bg-gray-800 text-white border-gray-700"
-                          : "bg-gray-100 text-gray-900 border-gray-300"
-                          } border px-3 py-1 text-xs`}
+
+                  {project.techStack?.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {project.techStack.map((tech: string, techIndex: number) => (
+                        <Badge
+                          key={techIndex}
+                          className={`${themeClasses.glassDark} ${themeClasses.textMuted} border border-white/20 hover:${themeClasses.accentBg} hover:text-white transition-all duration-300`}
+                        >
+                          {tech}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+
+                  {project.button && (
+                    <div>
+                      <Button
+                        onClick={() => window.open(project.button.link, "_blank")}
+                        className={`${themeClasses.accentBg} hover:bg-[#0A2647]/90 text-white rounded-2xl transition-all duration-300 sm:hover:scale-105
+`}
                       >
-                        {tech}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="flex gap-3 sm:gap-4">
-                    <Button
-                      variant="outline"
-                      className={`${isDarkMode
-                        ? "border-gray-700 text-white hover:bg-gray-800"
-                        : "border-gray-300 text-gray-900 hover:bg-gray-100"
-                        } flex items-center gap-2 text-sm sm:text-base`}
-                      onClick={() => window.open(project.github, "_blank")}
-                    
-                    >
-                      <Github className="w-4 h-4" />
-                      {t.github}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className={`${isDarkMode
-                        ? "border-gray-700 text-white hover:bg-gray-800"
-                        : "border-gray-300 text-gray-900 hover:bg-gray-100"
-                        } flex items-center gap-2 text-sm sm:text-base`}
-                      onClick={() => window.open(project.live, "_blank")}
-                      
-                    >
-                      <Link className="w-4 h-4" />
-                      {t.live}
-                    </Button>
-                  </div>
+                        <Link className="mr-2 h-4 w-4" />
+                        {project.button.label?.[currentLang] || 'View Project'}
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             ))}
@@ -1361,157 +1154,546 @@ export default function Portfolio() {
         </div>
       </section>
 
-
       {/* About Section */}
-      <section id="about" className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8">
-        <div className="container mx-auto max-w-7xl">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
-            <div>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-6 sm:mb-8">{t.aboutTitle}</h2>
-              <p className={`${themeClasses.textSecondary} text-base sm:text-lg leading-relaxed mb-6 sm:mb-8`}>
-                {t.aboutDescription}
+      <section id="about" className={`py-20 ${themeClasses.background}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+           <h2 className={`text-3xl md:text-4xl font-bold text-center mb-16 ${themeClasses.text}`}>
+    {t.aboutTitle}
+            <span className={`block w-20 h-1 ${themeClasses.accentBg} mx-auto mt-4 rounded-full`}></span>
+          </h2>
+          <div className="grid lg:grid-cols-2 gap-12 items-start">
+            <div className={`${themeClasses.glassDark} rounded-2xl p-8 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105
+`}>
+             <h2 className={`text-3xl md:text-4xl font-bold mb-8 ${themeClasses.text}`}>
+                {mockData.username?.[currentLang]}
+          
+              </h2> 
+
+              <p className={`${themeClasses.textMuted} text-lg leading-relaxed mb-8`}>
+                {mockData.about.aboutDescription?.[currentLang]}
               </p>
 
-              {/* Personal Info */}
-              <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                <div>
-                  <p className={`${themeClasses.textMuted} text-xs sm:text-sm mb-1`}>{t.age}</p>
-                  <p className="font-medium text-sm sm:text-base">{t.years}</p>
-                </div>
-                <div>
-                  <p className={`${themeClasses.textMuted} text-xs sm:text-sm mb-1`}>{t.location}</p>
-                  <p className="font-medium text-sm sm:text-base">{t.locationValue}</p>
-                </div>
-                <div>
-                  <p className={`${themeClasses.textMuted} text-xs sm:text-sm mb-1`}>{t.status}</p>
-                  <p className="font-medium text-sm sm:text-base">{t.single}</p>
-                </div>
-                <div>
-                  <p className={`${themeClasses.textMuted} text-xs sm:text-sm mb-1`}>{t.nationality}</p>
-                  <p className="font-medium text-sm sm:text-base">{t.moroccan}</p>
-                </div>
+              <div className="space-y-6">
+                {mockData.about.personalInfo?.map((info, index) => {
+                  const IconComponent = getIcon(info.icon);
+                  return (
+                 <div
+  key={index}
+  className={`flex items-center ${
+    currentLang === "ar" ? "space-x-reverse space-x-4" : "space-x-4"
+  }`}
+>
+  {IconComponent && (
+    <div className={`${themeClasses.accentBg} p-3 rounded-2xl`}>
+      <IconComponent className="h-5 w-5 text-white" />
+    </div>
+  )}
+  <div>
+    <p className={`font-medium ${themeClasses.text}`}>
+      {info.label?.[currentLang]}
+    </p>
+    <p className={`${themeClasses.textMuted}`}>
+      {info.value?.[currentLang]}
+    </p>
+  </div>
+</div>
+
+                  );
+                })}
               </div>
             </div>
 
             <div className="space-y-8">
               {/* Languages */}
-              <div>
-                <h3 className="text-xl sm:text-2xl font-medium mb-4 sm:mb-6 flex items-center gap-3">
-                  <LanguagesIcon className="w-5 h-5 sm:w-6 sm:h-6 text-[rgb(var(--portfolio-gold))]" />
-                  {t.languages}
-                </h3>
-                <div className="space-y-3 sm:space-y-4">
-                  {[
-                         { lang: currentLang === "fr" ? "Anglais" : "English", level: t.good, width: "80%" },
-                 
-                    { lang: currentLang === "fr" ? "Français" : "French", level: t.average, width: "60%" },
-                    { lang: "Tamazight", level: t.native, width: "85%" },
-                    { lang: currentLang === "fr" ? "Arabe" : "Arabic", level: t.native, width: "85%" },
-                   
-                 ].map((item, index) => (
-                    <div key={index}>
-                      <div className="flex justify-between mb-1 sm:mb-2">
-                        <span className="font-medium text-sm sm:text-base">{item.lang}</span>
-                        <span className={`${themeClasses.textSecondary} text-xs sm:text-sm`}>{item.level}</span>
-                      </div>
-                      <div className={`w-full ${isDarkMode ? "bg-gray-800" : "bg-gray-200"} rounded-full h-1`}>
-                        <div
-                          className="bg-[rgb(var(--portfolio-gold))] h-1 rounded-full transition-all duration-1000"
-                          style={{ width: item.width }}
-                        ></div>
-                      </div>
-                    </div>
-                  ))}
+              <div className={`${themeClasses.glassDark} rounded-2xl p-8 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105
+`}>
+            <h3 className={`text-2xl font-semibold mb-6 ${themeClasses.text} flex items-center`}>
+  <LanguagesIcon
+    className={`h-6 w-6 ${themeClasses.accent} ${
+      currentLang === "ar" ? "ml-3" : "mr-3"
+    }`}
+  />
+  {mockData.about.languages?.title?.[currentLang]}
+</h3>
+
+                <div className="space-y-4">
+            {mockData.about.languages?.list?.map((lang, index) => {
+  const levelKey = lang.level.toLowerCase(); 
+  const levelText = mockData.about.languages?.levels?.[levelKey]?.[currentLang] || '';
+
+  
+  const levelPercentages = {
+    a1: 10,
+    a2: 30,
+    b1: 50,
+    b2: 70,
+    c1: 85,
+    c2: 95,
+    native: 100
+  };
+
+  const levelPercentage = levelPercentages[levelKey] || 0;
+
+  return (
+    <div key={index} className="mb-4">
+      <div className="flex justify-between items-center mb-2">
+        <span className={`font-medium ${themeClasses.text}`}>
+          {lang.name?.[currentLang]}
+        </span>
+        <span className={`text-sm ${themeClasses.textMuted}`}>
+          {levelText}
+        </span>
+      </div>
+      <div className={`h-2 ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'} rounded-full overflow-hidden`}>
+        <div
+          className={`h-full ${themeClasses.accentBg} rounded-full transition-all duration-1000 ease-out`}
+          style={{ width: `${levelPercentage}%` }}
+        ></div>
+      </div>
+    </div>
+  );
+})}
+
                 </div>
               </div>
 
               {/* Interests */}
-              <div>
-                <h3 className="text-xl sm:text-2xl font-medium mb-4 sm:mb-6 flex items-center gap-3">
-                  <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-[rgb(var(--portfolio-gold))]" />
-                  {t.interests}
-                </h3>
-                <div className="flex flex-wrap gap-3 sm:gap-4">
-                  <Badge
-                    className={`${isDarkMode ? "bg-gray-800 text-white border-gray-700" : "bg-gray-100 text-gray-900 border-gray-300"} border px-3 sm:px-4 py-1 sm:py-2 text-sm`}
-                  >
-                    {t.sport}
-                  </Badge>
-                  <Badge
-                    className={`${isDarkMode ? "bg-gray-800 text-white border-gray-700" : "bg-gray-100 text-gray-900 border-gray-300"} border px-3 sm:px-4 py-1 sm:py-2 text-sm`}
-                  >
-                    {t.travel}
-                  </Badge>
-                  <Badge
-                    className={`${isDarkMode ? "bg-gray-800 text-white border-gray-700" : "bg-gray-100 text-gray-900 border-gray-300"} border px-3 sm:px-4 py-1 sm:py-2 text-sm`}
-                  >
-                    {t.coding}
-                  </Badge>
+              <div className={`${themeClasses.glassDark} rounded-2xl p-8 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105
+`}>
+  
+  
+  <h3 className={`text-2xl font-semibold mb-6 ${themeClasses.text} flex items-center`}>
+  <Heart
+    className={`h-6 w-6 ${themeClasses.accent} ${
+      currentLang === "ar" ? "ml-3" : "mr-3"
+    }`}
+  />
+  {t.interests}
+</h3>
+
+                <div className="flex flex-wrap gap-3">
+                  {mockData.about.interests?.map((interest, index) => {
+                    const IconComponent = getIcon(interest.icon);
+                    return (
+                    <Badge
+  key={index}
+  className={`${themeClasses.glassDark} ${themeClasses.text} border border-white/20 px-4 py-2 rounded-2xl hover:${themeClasses.accentBg} transition-all duration-300 sm:hover:scale-105
+`}
+>
+  {IconComponent && (
+    <IconComponent
+      className={`h-4 w-4 ${
+        currentLang === "ar" ? "ml-2" : "mr-2"
+      }`}
+    />
+  )}
+  {interest.name?.[currentLang]}
+</Badge>
+
+                    );
+                  })}
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+    {/* Services Section */}
+      <section id="services" className={`py-20 ${themeClasses.background}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className={`text-3xl md:text-4xl font-bold text-center mb-16 ${themeClasses.text}`}>
+            {t.servicesTitle}
+            <span className={`block w-20 h-1 ${themeClasses.accentBg} mx-auto mt-4 rounded-full`}></span>
+          </h2>
 
-      {/* Contact Section */}
-      <section id="contact" className={`py-16 sm:py-20 px-4 sm:px-6 lg:px-8 ${themeClasses.sectionBg}`}>
-        <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-light mb-6 sm:mb-8">{t.contactTitle}</h2>
-          <p className={`${themeClasses.textSecondary} text-base sm:text-lg mb-10 sm:mb-12 max-w-2xl mx-auto`}>
-            {t.contactDescription}
-          </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {mockData.services.servicesList.map((service, index) => {
+              const title = service.title?.[currentLang];
+              const description = service.description?.[currentLang];
 
-          <div className="grid md:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12">
-            <div className="text-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[rgb(var(--portfolio-gold))] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
-
-
-              </div>
-              <h3 className="font-medium text-base sm:text-lg mb-1 sm:mb-2">{t.email}</h3>
-              <p className={`${themeClasses.textSecondary} text-sm sm:text-base`}>smail.yazidi.work@gmail.com</p>
-            </div>
-            <div className="text-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[rgb(var(--portfolio-gold))] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-black" />
-
-              </div>
-              <h3 className="font-medium text-base sm:text-lg mb-1 sm:mb-2">{t.phone}</h3>
-              <p className={`${themeClasses.textSecondary} text-sm sm:text-base`}>0719270155</p>
-            </div>
-            <div className="text-center">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-[rgb(var(--portfolio-gold))] rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-black" />   </div>
-              <h3 className="font-medium text-base sm:text-lg mb-1 sm:mb-2">{t.location}</h3>
-              <p className={`${themeClasses.textSecondary} text-sm sm:text-base`}>{t.locationValue}</p>
-            </div>
+              return (
+                <Card
+                  key={index}
+                  className={`${themeClasses.glassDark} border-white/10 rounded-2xl ${themeClasses.shadow} ${themeClasses.glassDark} transition-all duration-300 sm:hover:scale-105
+ hover:shadow-2xl group`}
+                >
+                  <CardContent className="p-8">
+                    <div className="flex justify-between items-start mb-6">
+                      <span className={`text-6xl font-bold ${themeClasses.accent} opacity-40 group-hover:opacity-60 transition-opacity duration-300`}>
+                        0{index + 1}
+                      </span>
+                      <ArrowUpRight className={`h-6 w-6 ${themeClasses.accent} group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300`} />
+                    </div>
+                    <h3 className={`text-xl font-semibold mb-4 ${themeClasses.text} group-hover:${themeClasses.accent} transition-colors duration-300`}>
+                      {title}
+                    </h3>
+                    {description && (
+                      <p className={`${themeClasses.textMuted} leading-relaxed`}>
+                        {description}
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
-
-          <Button className="bg-[rgb(var(--portfolio-gold))] hover:bg-[rgb(var(--portfolio-gold-hover))] text-black font-medium px-8 py-3 rounded-full text-base sm:text-lg">
-            <Mail className="w-5 h-5 mr-2 text-black" />
-            {t.startProject}
-          </Button>
-
         </div>
       </section>
+   {/* Contact Section */}
+<section id="contact" className={`py-20 ${themeClasses.background}`}>
+  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+    <h2 className={`text-3xl md:text-4xl font-bold mb-6 ${themeClasses.text}`}>
+      {mockData.contact.contactTitle?.[currentLang]}
+    </h2>
+    <p className={`text-lg ${themeClasses.textMuted} mb-12 max-w-2xl mx-auto`}>
+      {mockData.contact.contactDescription?.[currentLang]}
+    </p>
+
+    {/* Contact Info Cards */}
+    <div className="grid md:grid-cols-2 gap-8 mb-12">
+      {mockData.contact.contactInfo?.map((info, index) => {
+        const IconComponent = getIcon(info.icon);
+        return (
+          <div
+            key={index}
+            className={`${themeClasses.glassDark} rounded-2xl p-8 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105
+ group`}
+          >
+            <div
+              className={`${themeClasses.accentBg} w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}
+            >
+              {IconComponent && <IconComponent className="h-8 w-8 text-white" />}
+            </div>
+            <h3
+              className={`text-xl font-semibold mb-4 ${themeClasses.text} group-hover:${themeClasses.accent} transition-colors duration-300`}
+            >
+              {info.label?.[currentLang]}
+            </h3>
+            <p className={`${themeClasses.textMuted}`}>
+              {info.link ? (
+                <a
+                  href={info.link}
+                  target={info.link.startsWith("http") ? "_blank" : "_self"}
+                  rel={info.link.startsWith("http") ? "noopener noreferrer" : ""}
+                  className={`hover:${themeClasses.accent} transition-colors duration-300`}
+                >
+                  {typeof info.value === "object"
+                    ? info.value[currentLang]
+                    : info.value}
+                </a>
+              ) : typeof info.value === "object" ? (
+                info.value[currentLang]
+              ) : (
+                info.value
+              )}
+            </p>
+          </div>
+        );
+      })}
+    </div>   {/* Button */}
+<a
+  href={mockData.contact.contactButton?.link || "#contact-form"}
+  className={`inline-flex items-center ${themeClasses.accentBg} hover:opacity-90 text-white px-8 py-4 rounded-2xl ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105 text-lg font-semibold`}
+>
+  <Send
+    className={`h-5 w-5 ${
+      currentLang === "ar" ? "ml-3" : "mr-3"
+    }`}
+  />
+  {mockData.contact.contactButton?.startProject?.[currentLang]}
+</a>
+
+ <br /><br /><br />
+  {/* Contact Form */}
+  
+  <div className={`${themeClasses.glassDark} rounded-2xl p-8 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105
+`}>
+  <h3 className={`text-2xl font-bold mb-8 text-center ${themeClasses.text}`}> 
+  {currentLang === "en"
+    ? "Contact Me"
+    : currentLang === "fr"
+    ? "Contactez-moi"
+    : "اتصل بي"}
+</h3>
+
+<form
+  id="contact-form"
+  className="space-y-6 text-left relative"
+  onSubmit={handleSubmit}
+>
+  <input
+    type="text"
+    name="name"
+    value={formData.name}
+    onChange={handleChange}
+    placeholder={
+      currentLang === "en"
+        ? "Your name"
+        : currentLang === "fr"
+        ? "Votre nom"
+        : "اسمك"
+    }
+    className={`w-full px-4 py-3 rounded-xl border ${
+      isDarkMode
+        ? "bg-gray-800 text-white border-gray-600 placeholder-gray-400"
+        : "bg-white text-black border-gray-300 placeholder-gray-500"
+    }`}
+    required
+    disabled={isLimitReached}
+  />
+
+  <input
+    type="email"
+    name="email"
+    value={formData.email}
+    onChange={handleChange}
+    placeholder={
+      currentLang === "en"
+        ? "Your email"
+        : currentLang === "fr"
+        ? "Votre email"
+        : "بريدك الإلكتروني"
+    }
+    className={`w-full px-4 py-3 rounded-xl border ${
+      isDarkMode
+        ? "bg-gray-800 text-white border-gray-600 placeholder-gray-400"
+        : "bg-white text-black border-gray-300 placeholder-gray-500"
+    }`}
+    required
+    disabled={isLimitReached}
+  />
+
+  <textarea
+    name="message"
+    rows={5}
+    value={formData.message}
+    onChange={handleChange}
+    placeholder={
+      currentLang === "en"
+        ? "Write your message..."
+        : currentLang === "fr"
+        ? "Écrivez votre message..."
+        : "اكتب رسالتك..."
+    }
+    className={`w-full px-4 py-3 rounded-xl border ${
+      isDarkMode
+        ? "bg-gray-800 text-white border-gray-600 placeholder-gray-400"
+        : "bg-white text-black border-gray-300 placeholder-gray-500"
+    }`}
+    required
+    disabled={isLimitReached}
+  ></textarea>
+
+  <button
+    type="submit"
+    disabled={isSendingMessage || isLimitReached}
+    className={`w-full flex justify-center items-center gap-2 px-8 py-4 rounded-2xl text-lg font-semibold ${
+      isLimitReached
+        ? "bg-gray-400 cursor-not-allowed"
+        : `${themeClasses.accentBg} hover:opacity-90 text-white`
+    }`}
+  >
+    {isLimitReached
+      ? currentLang === "en"
+        ? "Try later"
+        : currentLang === "fr"
+        ? "Réessayez plus tard"
+        : "حاول لاحقًا"
+      : isSendingMessage
+      ? currentLang === "en"
+        ? "Sending..."
+        : currentLang === "fr"
+        ? "Envoi..."
+        : "جارٍ الإرسال..."
+      : currentLang === "en"
+      ? "Send Message"
+      : currentLang === "fr"
+      ? "Envoyer le message"
+      : "إرسال الرسالة"}
+  </button>
+{isMessageSent && (
+  <p
+    className={`font-semibold mt-2 p-2 rounded border transition-colors duration-300 ${
+      currentLang === "ar" ? "text-right" : "text-left"
+    } ${isDarkMode 
+        ? "bg-green-800 text-green-400 border-green-600" 
+        : "bg-green-100 text-green-600 border-green-300"
+      }`}
+    dir={currentLang === "ar" ? "rtl" : "ltr"}
+  >
+    {currentLang === "en"
+      ? "Message sent successfully!"
+      : currentLang === "fr"
+      ? "Message envoyé avec succès !"
+      : "تم إرسال الرسالة بنجاح!"}
+  </p>
+)}
+
+</form>
+
+
+</div>
+
+ 
+  </div>
+</section>
 
       {/* Footer */}
-      <footer className={`py-6 sm:py-8 px-4 sm:px-6 lg:px-8 border-t ${themeClasses.headerBorder}`}>
-        <div className="container mx-auto max-w-7xl">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-3 mb-4 md:mb-0">
-              <div
-                className={`w-8 h-8 ${isDarkMode ? "bg-white" : "bg-gray-900"} rounded-full flex items-center justify-center`}
-              >
-                <span className={`${isDarkMode ? "text-black" : "text-white"} font-bold text-sm`}>S</span>
-              </div>
-              <span className={themeClasses.textSecondary}>© 2025 Smail Yazidi</span>
+      <footer className={`${themeClasses.glassDark} border-t border-white/10`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center">
+            <div className="flex justify-center items-center space-x-2 mb-4">
+          <span
+  className={`text-2xl font-bold ${
+    isDarkMode ? 'text-white' : 'text-[#0A2647]'
+  }`}
+>
+
+
+
+                © 2025 {mockData.username?.[currentLang]}
+              </span>
             </div>
-            <p className={`${themeClasses.textMuted} text-xs sm:text-sm`}>{t.rightsReserved}</p>
+            <p className={`${themeClasses.textMuted}`}>{t.rightsReserved}</p>
           </div>
         </div>
       </footer>
+
+
+{searchTerm && (
+  <div
+    className="fixed top-40 inset-x-0 z-40 backdrop-blur overflow-auto py-8"
+    style={{ maxHeight: "calc(100vh - 4rem)" }} // adjust 4rem if your header height is different
+  >
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={`${themeClasses.glassDark} p-8 rounded-3xl shadow-xl`}>
+        <h2 className={`text-2xl md:text-3xl font-bold mb-6 text-center ${themeClasses.text}`}>
+          {currentLang === "en"
+            ? "Search Results"
+            : currentLang === "fr"
+            ? "Résultats de recherche"
+            : "نتائج البحث"}
+        </h2>
+
+        {searchResults.length > 0 ? (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {searchResults.map((result, idx) => (
+              <div
+                key={idx}
+                className={`${themeClasses.glassDark} p-6 rounded-2xl ${themeClasses.shadow} transition-all duration-300`}
+              >
+                <p className="font-semibold mb-2">{result.type}</p>
+
+                {/* Title / Name */}
+                <h3 className={`${themeClasses.text} font-medium mb-2`}>
+                  {result.type === "Skill" && result.item.name?.[currentLang]}
+                  {result.type === "Project" && result.item.title?.[currentLang]}
+                  {result.type === "Experience" && result.item.title?.[currentLang]}
+                  {result.type === "Service" && result.item.title?.[currentLang]}
+                  {result.type === "About" && currentLang && "About Me"}
+                  {result.type === "PersonalInfo" && result.item.label?.[currentLang]}
+                  {result.type === "Language" && result.item.name?.[currentLang]}
+                  {result.type === "Interest" && result.item.name?.[currentLang]}
+                  {result.type === "Contact" && result.item.contactTitle?.[currentLang]}
+                </h3>
+
+                {/* Description / Details */}
+                {result.type === "Skill" && result.item.examples?.length > 0 && (
+                  <ul className={`${themeClasses.textMuted} text-sm mt-1 list-disc list-inside`}>
+                    {result.item.examples.map((ex, i) => (
+                      <li key={i}>{ex?.[currentLang]}</li>
+                    ))}
+                  </ul>
+                )}
+
+                {result.type === "Experience" && (
+                  <>
+                    {result.item.institution && (
+                      <p className={`${themeClasses.textMuted} text-sm`}>
+                        {result.item.institution?.[currentLang]}
+                      </p>
+                    )}
+                    {result.item.description && (
+                      <p className={`${themeClasses.textMuted} text-sm mt-1`}>
+                        {result.item.description?.[currentLang]}
+                      </p>
+                    )}
+                  </>
+                )}
+
+                {result.type === "Project" && result.item.description && (
+                  <p className={`${themeClasses.textMuted} text-sm mt-1`}>
+                    {result.item.description?.[currentLang]}
+                  </p>
+                )}
+
+                {result.type === "Service" && result.item.description && (
+                  <p className={`${themeClasses.textMuted} text-sm mt-1`}>
+                    {result.item.description?.[currentLang]}
+                  </p>
+                )}
+
+                {result.type === "About" && result.item.description && (
+                  <p className={`${themeClasses.textMuted} text-sm mt-1`}>
+                    {result.item.description?.[currentLang]}
+                  </p>
+                )}
+
+                {result.type === "PersonalInfo" && (
+                  <p className={`${themeClasses.textMuted} text-sm mt-1`}>
+                    {result.item.value?.[currentLang]}
+                  </p>
+                )}
+
+                {result.type === "Language" && (
+                  <p className={`${themeClasses.textMuted} text-sm mt-1`}>
+                    Level: {mockData.about.languages.levels[result.item.level]?.[currentLang] || result.item.level}
+                  </p>
+                )}
+
+                {result.type === "Interest" && (
+                  <p className={`${themeClasses.textMuted} text-sm mt-1`}>
+                    {result.item.name?.[currentLang]}
+                  </p>
+                )}
+
+                {result.type === "Contact" && (
+                  <>
+                    {result.item.contactDescription && (
+                      <p className={`${themeClasses.textMuted} text-sm mt-1`}>
+                        {result.item.contactDescription?.[currentLang]}
+                      </p>
+                    )}
+                    {result.item.contactInfo?.map((info, i) => (
+                      <p key={i} className={`${themeClasses.textMuted} text-sm`}>
+                        {info.label?.[currentLang]}: {info.value}
+                      </p>
+                    ))}
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className={`text-center ${themeClasses.textMuted}`}>
+            {currentLang === "en"
+              ? "No results found."
+              : currentLang === "fr"
+              ? "Aucun résultat trouvé."
+              : "لم يتم العثور على نتائج."}
+          </p>
+        )}
+        <br /><br /><br /><br /><br />
+      </div>
     </div>
+  </div>
+)}
+
+
+
+
+      
+    </div>
+    
   )
 }

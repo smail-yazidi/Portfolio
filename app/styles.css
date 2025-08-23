@@ -1,0 +1,387 @@
+
+    /* Base styles */
+    .portfolio-container {
+      transition: all 0.3s ease;
+      min-height: 100vh;
+    }
+
+    .dark-mode {
+      background: linear-gradient(135deg, #0b0c1d 0%, #1a103d 100%);
+      color: #f9f9fb;
+    }
+
+    .light-mode {
+      background: linear-gradient(135deg, #f9f9fb 0%, #fffdfc 100%);
+      color: #1a103d;
+    }
+
+    /* Header styles */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .dark-header {
+      background: rgba(11, 12, 29, 0.8);
+      border-bottom: 1px solid rgba(255, 154, 203, 0.1);
+    }
+
+    .light-header {
+      background: rgba(249, 249, 251, 0.8);
+      border-bottom: 1px solid rgba(166, 124, 255, 0.1);
+    }
+
+    .nav-link {
+      position: relative;
+      padding: 0.5rem 0;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      transition: width 0.3s ease;
+    }
+
+    .dark-nav-link::after {
+      background: linear-gradient(90deg, #ff9acb, #a67cff);
+    }
+
+    .light-nav-link::after {
+      background: linear-gradient(90deg, #f6a5c0, #c8a2c8);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .active-nav-link::after {
+      width: 100%;
+    }
+
+    /* Button styles */
+    .gradient-btn {
+      background: linear-gradient(90deg, #ff9acb, #a67cff);
+      border: none;
+      color: white;
+      transition: all 0.3s ease;
+    }
+
+    .light-gradient-btn {
+      background: linear-gradient(90deg, #f6a5c0, #c8a2c8);
+      border: none;
+      color: #1a103d;
+      transition: all 0.3s ease;
+    }
+
+    .gradient-btn:hover, .light-gradient-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(166, 124, 255, 0.3);
+    }
+
+    .secondary-btn {
+      background: transparent;
+      border: 1px solid;
+      transition: all 0.3s ease;
+    }
+
+    .dark-secondary-btn {
+      border-color: #a67cff;
+      color: #a67cff;
+    }
+
+    .light-secondary-btn {
+      border-color: #c8a2c8;
+      color: #b76e79;
+    }
+
+    .dark-secondary-btn:hover {
+      background: rgba(166, 124, 255, 0.1);
+      box-shadow: 0 0 15px rgba(166, 124, 255, 0.5);
+    }
+
+    .light-secondary-btn:hover {
+      background: rgba(200, 162, 200, 0.1);
+      box-shadow: 0 0 10px rgba(200, 162, 200, 0.3);
+    }
+
+    /* Card styles */
+    .portfolio-card {
+      border-radius: 16px;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .dark-card {
+      background: rgba(26, 16, 61, 0.5);
+      border: 1px solid rgba(166, 124, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .light-card {
+      background: rgba(255, 253, 252, 0.7);
+      border: 1px solid rgba(200, 162, 200, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .portfolio-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .dark-card:hover {
+      box-shadow: 0 10px 30px rgba(166, 124, 255, 0.2);
+    }
+
+    .light-card:hover {
+      box-shadow: 0 10px 30px rgba(200, 162, 200, 0.2);
+    }
+
+    /* Gradient text */
+    .gradient-text {
+      background: linear-gradient(90deg, #ff9acb, #a67cff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .light-gradient-text {
+      background: linear-gradient(90deg, #f6a5c0, #b76e79);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Section titles */
+    .section-title {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 3rem;
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      border-radius: 3px;
+    }
+
+    .dark-title::after {
+      background: linear-gradient(90deg, #ff9acb, #a67cff);
+    }
+
+    .light-title::after {
+      background: linear-gradient(90deg, #f6a5c0, #b76e79);
+    }
+
+    /* Timeline styles */
+    .timeline {
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #ff9acb, #a67cff);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2rem;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      top: 0;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+    }
+
+    .dark-dot {
+      background: linear-gradient(90deg, #ff9acb, #a67cff);
+      box-shadow: 0 0 10px rgba(166, 124, 255, 0.5);
+    }
+
+    .light-dot {
+      background: linear-gradient(90deg, #f6a5c0, #b76e79);
+      box-shadow: 0 0 10px rgba(183, 110, 121, 0.3);
+    }
+
+/* Profile image glow */
+.profile-image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-image-container::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border-radius: 10px; /* Changed from 50% to a small radius for square corners */
+  z-index: -1;
+  animation: pulse 2s infinite;
+}
+
+.dark-profile-glow::after {
+  background: linear-gradient(90deg, #ff9acb, #a67cff);
+  filter: blur(15px);
+  opacity: 0.5;
+}
+
+.light-profile-glow::after {
+  background: linear-gradient(90deg, #f6a5c0, #c8a2c8);
+  filter: blur(10px);
+  opacity: 0.3;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 0.8; }
+  100% { opacity: 0.5; }
+}
+
+
+    /* Language menu */
+    .language-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 0.5rem;
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      z-index: 50;
+      min-width: 140px;
+      overflow: hidden;
+    }
+
+    .dark-language-menu {
+      background: rgba(26, 16, 61, 0.8);
+      border: 1px solid rgba(166, 124, 255, 0.2);
+    }
+
+    .light-language-menu {
+      background: rgba(255, 253, 252, 0.8);
+      border: 1px solid rgba(200, 162, 200, 0.2);
+    }
+
+    /* Mobile menu */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .dark-mobile-menu {
+      background: rgba(11, 12, 29, 0.95);
+    }
+
+    .light-mobile-menu {
+      background: rgba(249, 249, 251, 0.95);
+    }
+
+    /* Search overlay */
+    .search-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 45;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 20vh;
+    }
+
+    .dark-search-overlay {
+      background: rgba(11, 12, 29, 0.98);
+    }
+
+    .light-search-overlay {
+      background: rgba(249, 249, 251, 0.98);
+    }
+
+    /* Skill bars */
+    .skill-bar {
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .dark-skill-bar {
+      background: rgba(166, 124, 255, 0.2);
+    }
+
+    .light-skill-bar {
+      background: rgba(200, 162, 200, 0.2);
+    }
+
+    .skill-progress {
+      height: 100%;
+      border-radius: 3px;
+    }
+
+    .dark-skill-progress {
+      background: linear-gradient(90deg, #ff9acb, #a67cff);
+    }
+
+    .light-skill-progress {
+      background: linear-gradient(90deg, #f6a5c0, #b76e79);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .timeline::before {
+        left: 20px;
+      }
+      
+      .timeline-dot {
+        left: 20px;
+      }
+    }
