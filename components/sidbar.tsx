@@ -6,7 +6,7 @@ import {
   Home,MessageCircle,
   BookOpen,
   Briefcase,
-  Code,
+  Code,Users,
   FileText,
     User as UserIcon, 
   Image,
@@ -26,11 +26,11 @@ const navItems = [
   { href: "/admin/projets", icon: FolderKanban, label: "Projets" },
   { href: "/admin/about_me", icon: UserIcon, label: "About Me" },
   { href: "/admin/contact", icon: Mail, label: "Contact" },
-  { href: "/admin/messages", icon: MessageCircle, label: "Messages" }, // new item
+  { href: "/admin/messages", icon: MessageCircle, label: "Messages" },
   { href: "/admin/cv", icon: FileText, label: "CV" },
   { href: "/admin/photo", icon: Image, label: "Photo" },
+  { href: "/admin/visitors", icon: Users, label: "Visitors" } // added item
 ];
-
   return (
     <>
       {/* Overlay */}

@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
 import { useRouter } from "next/navigation";
 
@@ -134,6 +135,7 @@ export default function Portfolio() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
+  const [visitors, setVisitors] = useState<number | null>(null);
 
   const [isSearchOpen, setIsSearchOpen] = useState(false)
 const [mockData, setMockData] = useState(baseMockData);
@@ -221,6 +223,69 @@ const [searchResults, setSearchResults] = useState<any[]>([]);
       setIsSendingMessage(false);
     }
   };
+
+
+useEffect(() => {
+  const trackVisit = async () => {
+    try {
+      // ✅ Load fingerprint
+      const fp = await FingerprintJS.load();
+      const result = await fp.get();
+      const visitorId = result.visitorId;
+
+      // ✅ Get IP & country
+      let ipData = {};
+      try {
+        const res = await fetch("https://ipapi.co/json/");
+        if (res.ok) ipData = await res.json();
+      } catch (err) {
+      
+      }
+
+      // ✅ If fingerprint or IP is missing, skip
+      if (!visitorId || !ipData.ip) {
+      
+        return;
+      }
+
+      // ✅ Detect device
+      const userAgent = navigator.userAgent;
+      const device = /Mobi|Android/i.test(userAgent) ? "Mobile" : "Desktop";
+
+      // ✅ Prepare data
+      const visitorData = {
+        fingerprint: visitorId,
+        ip: ipData.ip,
+        country: ipData.country_name || "",
+        userAgent,
+        device,
+        language: navigator.language,
+      };
+
+      // ✅ Send to API with API Key header
+      const res = await fetch("/api/track-visit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.NEXT_PUBLIC_API_SECRET || "",
+        },
+        body: JSON.stringify(visitorData),
+      });
+
+      if (!res.ok) return;
+
+      const data = await res.json();
+      if (data.success) setVisitors(data.totalVisitors);
+    } catch (err) {
+    
+    }
+  };
+
+  trackVisit();
+}, []);
+
+
+
 
    const [currentLang, setCurrentLang] = useState<"fr" | "en" | "ar">(() => {
       if (typeof window !== 'undefined') {
