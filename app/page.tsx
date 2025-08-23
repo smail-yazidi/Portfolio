@@ -1102,7 +1102,7 @@ shadow: 'shadow-xl',
           </h2>
 
           <div className="grid lg:grid-cols-2 gap-8">
-            {mockData.projects.projects.map((project: any) => (
+            {mockData.projects.projects.slice().reverse().map((project: any) => (
               <Card
                 key={project._id}
                 className={` rounded-2xl overflow-hidden ${themeClasses.accent}   transition-all duration-300 sm:hover:scale-105
