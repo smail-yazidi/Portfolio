@@ -29,6 +29,23 @@ export async function GET(req: Request) {
   }
 }
 
+function extractOSAndDevice(userAgent: string) {
+  let deviceType = "Unknown";
+  let os = "Unknown";
+
+  if (/Windows/i.test(userAgent)) os = "Windows";
+  else if (/Macintosh/i.test(userAgent)) os = "MacOS";
+  else if (/Linux/i.test(userAgent)) os = "Linux";
+  else if (/Android/i.test(userAgent)) os = "Android";
+  else if (/iPhone|iPad/i.test(userAgent)) os = "iOS";
+
+  if (/Mobile/i.test(userAgent)) deviceType = "Mobile";
+  else if (/Tablet/i.test(userAgent)) deviceType = "Tablet";
+  else deviceType = "Desktop";
+
+  return { os, deviceType };
+}
+
 export async function POST(req: Request) {
   try {
     const db = await connectDB();
@@ -47,23 +64,41 @@ export async function POST(req: Request) {
     const newEntry = {
       ip: ip || "",
       country: country || "",
-      userAgent: userAgent || "",
-      device: device || "",
-      language: language || "",
+      userAgent,
+      device,
+      language,
       time: new Date(),
     };
 
+    const { os, deviceType } = extractOSAndDevice(userAgent);
+
     // العثور على الزائر حسب البصمة
-    const existingVisitor = await visitorsCollection.findOne({ fingerprint });
+    let existingVisitor = await visitorsCollection.findOne({ fingerprint });
 
     if (!existingVisitor) {
-      // إذا البصمة غير موجودة → إنشاء زائر جديد
-      await visitorsCollection.insertOne({
-        fingerprint,
-        history: [newEntry],
+      // تحقق أولاً من وجود زائر مشابه بنفس نظام التشغيل ونوع الجهاز
+      const similarVisitor = await visitorsCollection.findOne({
+        "userAgentOS": os,
+        "deviceType": deviceType,
       });
+
+      if (similarVisitor) {
+        // إذا وجد زائر مشابه → إضافة التاريخ له
+        await visitorsCollection.updateOne(
+          { _id: similarVisitor._id },
+          { $push: { history: newEntry } }
+        );
+      } else {
+        // إذا لم يوجد → إنشاء زائر جديد
+        await visitorsCollection.insertOne({
+          fingerprint,
+          userAgentOS: os,
+          deviceType: deviceType,
+          history: [newEntry],
+        });
+      }
     } else {
-      // البصمة موجودة → تحقق من التغيرات في المعلومات المهمة (باستثناء IP والبلد)
+      // البصمة موجودة → تحقق من التغيرات المهمة (باستثناء IP والبلد)
       const lastEntry = existingVisitor.history?.[existingVisitor.history.length - 1];
 
       const otherChanged =
@@ -72,7 +107,6 @@ export async function POST(req: Request) {
         lastEntry?.language !== language;
 
       if (otherChanged) {
-        // إذا تغيرت معلومات مهمة → إضافة سجل جديد
         await visitorsCollection.updateOne(
           { _id: existingVisitor._id },
           { $push: { history: newEntry } }
@@ -96,5 +130,6 @@ export async function POST(req: Request) {
     );
   }
 }
+
 
 
