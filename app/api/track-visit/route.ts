@@ -63,23 +63,27 @@ export async function POST(req: Request) {
         history: [newEntry],
       });
     } else {
-      // البصمة موجودة → تحقق من التغيرات في المعلومات (باستثناء IP)
+      // البصمة موجودة → تحقق من التغيرات في المعلومات المهمة (باستثناء IP والبلد)
       const lastEntry = existingVisitor.history?.[existingVisitor.history.length - 1];
 
       const otherChanged =
-
         lastEntry?.userAgent !== userAgent ||
         lastEntry?.device !== device ||
         lastEntry?.language !== language;
 
       if (otherChanged) {
-        // إذا تغيرت معلومات أخرى → إضافة سجل جديد
+        // إذا تغيرت معلومات مهمة → إضافة سجل جديد
         await visitorsCollection.updateOne(
           { _id: existingVisitor._id },
           { $push: { history: newEntry } }
         );
+      } else {
+        // تحديث آخر سجل فقط للـ IP والبلد بدون إضافة سجل جديد
+        await visitorsCollection.updateOne(
+          { _id: existingVisitor._id, "history._id": lastEntry._id },
+          { $set: { "history.$.ip": ip || "", "history.$.country": country || "" } }
+        );
       }
-      // إذا لم تتغير المعلومات إلا IP فقط → لا نفعل شيئاً
     }
 
     const totalVisitors = await visitorsCollection.countDocuments();
