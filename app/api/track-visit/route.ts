@@ -61,6 +61,9 @@ export async function POST(req: Request) {
       );
     }
 
+    // تحليل نظام التشغيل والجهاز من UserAgent
+    const { os, deviceType } = extractOSAndDevice(userAgent);
+
     const newEntry = {
       ip: ip || "",
       country: country || "",
@@ -70,53 +73,56 @@ export async function POST(req: Request) {
       time: new Date(),
     };
 
-    const { os, deviceType } = extractOSAndDevice(userAgent);
-
-    // العثور على الزائر حسب البصمة
+    // البحث عن الزائر حسب البصمة
     let existingVisitor = await visitorsCollection.findOne({ fingerprint });
 
     if (!existingVisitor) {
-      // تحقق أولاً من وجود زائر مشابه بنفس نظام التشغيل ونوع الجهاز
-      const similarVisitor = await visitorsCollection.findOne({
-        "userAgentOS": os,
-        "deviceType": deviceType,
+      // إذا الزائر جديد → إنشئ سجل جديد
+      await visitorsCollection.insertOne({
+        fingerprint,
+        userAgentOS: os,
+        deviceType: deviceType,
+        history: [newEntry],
       });
-
-      if (similarVisitor) {
-        // إذا وجد زائر مشابه → إضافة التاريخ له
-        await visitorsCollection.updateOne(
-          { _id: similarVisitor._id },
-          { $push: { history: newEntry } }
-        );
-      } else {
-        // إذا لم يوجد → إنشاء زائر جديد
-        await visitorsCollection.insertOne({
-          fingerprint,
-          userAgentOS: os,
-          deviceType: deviceType,
-          history: [newEntry],
-        });
-      }
     } else {
-      // البصمة موجودة → تحقق من التغيرات المهمة (باستثناء IP والبلد)
-      const lastEntry = existingVisitor.history?.[existingVisitor.history.length - 1];
+      // الزائر موجود → تحقق من السجل الأخير
+      const lastEntry =
+        existingVisitor.history?.[existingVisitor.history.length - 1];
 
-      const otherChanged =
-        lastEntry?.userAgent !== userAgent ||
-        lastEntry?.device !== device ||
-        lastEntry?.language !== language;
-
-      if (otherChanged) {
+      if (!lastEntry) {
+        // ما فيه أي تاريخ محفوظ → أضف أول سجل
         await visitorsCollection.updateOne(
           { _id: existingVisitor._id },
           { $push: { history: newEntry } }
         );
       } else {
-        // تحديث آخر سجل فقط للـ IP والبلد بدون إضافة سجل جديد
-        await visitorsCollection.updateOne(
-          { _id: existingVisitor._id, "history._id": lastEntry._id },
-          { $set: { "history.$.ip": ip || "", "history.$.country": country || "" } }
-        );
+        const importantChanged =
+          lastEntry.userAgent !== userAgent ||
+          lastEntry.device !== device ||
+          lastEntry.language !== language;
+
+        if (importantChanged) {
+          // تغييرات مهمة → إضافة سجل جديد
+          await visitorsCollection.updateOne(
+            { _id: existingVisitor._id },
+            { $push: { history: newEntry } }
+          );
+        } else {
+          // لم تتغير البيانات المهمة → فقط تحديث IP و الدولة و الوقت
+          await visitorsCollection.updateOne(
+            { _id: existingVisitor._id },
+            {
+              $set: {
+                "history.$[last].ip": ip || "",
+                "history.$[last].country": country || "",
+                "history.$[last].time": new Date(),
+              },
+            },
+            {
+              arrayFilters: [{ "last.time": lastEntry.time }],
+            }
+          );
+        }
       }
     }
 
@@ -130,6 +136,7 @@ export async function POST(req: Request) {
     );
   }
 }
+
 
 
 
