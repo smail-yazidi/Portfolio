@@ -67,7 +67,7 @@ export async function POST(req: Request) {
       const lastEntry = existingVisitor.history?.[existingVisitor.history.length - 1];
 
       const otherChanged =
-        lastEntry?.country !== country ||
+
         lastEntry?.userAgent !== userAgent ||
         lastEntry?.device !== device ||
         lastEntry?.language !== language;
