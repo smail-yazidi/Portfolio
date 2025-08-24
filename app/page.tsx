@@ -223,28 +223,7 @@ const [searchResults, setSearchResults] = useState<any[]>([]);
       setIsSendingMessage(false);
     }
   };
-  useEffect(() => {
-    const fetchAllData = async () => {
-      try {
-        const res = await fetch("/api/all-data", {
-          headers: {
-            "x-api-key": process.env.NEXT_PUBLIC_API_SECRET || ""
-          }
-        });
 
-        if (!res.ok) throw new Error("Failed to fetch all data");
-
-        const data = await res.json();
-        setMockData(data);
-      } catch (err) {
-        console.error("Error fetching all data:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAllData();
-  }, []);
 
 useEffect(() => {
   const trackVisit = async () => {
@@ -495,6 +474,89 @@ useEffect(() => {
 
 
 
+ useEffect(() => {
+  const fetchAllData = async () => {
+    try {
+      const endpoints = {
+        photo: "/api/photo",
+        hero: "/api/hero",
+        username: "/api/username",
+        about: "/api/about_me",
+        contact: "/api/contact",
+        services: "/api/services",
+        education: "/api/education",
+        skills: "/api/skills",
+        projects: "/api/projets"
+      };
+
+      // Fetch all endpoints in parallel
+      const results = await Promise.all(
+        Object.entries(endpoints).map(async ([key, url]) => {
+          try {
+            const res = await fetch(url, {
+              headers: {
+                "x-api-key": process.env.NEXT_PUBLIC_API_SECRET || ""
+              }
+            });
+
+            if (!res.ok) throw new Error(`${url} failed`);
+            const data = await res.json();
+            return { key, data };
+          } catch (err) {
+            console.error(`Error fetching ${key}:`, err);
+            return { key, data: null }; // fallback
+          }
+        })
+      );
+
+      // Build new mockData from base + API
+      let updatedData = { ...baseMockData };
+
+      results.forEach(({ key, data }) => {
+        if (!data) return; // skip failed fetches
+        switch (key) {
+          case "photo":
+            updatedData = { ...updatedData, photoUrl: data.url };
+            break;
+          case "hero":
+            updatedData = { ...updatedData, hero: data };
+            break;
+          case "username":
+            updatedData = { ...updatedData, username: data };
+            break;
+          case "about":
+            updatedData = { ...updatedData, about: data };
+            break;
+          case "contact":
+            updatedData = { ...updatedData, contact: data };
+            break;
+          case "services":
+            updatedData = { ...updatedData, services: data };
+            break;
+          case "education":
+            updatedData = { ...updatedData, education: data };
+            break;
+          case "skills":
+            updatedData = { ...updatedData, skills: data };
+            break;
+          case "projects":
+            updatedData = { ...updatedData, projects: data };
+            break;
+          default:
+            break;
+        }
+      });
+
+      setMockData(updatedData);
+    } catch (err) {
+      console.error("Error fetching all data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchAllData();
+}, []);
 
 
 
