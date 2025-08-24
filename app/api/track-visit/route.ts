@@ -29,7 +29,7 @@ export async function GET(req: Request) {
   }
 }
 
-// ✅ Add new visitor
+// ✅ Add new visitor or update existing one with new info
 export async function POST(req: Request) {
   try {
     const db = await connectDB();
@@ -45,19 +45,43 @@ export async function POST(req: Request) {
       );
     }
 
-    // Check if visitor already exists
+    // Find visitor by fingerprint
     const existingVisitor = await visitorsCollection.findOne({ fingerprint });
 
+    const newEntry = {
+      ip: ip || "",
+      country: country || "",
+      userAgent: userAgent || "",
+      device: device || "",
+      language: language || "",
+      time: new Date(),
+    };
+
     if (!existingVisitor) {
+      // Fingerprint doesn't exist → create new visitor
       await visitorsCollection.insertOne({
         fingerprint,
-        ip: ip || "",
-        country: country || "",
-        userAgent: userAgent || "",
-        device: device || "",
-        language: language || "",
-        time: new Date(),
+        history: [newEntry],
       });
+    } else {
+      // Fingerprint exists → check last history
+      const lastEntry = existingVisitor.history?.[existingVisitor.history.length - 1];
+
+      // Determine if IP changed or other fields changed
+      const ipChanged = lastEntry?.ip !== ip;
+      const otherChanged =
+        lastEntry?.country !== country ||
+        lastEntry?.userAgent !== userAgent ||
+        lastEntry?.device !== device ||
+        lastEntry?.language !== language;
+
+      if (ipChanged || otherChanged) {
+        // Push new history entry
+        await visitorsCollection.updateOne(
+          { _id: existingVisitor._id },
+          { $push: { history: newEntry } }
+        );
+      }
     }
 
     const totalVisitors = await visitorsCollection.countDocuments();
@@ -70,3 +94,4 @@ export async function POST(req: Request) {
     );
   }
 }
+

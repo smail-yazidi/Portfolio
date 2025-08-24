@@ -5,15 +5,19 @@ import { Trash2, ArrowLeft, ArrowUp, ArrowDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Loading from "@/components/LoadingAdmin";
 
-type Visitor = {
-  _id: string;
-  fingerprint: string;
+type HistoryEntry = {
   ip: string;
   country: string;
   device: string;
   language: string;
   userAgent: string;
   time: string;
+};
+
+type Visitor = {
+  _id: string;
+  fingerprint: string;
+  history: HistoryEntry[];
 };
 
 const PAGE_SIZE = 10;
@@ -42,15 +46,26 @@ export default function VisitorsPage() {
 
       const data = await res.json();
 
+      // Sort by last history entry
       const sorted =
         sortOrder === "newest"
           ? data.visitors.sort(
               (a: Visitor, b: Visitor) =>
-                new Date(b.time).getTime() - new Date(a.time).getTime()
+                new Date(
+                  b.history[b.history.length - 1]?.time || 0
+                ).getTime() -
+                new Date(
+                  a.history[a.history.length - 1]?.time || 0
+                ).getTime()
             )
           : data.visitors.sort(
               (a: Visitor, b: Visitor) =>
-                new Date(a.time).getTime() - new Date(b.time).getTime()
+                new Date(
+                  a.history[a.history.length - 1]?.time || 0
+                ).getTime() -
+                new Date(
+                  b.history[b.history.length - 1]?.time || 0
+                ).getTime()
             );
 
       setVisitors(sorted);
@@ -68,13 +83,15 @@ export default function VisitorsPage() {
   }, [sortOrder]);
 
   useEffect(() => {
-    const filtered = visitors.filter(
-      (v) =>
-        v.ip?.toLowerCase().includes(search.toLowerCase()) ||
-        v.country?.toLowerCase().includes(search.toLowerCase()) ||
-        v.device?.toLowerCase().includes(search.toLowerCase()) ||
-        v.language?.toLowerCase().includes(search.toLowerCase())
-    );
+    const filtered = visitors.filter((v) => {
+      const latest = v.history[v.history.length - 1];
+      return (
+        latest.ip?.toLowerCase().includes(search.toLowerCase()) ||
+        latest.country?.toLowerCase().includes(search.toLowerCase()) ||
+        latest.device?.toLowerCase().includes(search.toLowerCase()) ||
+        latest.language?.toLowerCase().includes(search.toLowerCase())
+      );
+    });
     setFilteredVisitors(filtered);
     setCurrentPage(1);
   }, [search, visitors]);
@@ -168,6 +185,7 @@ export default function VisitorsPage() {
             <table className="w-full border-collapse border border-gray-300">
               <thead className="bg-gray-100">
                 <tr>
+                  <th className="border p-2 text-left">Fingerprint</th>
                   <th className="border p-2 text-left">IP</th>
                   <th className="border p-2 text-left">Country</th>
                   <th className="border p-2 text-left">Device</th>
@@ -177,32 +195,38 @@ export default function VisitorsPage() {
                 </tr>
               </thead>
               <tbody>
-                {paginatedVisitors.map((v) => (
-                  <tr
-                    key={v._id}
-                    className="hover:bg-gray-50 cursor-pointer"
-                    onClick={() => setSelectedVisitor(v)}
-                  >
-                    <td className="border p-2">{v.ip || "-"}</td>
-                    <td className="border p-2">{v.country || "-"}</td>
-                    <td className="border p-2">{v.device || "-"}</td>
-                    <td className="border p-2">{v.language || "-"}</td>
-                    <td className="border p-2">
-                      {new Date(v.time).toLocaleString()}
-                    </td>
-                    <td className="border p-2">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(v._id);
-                        }}
-                        className="text-red-500 hover:text-red-700 flex items-center gap-1"
-                      >
-                        <Trash2 className="w-4 h-4" /> Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {paginatedVisitors.map((v) => {
+                  const latest = v.history[v.history.length - 1];
+                  return (
+                    <tr
+                      key={v._id}
+                      className="hover:bg-gray-50 cursor-pointer"
+                      onClick={() => setSelectedVisitor(v)}
+                    >
+                      <td className="border p-2">{v.fingerprint}</td>
+                      <td className="border p-2">{latest?.ip || "-"}</td>
+                      <td className="border p-2">{latest?.country || "-"}</td>
+                      <td className="border p-2">{latest?.device || "-"}</td>
+                      <td className="border p-2">{latest?.language || "-"}</td>
+                      <td className="border p-2">
+                        {latest?.time
+                          ? new Date(latest.time).toLocaleString()
+                          : "-"}
+                      </td>
+                      <td className="border p-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDelete(v._id);
+                          }}
+                          className="text-red-500 hover:text-red-700 flex items-center gap-1"
+                        >
+                          <Trash2 className="w-4 h-4" /> Delete
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -247,26 +271,38 @@ export default function VisitorsPage() {
             <ArrowLeft className="w-4 h-4" /> all visitors
           </button>
 
-          <div className="border p-4 rounded shadow max-w-full space-y-2">
-            <p>
-              <strong>IP:</strong> {selectedVisitor.ip || "-"}
-            </p>
-            <p>
-              <strong>Country:</strong> {selectedVisitor.country || "-"}
-            </p>
-            <p>
-              <strong>Device:</strong> {selectedVisitor.device || "-"}
-            </p>
-            <p>
-              <strong>Language:</strong> {selectedVisitor.language || "-"}
-            </p>
-            <p>
-              <strong>Date:</strong>{" "}
-              {new Date(selectedVisitor.time).toLocaleString()}
-            </p>
-            <p className="break-words">
-              <strong>User Agent:</strong> {selectedVisitor.userAgent}
-            </p>
+          <div className="border p-4 rounded shadow max-w-full space-y-4">
+            <h2 className="text-lg font-bold">
+              Fingerprint: {selectedVisitor.fingerprint}
+            </h2>
+
+            {/* Full history */}
+            <table className="w-full border-collapse border border-gray-300">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="border p-2">IP</th>
+                  <th className="border p-2">Country</th>
+                  <th className="border p-2">Device</th>
+                  <th className="border p-2">Language</th>
+                  <th className="border p-2">Date</th>
+                  <th className="border p-2">User Agent</th>
+                </tr>
+              </thead>
+              <tbody>
+                {selectedVisitor.history.map((entry, idx) => (
+                  <tr key={idx}>
+                    <td className="border p-2">{entry.ip || "-"}</td>
+                    <td className="border p-2">{entry.country || "-"}</td>
+                    <td className="border p-2">{entry.device || "-"}</td>
+                    <td className="border p-2">{entry.language || "-"}</td>
+                    <td className="border p-2">
+                      {new Date(entry.time).toLocaleString()}
+                    </td>
+                    <td className="border p-2 break-words">{entry.userAgent}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
 
             <button
               onClick={() => handleDelete(selectedVisitor._id)}
