@@ -933,7 +933,7 @@ shadow: 'shadow-xl',
 `}>
     <div className="relative w-48 h-48 sm:w-60 sm:h-60 md:w-80 md:h-80 rounded-2xl overflow-hidden">
       <Image
-        src={mockData.photoUrl || "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face"}
+        src={mockData.photoUrl || "https://woxgxzelncuqwury.public.blob.vercel-storage.com/free.png"}
         alt="Profile photo"
         width={400}
         height={400}
