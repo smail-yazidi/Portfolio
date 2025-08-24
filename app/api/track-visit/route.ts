@@ -29,7 +29,6 @@ export async function GET(req: Request) {
   }
 }
 
-// ✅ Add new visitor or update existing one with new info
 export async function POST(req: Request) {
   try {
     const db = await connectDB();
@@ -45,9 +44,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Find visitor by fingerprint
-    const existingVisitor = await visitorsCollection.findOne({ fingerprint });
-
     const newEntry = {
       ip: ip || "",
       country: country || "",
@@ -57,31 +53,33 @@ export async function POST(req: Request) {
       time: new Date(),
     };
 
+    // العثور على الزائر حسب البصمة
+    const existingVisitor = await visitorsCollection.findOne({ fingerprint });
+
     if (!existingVisitor) {
-      // Fingerprint doesn't exist → create new visitor
+      // إذا البصمة غير موجودة → إنشاء زائر جديد
       await visitorsCollection.insertOne({
         fingerprint,
         history: [newEntry],
       });
     } else {
-      // Fingerprint exists → check last history
+      // البصمة موجودة → تحقق من التغيرات في المعلومات (باستثناء IP)
       const lastEntry = existingVisitor.history?.[existingVisitor.history.length - 1];
 
-      // Determine if IP changed or other fields changed
-      const ipChanged = lastEntry?.ip !== ip;
       const otherChanged =
         lastEntry?.country !== country ||
         lastEntry?.userAgent !== userAgent ||
         lastEntry?.device !== device ||
         lastEntry?.language !== language;
 
-      if (ipChanged || otherChanged) {
-        // Push new history entry
+      if (otherChanged) {
+        // إذا تغيرت معلومات أخرى → إضافة سجل جديد
         await visitorsCollection.updateOne(
           { _id: existingVisitor._id },
           { $push: { history: newEntry } }
         );
       }
+      // إذا لم تتغير المعلومات إلا IP فقط → لا نفعل شيئاً
     }
 
     const totalVisitors = await visitorsCollection.countDocuments();
@@ -94,4 +92,5 @@ export async function POST(req: Request) {
     );
   }
 }
+
 
