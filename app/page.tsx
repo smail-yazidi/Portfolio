@@ -907,24 +907,29 @@ shadow: 'shadow-xl',
       {t.viewJourney}
     </Button>
 
-                {mockData.hero.heroButtons?.map((button, index) => {
-                  const Icon = getIcon(button.icon);
-                  const handleClick = () => {
-                    if (button.link) scrollToSection(button.link.replace('#', ''));
-                  };
-                  return (
-                    <Button
-                      key={index}
-                      variant="outline"
-                      onClick={handleClick}
-                      className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} hover:${themeClasses.accentBg} rounded-2xl px-8 py-3 transition-all duration-300 sm:hover:scale-105
- text-lg`}
-                    >
-                      {Icon && <Icon className="mr-2 h-5 w-5" />}
-                      {button.text?.[currentLang]}
-                    </Button>
-                  );
-                })}
+            {mockData.hero.heroButtons?.map((button, index) => {
+  const Icon = getIcon(button.icon);
+  const isExternal = button.link?.startsWith("http");
+
+  return (
+    <Button
+      key={index}
+      variant="outline"
+      asChild // 👈 allows Button to wrap an <a>
+      className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} hover:${themeClasses.accentBg} rounded-2xl px-8 py-3 transition-all duration-300 sm:hover:scale-105 text-lg`}
+    >
+      <a
+        href={button.link || "#"}
+        target={isExternal ? "_blank" : "_self"}
+        rel={isExternal ? "noopener noreferrer" : ""}
+      >
+        {Icon && <Icon className="mr-2 h-5 w-5 inline-block" />}
+        {button.text?.[currentLang]}
+      </a>
+    </Button>
+  );
+})}
+
               </div>
             </div>
 
@@ -948,77 +953,95 @@ shadow: 'shadow-xl',
           </div>
         </div>
       </section>
-
-    {/* Skills Section */}
-      <section id="skills" className={`py-20 ${themeClasses.background}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className={`text-3xl md:text-4xl font-bold text-center mb-16 ${themeClasses.text}`}>
-            {t.skillsTitle}
-            <span className={`block w-20 h-1 ${themeClasses.accentBg} mx-auto mt-4 rounded-full`}></span>
-          </h2>
-
-          <div className="space-y-12">
-            {mockData.skills.skills.map((category, catIndex) => {
-              const CategoryIcon = getIcon(category.skillicon);
-
-              return (
-                <div key={catIndex} className={`${themeClasses.glassDark} rounded-2xl p-8 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105
-`}>
-               <h3 className={`text-2xl font-semibold mb-8 ${themeClasses.text} flex items-center`}>
-  {CategoryIcon && (
-    <CategoryIcon
-      className={`h-6 w-6 ${themeClasses.accent} ${
-        currentLang === "ar" ? "ml-3" : "mr-3"
-      }`}
-    />
-  )}
-  {category.title?.[currentLang]}
-</h3>
-
-
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {category.items.map((skill, skillIndex) => {
-                      const SkillIcon = getIcon(skill.icon);
-
-                      return (
-                        <Card
-                          key={skillIndex}
-                          className={`${themeClasses.glassDark} border-white/10 rounded-2xl transition-all duration-300 sm:hover:scale-105
- hover:shadow-lg group`}
-                        >
-                          <CardContent className="p-6">
-                            {SkillIcon && (
-                              <SkillIcon className={`h-8 w-8 ${themeClasses.accent} mb-4 group-hover:scale-110 transition-transform duration-300`} />
-                            )}
-                            <h4 className={`text-lg font-semibold mb-3 ${themeClasses.text} group-hover:${themeClasses.accent} transition-colors duration-300`}>
-                              {skill.name?.[currentLang]}
-                            </h4>
-                            {skill.examples?.length > 0 && (
-                           <ul className={`space-y-1 ${themeClasses.textMuted} text-sm`}>
-  {skill.examples.map((ex, exIndex) => (
-    <li key={exIndex} className="flex items-center">
+{/* Skills Section */}
+<section id="skills" className={`py-20 ${themeClasses.background}`}>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2
+      className={`text-3xl md:text-4xl font-bold text-center mb-16 ${themeClasses.text}`}
+    >
+      {t.skillsTitle}
       <span
-        className={`w-2 h-2 ${themeClasses.accentBg} rounded-full ${
-          currentLang === "ar" ? "ml-2" : "mr-2"
-        }`}
+        className={`block w-20 h-1 ${themeClasses.accentBg} mx-auto mt-4 rounded-full`}
       ></span>
-      {ex?.[currentLang]}
-    </li>
-  ))}
-</ul>
+    </h2>
 
-                            )}
-                          </CardContent>
-                        </Card>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
+    {/* One container for all categories */}
+    <div className="bg-white/40 backdrop-blur-lg border border-black/20 shadow-xl rounded-2xl p-8 transition-all duration-300 sm:hover:scale-105 space-y-12">
+      {mockData.skills.skills.map((category, catIndex) => {
+        const CategoryIcon = getIcon(category.skillicon);
+
+        return (
+          <div key={`cat-${catIndex}`}>
+            {/* Category Title */}
+            <h3
+              className={`text-2xl font-semibold mb-8 ${themeClasses.text} flex items-center`}
+            >
+              {CategoryIcon && (
+                <CategoryIcon
+                  className={`h-6 w-6 ${themeClasses.accent} ${
+                    currentLang === "ar" ? "ml-3" : "mr-3"
+                  }`}
+                />
+              )}
+              {category.title?.[currentLang]}
+            </h3>
+
+            {/* Skills Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {category.items.map((skill, skillIndex) => {
+                const SkillIcon = getIcon(skill.icon);
+
+                return (
+                  <Card
+                    key={`cat-${catIndex}-skill-${skillIndex}`}
+                    className={`${themeClasses.glassDark} border-white/10 rounded-2xl transition-all duration-300 sm:hover:scale-105 hover:shadow-lg group`}
+                  >
+                    <CardContent className="p-6 text-center">
+                      {SkillIcon && (
+                        <SkillIcon
+                          className={`h-8 w-8 mx-auto ${themeClasses.accent} mb-4 group-hover:scale-110 transition-transform duration-300`}
+                        />
+                      )}
+
+                      {/* Skill name with scrolling if too long */}
+                      <h4
+                        className={`relative overflow-hidden whitespace-nowrap text-lg font-semibold mb-3 ${themeClasses.text} group-hover:${themeClasses.accent} transition-colors duration-300`}
+                      >
+                        <span className="inline-block animate-marquee sm:animate-none">
+                          {skill.name?.[currentLang]}
+                        </span>
+                      </h4>
+
+                      {skill.examples?.length > 0 && (
+                        <ul
+                          className={`space-y-1 ${themeClasses.textMuted} text-sm text-left`}
+                        >
+                          {skill.examples.map((ex, exIndex) => (
+                            <li
+                              key={`cat-${catIndex}-skill-${skillIndex}-ex-${exIndex}`}
+                              className="flex items-center"
+                            >
+                              <span
+                                className={`w-2 h-2 ${themeClasses.accentBg} rounded-full ${
+                                  currentLang === "ar" ? "ml-2" : "mr-2"
+                                }`}
+                              ></span>
+                              {ex?.[currentLang]}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </section>
+        );
+      })}
+    </div>
+  </div>
+</section>
 
       {/* Experience Section */}
       <section id="experience" className={`py-20 ${themeClasses.background}`}>
