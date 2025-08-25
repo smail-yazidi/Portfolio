@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   title: 'Smail Yazidi',
   description: '',
   generator: '',
-  icon: '/favicon.ico',
+  icon: 'https://ocptjbiqeoasires.public.blob.vercel-storage.com/favicon.ico',
 }
 
 export default function RootLayout({
