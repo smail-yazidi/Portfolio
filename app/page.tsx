@@ -614,13 +614,13 @@ shadow: 'shadow-xl',
   return (
     <div className={`min-h-screen transition-all duration-500 ${themeClasses.background} ${themeClasses.text} ${currentLang === 'ar' ? 'font-arabic' : ''}`} style={{ direction: currentLang === 'ar' ? 'rtl' : 'ltr' }}>
       {/* Header */}
-      <header className={`fixed top-0 w-full z-50 ${themeClasses.glassDark} ${themeClasses.shadow} transition-all duration-500`}>
+      <header className={`fixed top-0 w-full z-50 ${themeClasses.glassDark}  backdrop-blur-lg ${themeClasses.shadow} transition-all duration-500`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4 ">
             {/* Logo */}
             <div className="flex-shrink-0">
 
-<div className={`${themeClasses.glassDark} ${isDarkMode ? 'text-white' : 'text-[#0A2647]'} border border-white/20 min-w-[30px] w-10 h-10  hover:${themeClasses.accent} rounded-full transition-all duration-300 sm:hover:scale-105
+<div className={`${themeClasses.glassDark}  backdrop-blur-lg ${isDarkMode ? 'text-white' : 'text-[#0A2647]'} border border-white/20 min-w-[30px] w-10 h-10  hover:${themeClasses.accent} rounded-full transition-all duration-300 sm:hover:scale-105
  flex items-center justify-center text-2xl font-bold sm:hidden`}>
   {/* Show first English letter, uppercased */}
 <span>
@@ -672,7 +672,7 @@ shadow: 'shadow-xl',
     <Button
       variant="outline"
       onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-      className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} hover:${themeClasses.accent} rounded-2xl transition-all duration-300 sm:hover:scale-105`}
+      className={`${themeClasses.glassDark} backdrop-blur-lg border-white/20 ${themeClasses.text} hover:${themeClasses.accent} rounded-2xl transition-all duration-300 sm:hover:scale-105`}
     >
       <span>{currentLang.toUpperCase()}</span>
       <ChevronDown
@@ -684,7 +684,7 @@ shadow: 'shadow-xl',
 
     {isLangMenuOpen && (
       <div
-        className={`absolute top-full right-0 mt-2 ${themeClasses.glassDark} rounded-2xl ${themeClasses.shadow} border border-white/10 min-w-[150px] z-50 transition-all duration-300 animate-in slide-in-from-top-2`}
+        className={`absolute top-full right-0 mt-2 ${themeClasses.glassDark} backdrop-blur-lg rounded-2xl ${themeClasses.shadow} border border-white/10 min-w-[150px] z-50 transition-all duration-300 animate-in slide-in-from-top-2`}
       >
         {languageOptions.map((option) => (
           <button
@@ -706,7 +706,7 @@ shadow: 'shadow-xl',
   <Button
     variant="outline"
     onClick={toggleTheme}
-    className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} hover:${themeClasses.accent} rounded-2xl transition-all duration-300 sm:hover:scale-105`}
+    className={`${themeClasses.glassDark} backdrop-blur-lg border-white/20 ${themeClasses.text} hover:${themeClasses.accent} rounded-2xl transition-all duration-300 sm:hover:scale-105`}
   >
     {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
   </Button>
@@ -719,7 +719,7 @@ shadow: 'shadow-xl',
   setSearchTerm("");
 }}
 
-    className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} hover:${themeClasses.accent} rounded-2xl transition-all duration-300 sm:hover:scale-105`}
+    className={`${themeClasses.glassDark} backdrop-blur-lg border-white/20 ${themeClasses.text} hover:${themeClasses.accent} rounded-2xl transition-all duration-300 sm:hover:scale-105`}
   >
     {isSearchOpen ? <X className="h-5 w-5" /> : <Search className="h-5 w-5" />}
   </Button>
@@ -743,7 +743,7 @@ shadow: 'shadow-xl',
   <Button
     variant="outline"
     onClick={toggleTheme}
-    className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} rounded-xl sm:rounded-2xl px-2 py-1 sm:px-3 sm:py-2`}
+    className={`${themeClasses.glassDark} backdrop-blur-lg border-white/20 ${themeClasses.text} rounded-xl sm:rounded-2xl px-2 py-1 sm:px-3 sm:py-2`}
   >
     {isDarkMode ? <Sun className="h-4 w-4 sm:h-5 sm:w-5" /> : <Moon className="h-4 w-4 sm:h-5 sm:w-5" />}
   </Button>
@@ -753,7 +753,7 @@ shadow: 'shadow-xl',
     <Button
       variant="outline"
       onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-      className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} rounded-xl sm:rounded-2xl px-2 py-1 sm:px-3 sm:py-2`}
+      className={`${themeClasses.glassDark} backdrop-blur-lg border-white/20 ${themeClasses.text} rounded-xl sm:rounded-2xl px-2 py-1 sm:px-3 sm:py-2`}
     >
       <span className="text-xs sm:text-sm">{currentLang.toUpperCase()}</span>
       <ChevronDown
@@ -763,7 +763,7 @@ shadow: 'shadow-xl',
 
     {isLangMenuOpen && (
       <div
-        className={`absolute top-full right-0 mt-1 sm:mt-2 ${themeClasses.glassDark} rounded-xl sm:rounded-2xl ${themeClasses.shadow} border border-white/10 min-w-[100px] sm:min-w-[120px] z-50`}
+        className={`absolute top-full right-0 mt-1 sm:mt-2 ${themeClasses.glassDark} backdrop-blur-lg rounded-xl sm:rounded-2xl ${themeClasses.shadow} border border-white/10 min-w-[100px] sm:min-w-[120px] z-50`}
       >
         {languageOptions.map((option) => (
           <button
@@ -785,7 +785,7 @@ shadow: 'shadow-xl',
   <Button
     variant="outline"
     onClick={() => {setIsSearchOpen(!isSearchOpen);setIsMenuOpen(false); setSearchTerm("");}}
-    className={`${themeClasses.glassDark} border-white/20 ${themeClasses.text} rounded-xl sm:rounded-2xl px-2 py-1 sm:px-3 sm:py-2`}
+    className={`${themeClasses.glassDark} backdrop-blur-lg border-white/20 ${themeClasses.text} rounded-xl sm:rounded-2xl px-2 py-1 sm:px-3 sm:py-2`}
   >
     {isSearchOpen ? <X className="h-4 w-4 sm:h-5 sm:w-5" /> : <Search className="h-4 w-4 sm:h-5 sm:w-5" />}
   </Button>
@@ -805,7 +805,7 @@ shadow: 'shadow-xl',
 {/* Mobile Menu */}
 {isMenuOpen && (
   <div
-    className={`xl:hidden ${themeClasses.glassDark} rounded-2xl mb-4 p-4 ${themeClasses.shadow} transition-all duration-300 animate-in slide-in-from-top-2`}
+    className={`xl:hidden ${themeClasses.glassDark} backdrop-blur-lg rounded-2xl mb-4 p-4 ${themeClasses.shadow} transition-all duration-300 animate-in slide-in-from-top-2`}
     dir={currentLang === "ar" ? "rtl" : "ltr"} // set direction
   >
     <nav className="flex flex-col space-y-2">
@@ -839,7 +839,7 @@ shadow: 'shadow-xl',
 
           {/* Search Bar */}
           {isSearchOpen && (
-          <div className={`${themeClasses.glassDark} rounded-2xl mb-4 p-4 ${themeClasses.shadow} transition-all duration-300 animate-in slide-in-from-top-2`}>
+          <div className={`${themeClasses.glassDark} backdrop-blur-lg rounded-2xl mb-4 p-4 ${themeClasses.shadow} transition-all duration-300 animate-in slide-in-from-top-2`}>
   <div className="relative">
     <input
       type="text"
