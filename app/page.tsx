@@ -953,6 +953,8 @@ shadow: 'shadow-xl',
           </div>
         </div>
       </section>
+
+
 {/* Skills Section */}
 <section id="skills" className={`py-20 ${themeClasses.background}`}>
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -966,8 +968,8 @@ shadow: 'shadow-xl',
     </h2>
 
     {/* One container for all categories */}
-    <div className="bg-white/40 backdrop-blur-lg border border-black/20 shadow-xl rounded-2xl p-8 transition-all duration-300 sm:hover:scale-105 space-y-12">
-      {mockData.skills.skills.map((category, catIndex) => {
+                    <div className={`${themeClasses.glassDark} rounded-2xl p-8 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105  space-y-12
+`}>  {mockData.skills.skills.map((category, catIndex) => {
         const CategoryIcon = getIcon(category.skillicon);
 
         return (
@@ -994,7 +996,7 @@ shadow: 'shadow-xl',
                 return (
                   <Card
                     key={`cat-${catIndex}-skill-${skillIndex}`}
-                    className={`${themeClasses.glassDark} border-white/10 rounded-2xl transition-all duration-300 sm:hover:scale-105 hover:shadow-lg group`}
+                    className={`${themeClasses.glassDark} border-white/10 rounded-2xl transition-all duration-300 sm:hover:scale-105 hover:shadow-lg group${themeClasses.glassDark}${themeClasses.shadow} `}
                   >
                     <CardContent className="p-6 text-center">
                       {SkillIcon && (
@@ -1042,7 +1044,6 @@ shadow: 'shadow-xl',
     </div>
   </div>
 </section>
-
       {/* Experience Section */}
       <section id="experience" className={`py-20 ${themeClasses.background}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
