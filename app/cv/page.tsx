@@ -110,8 +110,8 @@ accentBg: isDarkMode ? 'bg-[#3A6EA5]' : 'bg-[#0A2647]',
 accentBorder: isDarkMode ? 'border-[#3A6EA5]' : 'border-[#0A2647]',
 
  glassDark: isDarkMode
-  ? 'bg-black/40 backdrop-blur-lg border border-white/20 shadow-xl' 
-  : 'bg-white/40 backdrop-blur-lg border border-black/20 shadow-xl',
+  ? 'bg-black/40  border border-white/20 shadow-xl' 
+  : 'bg-white/40  border border-black/20 shadow-xl',
 shadow: 'shadow-xl',
 };
   const languageOptions = [
@@ -231,7 +231,7 @@ return (
     <section
       className={`
         flex-1 relative
-        ${themeClasses.background}  
+        ${themeClasses.background}   ${themeClasses.glassDark}  ${themeClasses.shadow}
         w-full max-w-4xl md:max-w-[794px] mx-auto my-2 rounded-2xl
       `}
     >
