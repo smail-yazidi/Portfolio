@@ -70,65 +70,30 @@ export async function POST(req: Request) {
       time: new Date(),
     };
 
-    const { os, deviceType } = extractOSAndDevice(userAgent);
-
+    
     // العثور على الزائر حسب البصمة
     let existingVisitor = await visitorsCollection.findOne({ fingerprint });
 
-    if (!existingVisitor) {
-      // تحقق أولاً من وجود زائر مشابه بنفس نظام التشغيل ونوع الجهاز
-      const similarVisitor = await visitorsCollection.findOne({
-        "userAgentOS": os,
-        "deviceType": deviceType,
-      });
+if (!existingVisitor) {
+  // إذا لم توجد البصمة → أضف الزائر مباشرة دون أي تحقق آخر
+  const { os, deviceType } = extractOSAndDevice(userAgent);
 
-     if (similarVisitor) {
-  const lastEntry = similarVisitor.history?.[similarVisitor.history.length - 1];
+  const newEntry = {
+    ip: ip || "",
+    country: country || "",
+    userAgent,
+    device,
+    language,
+    time: new Date(),
+  };
 
-  if (!lastEntry) {
-    // no history → just add the first entry
-    await visitorsCollection.updateOne(
-      { _id: similarVisitor._id },
-      { $push: { history: newEntry } }
-    );
-  } else {
-    const importantChanged =
-      lastEntry.userAgent !== userAgent ||
-      lastEntry.device !== device ||
-      lastEntry.language !== language;
-
-    if (importantChanged) {
-      // something important changed → push new history entry
-      await visitorsCollection.updateOne(
-        { _id: similarVisitor._id },
-        { $push: { history: newEntry } }
-      );
-    } else {
-      // no important change → update only last entry with new ip/country/time
-      await visitorsCollection.updateOne(
-        { _id: similarVisitor._id },
-        {
-          $set: {
-            "history.$[last].ip": ip || "",
-            "history.$[last].country": country || "",
-            "history.$[last].time": new Date(),
-          },
-        },
-        { arrayFilters: [{ "last.time": lastEntry.time }] }
-      );
-    }
-  }
-}
- else {
-        // إذا لم يوجد → إنشاء زائر جديد
-        await visitorsCollection.insertOne({
-          fingerprint,
-          userAgentOS: os,
-          deviceType: deviceType,
-          history: [newEntry],
-        });
-      }
-    } else {
+  await visitorsCollection.insertOne({
+    fingerprint,
+    userAgentOS: os,
+    deviceType: deviceType,
+    history: [newEntry],
+  });
+} else {
       const lastEntry = existingVisitor.history?.[existingVisitor.history.length - 1];
 
 if (!lastEntry) {
