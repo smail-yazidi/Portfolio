@@ -955,96 +955,74 @@ shadow: 'shadow-xl',
       </section>
 
 
-{/* Skills Section */}
-<section id="skills" className={`py-20 ${themeClasses.background}`}>
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <h2
-      className={`text-3xl md:text-4xl font-bold text-center mb-16 ${themeClasses.text}`}
-    >
-      {t.skillsTitle}
-      <span
-        className={`block w-20 h-1 ${themeClasses.accentBg} mx-auto mt-4 rounded-full`}
-      ></span>
-    </h2>
 
-    {/* One container for all categories */}
-                    <div className={`${themeClasses.glassDark} rounded-2xl p-8 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105  space-y-12
-`}>  {mockData.skills.skills.map((category, catIndex) => {
-        const CategoryIcon = getIcon(category.skillicon);
+      {/* Projects Section */}
+      <section id="projects" className={`py-20 ${themeClasses.background}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className={`text-3xl md:text-4xl font-bold text-center mb-16 ${themeClasses.text}`}>
+            {t.myProjects}
+            <span className={`block w-20 h-1 ${themeClasses.accentBg} mx-auto mt-4 rounded-full`}></span>
+          </h2>
 
-        return (
-          <div key={`cat-${catIndex}`}>
-            {/* Category Title */}
-            <h3
-              className={`text-2xl font-semibold mb-8 ${themeClasses.text} flex items-center`}
-            >
-              {CategoryIcon && (
-                <CategoryIcon
-                  className={`h-6 w-6 ${themeClasses.accent} ${
-                    currentLang === "ar" ? "ml-3" : "mr-3"
-                  }`}
-                />
-              )}
-              {category.title?.[currentLang]}
-            </h3>
+          <div className="grid lg:grid-cols-2 gap-8">
+            {mockData.projects.projects.map((project: any) => (
+              <Card
+                key={project._id}
+                className={` rounded-2xl overflow-hidden ${themeClasses.accent}   transition-all duration-300 sm:hover:scale-105
+ hover:shadow-2xl group ${themeClasses.glassDark}`}
+              >
+                <div className="relative h-64 overflow-hidden">
+                  <Image
+                    src={project.image}
+                    alt={project.title?.[currentLang] || 'Project'}
+                    width={800}
+                    height={450}
+                    className="object-cover w-full h-full transition-transform duration-500 sm:group-hover:scale-110"
+                  />
+                  <div className={`absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
+                </div>
 
-            {/* Skills Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {category.items.map((skill, skillIndex) => {
-                const SkillIcon = getIcon(skill.icon);
+                <CardContent className="p-8">
+                  <h3 className={`text-xl font-semibold mb-4 ${themeClasses.text} group-hover:${themeClasses.accent} transition-colors duration-300`}>
+                    {project.title?.[currentLang]}
+                  </h3>
+                  <p className={`${themeClasses.textMuted} mb-6 leading-relaxed`}>
+                    {project.description?.[currentLang]}
+                  </p>
 
-                return (
-                  <Card
-                    key={`cat-${catIndex}-skill-${skillIndex}`}
-                    className={`${themeClasses.glassDark} border-white/10 rounded-2xl transition-all duration-300 sm:hover:scale-105 hover:shadow-lg group${themeClasses.glassDark}${themeClasses.shadow} `}
-                  >
-                    <CardContent className="p-6 text-center">
-                      {SkillIcon && (
-                        <SkillIcon
-                          className={`h-8 w-8 mx-auto ${themeClasses.accent} mb-4 group-hover:scale-110 transition-transform duration-300`}
-                        />
-                      )}
-
-                      {/* Skill name with scrolling if too long */}
-                      <h4
-                        className={`relative overflow-hidden whitespace-nowrap text-lg font-semibold mb-3 ${themeClasses.text} group-hover:${themeClasses.accent} transition-colors duration-300`}
-                      >
-                        <span className="inline-block animate-marquee sm:animate-none">
-                          {skill.name?.[currentLang]}
-                        </span>
-                      </h4>
-
-                      {skill.examples?.length > 0 && (
-                        <ul
-                          className={`space-y-1 ${themeClasses.textMuted} text-sm text-left`}
+                  {project.techStack?.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-6">
+                      {project.techStack.map((tech: string, techIndex: number) => (
+                        <Badge
+                          key={techIndex}
+                          className={`${themeClasses.glassDark} ${themeClasses.textMuted} border border-white/20 hover:${themeClasses.accentBg} hover:text-white transition-all duration-300`}
                         >
-                          {skill.examples.map((ex, exIndex) => (
-                            <li
-                              key={`cat-${catIndex}-skill-${skillIndex}-ex-${exIndex}`}
-                              className="flex items-center"
-                            >
-                              <span
-                                className={`w-2 h-2 ${themeClasses.accentBg} rounded-full ${
-                                  currentLang === "ar" ? "ml-2" : "mr-2"
-                                }`}
-                              ></span>
-                              {ex?.[currentLang]}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })}
-            </div>
+                          {tech}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+
+                  {project.button && (
+                    <div>
+                      <Button
+                        onClick={() => window.open(project.button.link, "_blank")}
+                        className={`${themeClasses.accentBg} hover:bg-[#0A2647]/90 text-white rounded-2xl transition-all duration-300 sm:hover:scale-105
+`}
+                      >
+                        <Link className="mr-2 h-4 w-4" />
+                        {project.button.label?.[currentLang] || 'View Project'}
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        );
-      })}
-    </div>
-  </div>
-</section>
-      {/* Experience Section */}
+        </div>
+      </section>
+
+     {/* Experience Section */}
       <section id="experience" className={`py-20 ${themeClasses.background}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className={`text-3xl md:text-4xl font-bold text-center mb-16 ${themeClasses.text}`}>
@@ -1180,73 +1158,100 @@ shadow: 'shadow-xl',
         </div>
       </section>
 
+{/* Skills Section */}
+<section id="skills" className={`py-20 ${themeClasses.background}`}>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <h2
+      className={`text-3xl md:text-4xl font-bold text-center mb-16 ${themeClasses.text}`}
+    >
+      {t.skillsTitle}
+      <span
+        className={`block w-20 h-1 ${themeClasses.accentBg} mx-auto mt-4 rounded-full`}
+      ></span>
+    </h2>
+
+    {/* One container for all categories */}
+                    <div className={`${themeClasses.glassDark} rounded-2xl p-8 ${themeClasses.shadow} transition-all duration-300 sm:hover:scale-105  space-y-12
+`}>  {mockData.skills.skills.map((category, catIndex) => {
+        const CategoryIcon = getIcon(category.skillicon);
+
+        return (
+          <div key={`cat-${catIndex}`}>
+            {/* Category Title */}
+            <h3
+              className={`text-2xl font-semibold mb-8 ${themeClasses.text} flex items-center`}
+            >
+              {CategoryIcon && (
+                <CategoryIcon
+                  className={`h-6 w-6 ${themeClasses.accent} ${
+                    currentLang === "ar" ? "ml-3" : "mr-3"
+                  }`}
+                />
+              )}
+              {category.title?.[currentLang]}
+            </h3>
+
+            {/* Skills Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {category.items.map((skill, skillIndex) => {
+                const SkillIcon = getIcon(skill.icon);
+
+                return (
+                  <Card
+                    key={`cat-${catIndex}-skill-${skillIndex}`}
+                    className={`${themeClasses.glassDark} border-white/10 rounded-2xl transition-all duration-300 sm:hover:scale-105 hover:shadow-lg group${themeClasses.glassDark}${themeClasses.shadow} `}
+                  >
+                    <CardContent className="p-6 text-center">
+                      {SkillIcon && (
+                        <SkillIcon
+                          className={`h-8 w-8 mx-auto ${themeClasses.accent} mb-4 group-hover:scale-110 transition-transform duration-300`}
+                        />
+                      )}
+
+                      {/* Skill name with scrolling if too long */}
+                      <h4
+                        className={`relative overflow-hidden whitespace-nowrap text-lg font-semibold mb-3 ${themeClasses.text} group-hover:${themeClasses.accent} transition-colors duration-300`}
+                      >
+                        <span className="inline-block animate-marquee sm:animate-none">
+                          {skill.name?.[currentLang]}
+                        </span>
+                      </h4>
+
+                      {skill.examples?.length > 0 && (
+                        <ul
+                          className={`space-y-1 ${themeClasses.textMuted} text-sm text-left`}
+                        >
+                          {skill.examples.map((ex, exIndex) => (
+                            <li
+                              key={`cat-${catIndex}-skill-${skillIndex}-ex-${exIndex}`}
+                              className="flex items-center"
+                            >
+                              <span
+                                className={`w-2 h-2 ${themeClasses.accentBg} rounded-full ${
+                                  currentLang === "ar" ? "ml-2" : "mr-2"
+                                }`}
+                              ></span>
+                              {ex?.[currentLang]}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+ 
+
     
 
-      {/* Projects Section */}
-      <section id="projects" className={`py-20 ${themeClasses.background}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className={`text-3xl md:text-4xl font-bold text-center mb-16 ${themeClasses.text}`}>
-            {t.myProjects}
-            <span className={`block w-20 h-1 ${themeClasses.accentBg} mx-auto mt-4 rounded-full`}></span>
-          </h2>
 
-          <div className="grid lg:grid-cols-2 gap-8">
-            {mockData.projects.projects.map((project: any) => (
-              <Card
-                key={project._id}
-                className={` rounded-2xl overflow-hidden ${themeClasses.accent}   transition-all duration-300 sm:hover:scale-105
- hover:shadow-2xl group ${themeClasses.glassDark}`}
-              >
-                <div className="relative h-64 overflow-hidden">
-                  <Image
-                    src={project.image}
-                    alt={project.title?.[currentLang] || 'Project'}
-                    width={800}
-                    height={450}
-                    className="object-cover w-full h-full transition-transform duration-500 sm:group-hover:scale-110"
-                  />
-                  <div className={`absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
-                </div>
-
-                <CardContent className="p-8">
-                  <h3 className={`text-xl font-semibold mb-4 ${themeClasses.text} group-hover:${themeClasses.accent} transition-colors duration-300`}>
-                    {project.title?.[currentLang]}
-                  </h3>
-                  <p className={`${themeClasses.textMuted} mb-6 leading-relaxed`}>
-                    {project.description?.[currentLang]}
-                  </p>
-
-                  {project.techStack?.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {project.techStack.map((tech: string, techIndex: number) => (
-                        <Badge
-                          key={techIndex}
-                          className={`${themeClasses.glassDark} ${themeClasses.textMuted} border border-white/20 hover:${themeClasses.accentBg} hover:text-white transition-all duration-300`}
-                        >
-                          {tech}
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-
-                  {project.button && (
-                    <div>
-                      <Button
-                        onClick={() => window.open(project.button.link, "_blank")}
-                        className={`${themeClasses.accentBg} hover:bg-[#0A2647]/90 text-white rounded-2xl transition-all duration-300 sm:hover:scale-105
-`}
-                      >
-                        <Link className="mr-2 h-4 w-4" />
-                        {project.button.label?.[currentLang] || 'View Project'}
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* About Section */}
       <section id="about" className={`py-20 ${themeClasses.background}`}>
