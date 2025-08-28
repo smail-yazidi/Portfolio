@@ -579,9 +579,11 @@ useEffect(() => {
   ]
 
   const navItems = [
-   { id: "skills", label: t.skills },
-    { id: "experience", label: t.experience },
+
     { id: "projects", label: t.projects },
+
+    { id: "experience", label: t.experience },
+       { id: "skills", label: t.skills },
     { id: "about", label: t.about },
        { id: "services", label: t.services },
     { id: "contact", label: t.contact },
